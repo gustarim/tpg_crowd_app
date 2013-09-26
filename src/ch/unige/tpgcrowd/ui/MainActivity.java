@@ -1,5 +1,8 @@
-package ch.unige.tpgcrowd;
+package ch.unige.tpgcrowd.ui;
 
+import ch.unige.tpgcrowd.R;
+import ch.unige.tpgcrowd.R.layout;
+import ch.unige.tpgcrowd.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
