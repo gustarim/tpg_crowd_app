@@ -39,7 +39,7 @@ public class TPGStopsImpl implements ITPGStops {
 	public TPGStopsImpl(Context context) {
 		this.context = context;
 		this.requestQueue = RequestQueueFactory.getRequestQueue(context);
-		objectMapper = new ObjectMapper();
+		this.objectMapper = new ObjectMapper();
 	}
 
 	@Override
@@ -133,19 +133,18 @@ public class TPGStopsImpl implements ITPGStops {
 
 	private void addTpgStopsRequest(String arguments, TPGObjectListener<StopList> listener) {
 
-		TpgJsonObjectRequest req = new TpgJsonObjectRequest(TpgJsonObjectRequest.METHOD_GET_STOPS, arguments, createSuccessListener(listener), createResultListener(listener));
+		TpgJsonObjectRequest req = new TpgJsonObjectRequest(TpgJsonObjectRequest.METHOD_GET_STOPS, arguments, createSuccessListener(listener), createErrorListener(listener));
 		requestQueue.add(req);
 	}
 
 	private void addTpgPhysicalStopsRequest(String arguments, TPGObjectListener<StopList> listener) {
 
-		TpgJsonObjectRequest req = new TpgJsonObjectRequest(TpgJsonObjectRequest.METHOD_GET_PHYSICAL_STOPS, arguments, createSuccessListener(listener), createResultListener(listener));
+		TpgJsonObjectRequest req = new TpgJsonObjectRequest(TpgJsonObjectRequest.METHOD_GET_PHYSICAL_STOPS, arguments, createSuccessListener(listener), createErrorListener(listener));
 		requestQueue.add(req);
 	}
 
 	
-	private ErrorListener createResultListener(
-			final TPGObjectListener<StopList> listener) {
+	private ErrorListener createErrorListener(final TPGObjectListener<StopList> listener) {
 		return new ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
@@ -155,10 +154,8 @@ public class TPGStopsImpl implements ITPGStops {
 		};
 	}
 
-	private Listener<JSONObject> createSuccessListener(
-			final TPGObjectListener<StopList> listener) {
+	private Listener<JSONObject> createSuccessListener(final TPGObjectListener<StopList> listener) {
 		return new Listener<JSONObject>() {
-
 			@Override
 			public void onResponse(JSONObject response) {
 				try {

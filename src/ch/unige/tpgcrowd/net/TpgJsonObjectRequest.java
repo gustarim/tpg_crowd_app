@@ -24,6 +24,11 @@ public class TpgJsonObjectRequest extends JsonObjectRequest {
 	 */
 	public static final String METHOD_GET_STOPS = "GetStops";
 	public static final String METHOD_GET_PHYSICAL_STOPS = "GetPhysicalStops";
+	public static final String METHOD_GET_THERMO = "GetThermometer";
+	public static final String METHOD_GET_ALL_DEPARTURES = "GetAllNextDepartures";
+	public static final String METHOD_GET_DEPARTURES = "GetNextDepartures";
+	public static final String METHOD_GET_DISRUPTIONS = "GetDisruptions";
+	public static final String METHOD_GET_LINES_COLORS = "GetLinesColors";
 
 	/**
 	 * Creates a TpgJsonObjectRequest instance ready to be added to the request queue.
@@ -37,4 +42,5 @@ public class TpgJsonObjectRequest extends JsonObjectRequest {
 		super(Request.Method.GET, TPG_URL + action + OUTPUT_FORMAT + TPG_KEY + arguments, null, listener, errorListener);
 	}
 
+	
 }

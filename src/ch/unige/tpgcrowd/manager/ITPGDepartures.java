@@ -2,6 +2,7 @@ package ch.unige.tpgcrowd.manager;
 
 import java.util.List;
 
+import ch.unige.tpgcrowd.model.DepartureList;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 
 public interface ITPGDepartures {
@@ -11,7 +12,7 @@ public interface ITPGDepartures {
 	 * 
 	 * @param listener			listener called on result
 	 */
-	public void getNextDepartures(final TPGObjectListener<Void> listener);
+	public void getNextDepartures(String stopCode, final TPGObjectListener<DepartureList> listener);
 
 	/**
 	 * Return the list of all departures in the next hour for the specified stop code
@@ -20,7 +21,7 @@ public interface ITPGDepartures {
 	 * @param departureCode		timecode (for connection only, can be null)
 	 * @param listener			listener called on result
 	 */
-	public void getNextDepartures(String stopCode, Integer departureCode, final TPGObjectListener<Void> listener);
+	public void getNextDepartures(String stopCode, Integer departureCode, final TPGObjectListener<DepartureList> listener);
 
 	/**
 	 * Return the list of all departures in the next hour for the specified stop code, filtered by lines and destination codes
@@ -31,7 +32,7 @@ public interface ITPGDepartures {
 	 * @param destinationsCode	destination code filter
 	 * @param listener			listener called on result
 	 */
-	public void getNextDepartures(String stopCode, Integer departureCode, List<String> linesCode, List<String> destinationsCode, final TPGObjectListener<Void> listener);
+	public void getNextDepartures(String stopCode, Integer departureCode, List<String> linesCode, List<String> destinationsCode, final TPGObjectListener<DepartureList> listener);
 	
 	/**
 	 * Return the list of all departures for the day
@@ -41,5 +42,5 @@ public interface ITPGDepartures {
 	 * @param destinationCode	the destination code
 	 * @param listener			listener called on result
 	 */
-	public void getAllNextDepartures(String stopCode, String lineCode, String destinationCode, final TPGObjectListener<Void> listener);
+	public void getAllNextDepartures(String stopCode, String lineCode, String destinationCode, final TPGObjectListener<DepartureList> listener);
 }
