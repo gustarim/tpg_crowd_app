@@ -2,6 +2,8 @@ package ch.unige.tpgcrowd.net;
 
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -21,6 +23,7 @@ public class TpgJsonObjectRequest extends JsonObjectRequest {
 	 * about open data in the doc folder of the project
 	 */
 	public static final String METHOD_GET_STOPS = "GetStops";
+	public static final String METHOD_GET_PHYSICAL_STOPS = "GetPhysicalStops";
 
 	/**
 	 * Creates a TpgJsonObjectRequest instance ready to be added to the request queue.
