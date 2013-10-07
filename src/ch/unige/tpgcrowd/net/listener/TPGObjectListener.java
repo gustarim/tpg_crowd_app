@@ -1,8 +1,10 @@
 package ch.unige.tpgcrowd.net.listener;
 
-public interface TPGObjectListener<T> {
+import ch.unige.tpgcrowd.model.ITPGModelEntity;
+
+public interface TPGObjectListener<T extends ITPGModelEntity> {
 	
-	public void onSuccess(T results);
+	public void onSuccess(final T results);
 	
 	public void onFailure();
 }

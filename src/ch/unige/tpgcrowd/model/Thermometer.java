@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Thermometer {
+public class Thermometer implements ITPGModelEntity {
 
 	@JsonProperty("timestamp")
 	Date timestamp;

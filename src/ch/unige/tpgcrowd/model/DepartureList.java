@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DepartureList {
+public class DepartureList implements ITPGModelEntity {
 
 	@JsonProperty("timestamp")
 	Date timestamp;

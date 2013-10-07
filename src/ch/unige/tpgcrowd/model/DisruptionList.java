@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DisruptionList {
+public class DisruptionList implements ITPGModelEntity{
 
 	@JsonProperty("timestamp")
 	Date timestamp;	
