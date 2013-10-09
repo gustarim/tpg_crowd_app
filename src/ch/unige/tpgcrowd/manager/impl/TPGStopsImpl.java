@@ -120,6 +120,6 @@ public class TPGStopsImpl extends TPGAbstractImpl implements ITPGStops {
 
 	@Override
 	protected Class<? extends ITPGModelEntity> getResponseClass() {
-		return DepartureList.class;
+		return StopList.class;
 	}
 }
