@@ -1,16 +1,19 @@
 package ch.unige.tpgcrowd.model;
 
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Departure {
+	@JsonProperty("timestamp")
+	Date timestamp;
 
 	@JsonProperty("departureCode")
 	Integer departureCode;
 	
 	@JsonProperty("waitingTime")
-	Integer waitingTime;
+	String waitingTime;
 	
 	@JsonProperty("waitingTimeMillis")
 	Integer waitingTimeMillis;
@@ -33,6 +36,17 @@ public class Departure {
 	@JsonProperty("disruptions")
 	List<Disruption> disruptions;
 	
+	@JsonProperty("line")
+	Line line;
+	
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public Integer getDepartureCode() {
 		return departureCode;
 	}
@@ -41,11 +55,11 @@ public class Departure {
 		this.departureCode = departureCode;
 	}
 
-	public Integer getWaitingTime() {
+	public String getWaitingTime() {
 		return waitingTime;
 	}
 
-	public void setWaitingTime(Integer waitingTime) {
+	public void setWaitingTime(String waitingTime) {
 		this.waitingTime = waitingTime;
 	}
 
@@ -104,5 +118,14 @@ public class Departure {
 	public void setDisruptions(List<Disruption> disruptions) {
 		this.disruptions = disruptions;
 	}
+
+	public Line getLine() {
+		return line;
+	}
+
+	public void setLine(Line line) {
+		this.line = line;
+	}
+	
 	
 }

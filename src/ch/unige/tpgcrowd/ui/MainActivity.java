@@ -1,23 +1,12 @@
 package ch.unige.tpgcrowd.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ch.unige.tpgcrowd.R;
-import ch.unige.tpgcrowd.manager.ITPGStops;
-import ch.unige.tpgcrowd.manager.ITPGThermometer;
-import ch.unige.tpgcrowd.manager.TPGManager;
-import ch.unige.tpgcrowd.model.Step;
-import ch.unige.tpgcrowd.model.Stop;
-import ch.unige.tpgcrowd.model.StopList;
-import ch.unige.tpgcrowd.model.Thermometer;
-import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.widget.TextView;
+import ch.unige.tpgcrowd.R;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
 	private TextView textview;
 
@@ -55,27 +44,27 @@ public class MainActivity extends Activity {
 //		});
 
 		//Small test code - get a thermometer instance and display the stop names
-		Integer departureCode = 218161;
-		ITPGThermometer thermoManager = TPGManager.getThermometerManager(getApplicationContext());
-		
-		thermoManager.getThermometer(departureCode, new TPGObjectListener<Thermometer>() {
-			
-			@Override
-			public void onSuccess(Thermometer results) {
-				String resultText = results.getTimestamp().toString() + " - ";
-				
-				for (Step step : results.getSteps()) {
-					resultText += step.getStop().getStopName();
-				}
-				
-				textview.setText(resultText);
-			}
-			
-			@Override
-			public void onFailure() {
-				textview.setText("error..");
-			}
-		});
+//		Integer departureCode = 218161;
+//		ITPGThermometer thermoManager = TPGManager.getThermometerManager(getApplicationContext());
+//		
+//		thermoManager.getThermometer(departureCode, new TPGObjectListener<Thermometer>() {
+//			
+//			@Override
+//			public void onSuccess(Thermometer results) {
+//				String resultText = results.getTimestamp().toString() + " - ";
+//				
+//				for (Step step : results.getSteps()) {
+//					resultText += step.getStop().getStopName();
+//				}
+//				
+//				textview.setText(resultText);
+//			}
+//			
+//			@Override
+//			public void onFailure() {
+//				textview.setText("error..");
+//			}
+//		});
 	
 	}
 
