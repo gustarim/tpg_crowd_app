@@ -1,10 +1,12 @@
 package ch.unige.tpgcrowd.manager.impl;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 import ch.unige.tpgcrowd.model.ITPGModelEntity;
 import ch.unige.tpgcrowd.net.RequestQueueFactory;
 import ch.unige.tpgcrowd.net.TpgJsonObjectRequest;
@@ -65,7 +67,7 @@ public abstract class TPGAbstractImpl {
 			@Override
 			public void onResponse(final JSONObject response) {
 				try {
-					listener.onSuccess((T) objectMapper.readValue(response.toString(), getResponseClass()));
+					listener.onSuccess((T) objectMapper.readValue(response.toString().getBytes(Charset.forName("ISO-8859-1")), getResponseClass()));
 
 				} catch (final JsonParseException e) {
 					// TODO Auto-generated catch block
