@@ -1,4 +1,4 @@
-package ch.unige.tpgcrowd.manager.google;
+package ch.unige.tpgcrowd.google;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -17,7 +17,7 @@ public final class GooglePlayServiceCheckUtility {
      * Define a request code to send to Google Play services
      * This code is returned in Activity.onActivityResult
      */
-    private final static int
+    public final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     
     // Define a DialogFragment that displays the error dialog

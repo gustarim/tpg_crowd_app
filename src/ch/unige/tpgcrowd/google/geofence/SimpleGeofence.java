@@ -1,4 +1,4 @@
-package ch.unige.tpgcrowd.manager.google.geofence;
+package ch.unige.tpgcrowd.google.geofence;
 
 import com.google.android.gms.location.Geofence;
 

@@ -1,4 +1,4 @@
-package ch.unige.tpgcrowd.manager.google.geofence;
+package ch.unige.tpgcrowd.google.geofence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
