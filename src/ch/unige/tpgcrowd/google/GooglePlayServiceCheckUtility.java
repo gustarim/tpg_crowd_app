@@ -3,6 +3,7 @@ package ch.unige.tpgcrowd.google;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -81,28 +82,39 @@ public final class GooglePlayServiceCheckUtility {
             return true;
         // Google Play services was not available for some reason
         } else {
-            // Get the error code
-            //final int errorCode = ConnectionResult.getErrorCode();
-            // Get the error dialog from Google Play services
-            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-                   // errorCode,
-            		resultCode,
-                    activity,
-                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-            // If Google Play services can provide an error dialog
-            if (errorDialog != null) {
-                // Create a new DialogFragment for the error dialog
-                final ErrorDialogFragment errorFragment =
-                        new ErrorDialogFragment();
-                // Set the dialog in the DialogFragment
-                errorFragment.setDialog(errorDialog);
-                // Show the error dialog in the DialogFragment
-                errorFragment.show(
-                        activity.getSupportFragmentManager(),
-                        "Location/Activity Service");
-            }
+            generateErrorDialog(activity, resultCode);
             return false;
+        }
+    }
+    
+    public static void generateErrorDialog(final FragmentActivity activity, final int errorCode) {
+    	// Get the error dialog from Google Play services
+        final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+                errorCode,
+                activity,
+                CONNECTION_FAILURE_RESOLUTION_REQUEST);
+        // If Google Play services can provide an error dialog
+        if (errorDialog != null) {
+            // Create a new DialogFragment for the error dialog
+            final ErrorDialogFragment errorFragment =
+                    new ErrorDialogFragment();
+            // Set the dialog in the DialogFragment
+            errorFragment.setDialog(errorDialog);
+            // Show the error dialog in the DialogFragment
+            errorFragment.show(
+                    activity.getSupportFragmentManager(),
+                    "Location/Activity Service");
+        }
+    }
+    
+    public static void tryResolutionOnConnectionError(final ConnectionResult connectionResult, final FragmentActivity activity) {
+    	try {
+            connectionResult.startResolutionForResult(
+                    activity,
+                    GooglePlayServiceCheckUtility.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+        } catch (final SendIntentException e) {
+            // Log the error
+            e.printStackTrace();
         }
     }
 }

@@ -30,9 +30,6 @@
             android:name="ch.unige.tpgcrowd.google.geofence.ReceiveTransitionsIntentService"
             android:enabled="true">
         </service>
-        <service android:enabled="true" 
-            android:name="ch.unige.tpgcrowd.google.geofence.GeofenceService">
-        </service>
     </application>
 
 </manifest>
