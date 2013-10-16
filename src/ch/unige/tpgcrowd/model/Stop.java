@@ -19,6 +19,9 @@ public class Stop {
 	@JsonProperty("connections")
 	List<Connection> connections;
 
+	@JsonProperty("physicalStops")
+	List<PhysicalStop> physicalStops;
+
 	public String getStopCode() {
 		return stopCode;
 	}
@@ -51,5 +54,11 @@ public class Stop {
 		this.connections = connections;
 	}
 	
-	
+	public List<PhysicalStop> getPhysicalStops() {
+		return physicalStops;
+	}
+
+	public void setPhysicalStops(List<PhysicalStop> physicalStops) {
+		this.physicalStops = physicalStops;
+	}
 }
