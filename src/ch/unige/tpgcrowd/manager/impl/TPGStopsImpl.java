@@ -70,7 +70,7 @@ public class TPGStopsImpl extends TPGAbstractImpl implements ITPGStops {
 	@Override
 	public void getStopsByPosition(final Double lat, final Double lon,
 			final TPGObjectListener<StopList> listener) {
-		if (lat != null && lon != null) {
+		if (lat == null || lon == null) {
 			listener.onFailure();
 		} 
 		else {

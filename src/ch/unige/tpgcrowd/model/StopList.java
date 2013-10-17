@@ -12,9 +12,6 @@ public class StopList implements ITPGModelEntity {
 	
 	@JsonProperty("stops")
 	List<Stop> stops;
-
-	@JsonProperty("physicalStops")
-	List<PhysicalStop> physicalStops;
 	
 	public Date getTimestamp() {
 		return timestamp;
@@ -30,14 +27,6 @@ public class StopList implements ITPGModelEntity {
 
 	public void setStops(List<Stop> stops) {
 		this.stops = stops;
-	}
-
-	public List<PhysicalStop> getPhysicalStops() {
-		return physicalStops;
-	}
-
-	public void setPhysicalStops(List<PhysicalStop> physicalStops) {
-		this.physicalStops = physicalStops;
 	}
 	
 }

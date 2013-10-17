@@ -67,7 +67,7 @@ public abstract class TPGAbstractImpl {
 			@Override
 			public void onResponse(final JSONObject response) {
 				try {
-					listener.onSuccess((T) objectMapper.readValue(response.toString().getBytes(Charset.forName("ISO-8859-1")), getResponseClass()));
+					listener.onSuccess((T) objectMapper.readValue(response.toString() /*.getBytes(Charset.forName("ISO-8859-1")) */, getResponseClass()));
 
 				} catch (final JsonParseException e) {
 					// TODO Auto-generated catch block
