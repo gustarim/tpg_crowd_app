@@ -2,7 +2,7 @@ package ch.unige.tpgcrowd.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Connection {
+public class Connection implements ITPGModelEntity {
 
 	@JsonProperty("lineCode")
 	String lineCode;

@@ -12,4 +12,22 @@ public class LineColorList implements ITPGModelEntity {
 	
 	@JsonProperty("colors")
 	List<Color> colors;
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public List<Color> getColors() {
+		return colors;
+	}
+
+	public void setColors(List<Color> colors) {
+		this.colors = colors;
+	}
+	
+	
 }

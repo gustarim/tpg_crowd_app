@@ -1,5 +1,6 @@
 package ch.unige.tpgcrowd.manager.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,9 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import android.content.Context;
 import android.util.Log;
 import ch.unige.tpgcrowd.manager.ITPGStops;
-import ch.unige.tpgcrowd.model.DepartureList;
-import ch.unige.tpgcrowd.model.StopList;
 import ch.unige.tpgcrowd.model.ITPGModelEntity;
+import ch.unige.tpgcrowd.model.StopList;
 import ch.unige.tpgcrowd.net.TpgJsonObjectRequest;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 
@@ -85,6 +85,14 @@ public class TPGStopsImpl extends TPGAbstractImpl implements ITPGStops {
 	public void getAllPhysicalStops(TPGObjectListener<StopList> listener) {
 		addRequest(TpgJsonObjectRequest.METHOD_GET_PHYSICAL_STOPS, EMPTY_ARGS,
 				listener);
+	}
+	
+	@Override
+	public void getPhysicalStopByCode(final String stopCode,
+			final TPGObjectListener<StopList> listener) {
+		final List<String> stopCodes = new ArrayList<String>();
+		stopCodes.add(stopCode);
+		getPhysicalStopsByCodes(stopCodes, listener);
 	}
 
 	@Override

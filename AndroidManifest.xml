@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +29,11 @@
 
         <service
             android:name="ch.unige.tpgcrowd.google.geofence.ReceiveTransitionsIntentService"
-            android:enabled="true">
+            android:enabled="true" >
+        </service>
+        <service
+            android:name="ch.unige.tpgcrowd.google.activity.ActivityRecognitionIntentService"
+            android:enabled="true" >
         </service>
     </application>
 

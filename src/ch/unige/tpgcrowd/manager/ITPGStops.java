@@ -67,6 +67,15 @@ public interface ITPGStops {
 	 * @param listener
 	 * @param errorListener
 	 */
+	public void getPhysicalStopByCode(String stopCode, final TPGObjectListener<StopList> listener);
+	
+	/**
+	 * Return the list of all physical stops with code in stopCodes
+	 * 
+	 * @param stopCodes
+	 * @param listener
+	 * @param errorListener
+	 */
 	public void getPhysicalStopsByCodes(List<String> stopCodes, final TPGObjectListener<StopList> listener);
 	
 	/**

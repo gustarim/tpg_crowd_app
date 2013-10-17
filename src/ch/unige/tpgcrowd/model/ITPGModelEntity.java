@@ -1,5 +1,7 @@
 package ch.unige.tpgcrowd.model;
 
-public interface ITPGModelEntity {
+import java.io.Serializable;
+
+public interface ITPGModelEntity extends Serializable {
 
 }
