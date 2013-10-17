@@ -1,12 +1,12 @@
 package ch.unige.tpgcrowd.google.geofence;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.app.PendingIntent;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,82 +20,86 @@ import com.google.android.gms.location.LocationStatusCodes;
 
 public final class GeofenceHandler implements ConnectionCallbacks, OnConnectionFailedListener,
 OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
-	private static GeofenceHandler ghandler;
-
-	public static GeofenceHandler getGeofanceHandler() {
-		if (ghandler == null) {
-			ghandler = new GeofenceHandler();
-		}
-		return ghandler;
-	}
-
 	// Defines the allowable request types.
-	private enum REQUEST_TYPE {ADD, REMOVE}
+	private enum REQUEST_TYPE {ADD, REMOVE_PENDING, REMOVE_IDS}
 	// Flag that indicates if a request is underway.
 	private boolean inProgress;
 	// Holds the location client
 	private LocationClient locationClient;
 	// Stores the PendingIntent used to request geofence monitoring
-	private PendingIntent transitionPendingIntent;
-	private FragmentActivity activity;
-	private List<Geofence> currentGeofences;
-	private REQUEST_TYPE requestType;
+	private final PendingIntent transitionPendingIntent;
+	//private FragmentActivity activity;
+	private final List<Geofence> currentGeofences;
+	private final String[] ids;
+	private final REQUEST_TYPE requestType;
 
-	public GeofenceHandler() {
+	private GeofenceHandler(final PendingIntent transitionPendingIntent,
+			final String[] ids, final REQUEST_TYPE requestType) {
+		this.transitionPendingIntent = transitionPendingIntent;
+		this.ids = ids;
+		this.requestType = requestType;
+		currentGeofences = new LinkedList<Geofence>();
 		inProgress = false;
 	}
 
-	public boolean addGeofences(final FragmentActivity activity, final String[] ids) {
-		return connectLocationService(activity, ids, REQUEST_TYPE.ADD);
+	public static boolean addGeofences(final Context context, final String[] ids,
+			final PendingIntent transitionPendingIntent) {
+		final GeofenceHandler gh = new GeofenceHandler(transitionPendingIntent, ids, REQUEST_TYPE.ADD);
+		return gh.connectLocationService(context);
 	}
 
-	public boolean removeGeofences(final FragmentActivity activity, final String[] ids) {
-		return connectLocationService(activity, ids, REQUEST_TYPE.REMOVE);
+	public boolean removeGeofencesByPendingIntent(final Context context,
+			final PendingIntent transitionPendingIntent) {
+		final GeofenceHandler gh = new GeofenceHandler(transitionPendingIntent, new String[] {}, REQUEST_TYPE.REMOVE_PENDING);
+		return gh.connectLocationService(context);
+	}
+	
+	public boolean removeGeofencesByIds(final Context context, final String[] ids,
+			final PendingIntent transitionPendingIntent) {
+		final GeofenceHandler gh = new GeofenceHandler(transitionPendingIntent, ids, REQUEST_TYPE.REMOVE_IDS);
+		return gh.connectLocationService(context);
 	}
 
 	/**
 	 * Start a request for geofence monitoring by calling
 	 * LocationClient.connect().
 	 */
-	private boolean connectLocationService(final FragmentActivity activity, final String[] ids, final REQUEST_TYPE requestType) {
+	private boolean connectLocationService(final Context context) {
 		boolean result = false;
-		this.activity = activity;
-		this.requestType = requestType;
-		final SimpleGeofenceStore store = new SimpleGeofenceStore(activity.getApplicationContext());
-		currentGeofences = new LinkedList<Geofence>();
 		for (int i = 0; i < ids.length; i++) {
-			currentGeofences.add(store.getGeofence(ids[i]).toGeofence());
+			currentGeofences.add(SimpleGeofenceStore.getGeofence(context, ids[i]).toGeofence());
 		}
 		/*
 		 * Test for Google Play services after setting the request type.
 		 * If Google Play services isn't present, the proper request
 		 * can be restarted.
 		 */
-		if (GooglePlayServiceCheckUtility.servicesConnected(activity)) {
+		//MOVED TO MAIN ACTIVITY!
+//		if (GooglePlayServiceCheckUtility.servicesConnected(activity)) {
 			/*
 			 * Create a new location client object. Since the current
 			 * activity class implements ConnectionCallbacks and
 			 * OnConnectionFailedListener, pass the current activity object
 			 * as the listener for both parameters
 			 */
-			locationClient = new LocationClient(activity.getApplicationContext(), this, this);
-			// If a request is not already underway
-			if (!inProgress) {
-				// Indicate that a request is underway
-				inProgress = true;
-				// Request a connection from the client to Location Services
-				locationClient.connect();
-				result = true;
-			} else {
-				/*
-				 * A request is already underway. You can handle
-				 * this situation by disconnecting the client,
-				 * re-setting the flag, and then re-trying the
-				 * request.
-				 */
-				locationClient.disconnect();
-			}
+		locationClient = new LocationClient(context, this, this);
+		// If a request is not already underway
+		if (!inProgress) {
+			// Indicate that a request is underway
+			inProgress = true;
+			// Request a connection from the client to Location Services
+			locationClient.connect();
+			result = true;
+		} else {
+			/*
+			 * A request is already underway. You can handle
+			 * this situation by disconnecting the client,
+			 * re-setting the flag, and then re-trying the
+			 * request.
+			 */
+			locationClient.disconnect();
 		}
+//		}
 		return result;
 	}
 
@@ -104,13 +108,16 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 		switch (requestType) {
 		case ADD :
 			// Get the PendingIntent for the request
-			transitionPendingIntent = getTransitionPendingIntent();
+			//transitionPendingIntent = getTransitionPendingIntent();
 			// Send a request to add the current geofences
 			locationClient.addGeofences(
 					currentGeofences, transitionPendingIntent, this);
 			break;
-		case REMOVE:
+		case REMOVE_PENDING:
 			locationClient.removeGeofences(transitionPendingIntent, this);
+			break;
+		case REMOVE_IDS:
+			locationClient.removeGeofences(Arrays.asList(ids), this);
 			break;
 		}
 	}
@@ -132,12 +139,12 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 		//	         * activity to resolve it.
 		//	         */
 		if (connectionResult.hasResolution()) {
-			GooglePlayServiceCheckUtility.tryResolutionOnConnectionError(connectionResult, activity);
+			GooglePlayServiceCheckUtility.tryResolutionOnConnectionError(connectionResult);
 			//	        // If no resolution is available, display an error dialog
 		} else {
 			//	            // Get the error code
 			final int errorCode = connectionResult.getErrorCode();
-			GooglePlayServiceCheckUtility.generateErrorDialog(activity, errorCode);
+			GooglePlayServiceCheckUtility.generateErrorDialog(errorCode);
 		}
 	}
 
@@ -190,20 +197,6 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 			//TODO
 		}
 		disconnect();
-	}
-
-	private PendingIntent getTransitionPendingIntent() {
-		// Create an explicit Intent
-		final Intent intent = new Intent(activity,
-				ReceiveTransitionsIntentService.class);
-		/*
-		 * Return the PendingIntent
-		 */
-		return PendingIntent.getService(
-				activity,
-				0,
-				intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 	private void disconnect() {

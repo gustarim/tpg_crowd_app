@@ -28,11 +28,11 @@
         </activity>
 
         <service
-            android:name="ch.unige.tpgcrowd.google.geofence.ReceiveTransitionsIntentService"
+            android:name="ch.unige.tpgcrowd.google.geofence.StopTransitionsIntentService"
             android:enabled="true" >
         </service>
         <service
-            android:name="ch.unige.tpgcrowd.google.activity.ActivityRecognitionIntentService"
+            android:name="ch.unige.tpgcrowd.google.activity.ActivityRecognitionAtStopIntentService"
             android:enabled="true" >
         </service>
     </application>

@@ -8,5 +8,6 @@
     <string name="default_direction">Direction</string>
     <string name="loading">Loading&#8230;</string>
     <string name="error">ERROR</string>
+    <string name="connection_not_found">No connection found!</string>
 
 </resources>

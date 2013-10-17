@@ -35,8 +35,25 @@ public class SimpleGeofenceStore {
 	// The name of the SharedPreferences
 	private static final String SHARED_PREFERENCES =
 			"SharedPreferences";
+	
+	public static void setGeofence(final Context context, final String id, 
+			final SimpleGeofence geofence) {
+		final SimpleGeofenceStore store = new SimpleGeofenceStore(context);
+		store.setGeofence(id, geofence);
+	}
+	
+	public static SimpleGeofence getGeofence(final Context context, final String id) {
+		final SimpleGeofenceStore store = new SimpleGeofenceStore(context);
+		return store.getGeofence(id);
+	}
+			
+	public static void clearGeofence(final Context context, final String id) {
+		final SimpleGeofenceStore store = new SimpleGeofenceStore(context);
+		store.clearGeofence(id);
+	}
+	
 	// Create the SharedPreferences storage with private access only
-	public SimpleGeofenceStore(final Context context) {
+	private SimpleGeofenceStore(final Context context) {
 		mPrefs =
 				context.getSharedPreferences(
 						SHARED_PREFERENCES,
@@ -50,7 +67,7 @@ public class SimpleGeofenceStore {
 	 * @param id The ID of a stored geofence
 	 * @return A geofence defined by its center and radius. See
 	 */
-	public SimpleGeofence getGeofence(final String id) {
+	private SimpleGeofence getGeofence(final String id) {
 		/*
 		 * Get the latitude for the geofence identified by id, or
 		 * INVALID_FLOAT_VALUE if it doesn't exist
@@ -110,7 +127,7 @@ public class SimpleGeofenceStore {
 	 * @param geofence The SimpleGeofence containing the
 	 * values you want to save in SharedPreferences
 	 */
-	public void setGeofence(final String id, final SimpleGeofence geofence) {
+	private void setGeofence(final String id, final SimpleGeofence geofence) {
 		/*
 		 * Get a SharedPreferences editor instance. Among other
 		 * things, SharedPreferences ensures that updates are atomic
@@ -136,7 +153,8 @@ public class SimpleGeofenceStore {
 		// Commit the changes
 		editor.commit();
 	}
-	public void clearGeofence(final String id) {
+	
+	private void clearGeofence(final String id) {
 		/*
 		 * Remove a flattened geofence object from storage by
 		 * removing all of its keys

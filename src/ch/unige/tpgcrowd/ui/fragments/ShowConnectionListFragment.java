@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,19 @@ public class ShowConnectionListFragment extends ListFragment {
 	public static final String EXTRA_CONNECTIONS = "ch.unige.tpg.extra.CONNECTIONS";
 	
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.list_show_connections, container, false);
+	}
+	
+	@Override
 	public void onStart() {
 		super.onStart();
 		final Bundle b = getArguments();
 		final List<Connection> connections = (List<Connection>)b.getSerializable(EXTRA_CONNECTIONS);
 		final PhisicalStopsAdapter adapter = new PhisicalStopsAdapter(getActivity(), connections);
+		final TextView stopCode = (TextView)getView().findViewById(R.id.stopcode);
+		stopCode.setText(getTag());
 		setListAdapter(adapter);
 	}
 
@@ -48,6 +57,7 @@ public class ShowConnectionListFragment extends ListFragment {
 			lineIcon.setBackgroundColor(ColorStore.getColor(getContext(), conn.getLineCode()));
 			final TextView destination = (TextView)rowView.findViewById(R.id.direction);
 			destination.setText(conn.getDestinationName());
+			Log.i("TPG", "ADD ROW LIST");
 			return rowView;
 		}
 		

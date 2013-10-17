@@ -3,17 +3,35 @@ package ch.unige.tpgcrowd.google.geofence;
 import java.util.List;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import ch.unige.tpgcrowd.google.activity.ActivityRecognitionAtStopIntentService;
+import ch.unige.tpgcrowd.google.activity.ActivityRecognitionHandler;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
-public class ReceiveTransitionsIntentService extends IntentService {
+public class StopTransitionsIntentService extends IntentService {
 	private static final String NAME = "ReceiveTransitionsIntentService";
+	
+	public static PendingIntent getTransitionPendingIntent(final Context context) {
+		// Create an explicit Intent
+		final Intent intent = new Intent(context,
+				StopTransitionsIntentService.class);
+		/*
+		 * Return the PendingIntent
+		 */
+		return PendingIntent.getService(
+				context,
+				0,
+				intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+	}
 
-	public ReceiveTransitionsIntentService() {
+	public StopTransitionsIntentService() {
 		super(NAME);
 	}
 
@@ -45,12 +63,20 @@ public class ReceiveTransitionsIntentService extends IntentService {
 				final List<Geofence> triggerList =
 						LocationClient.getTriggeringGeofences(intent);
 
-				String[] triggerIds = new String[triggerList.size()];
-
-				for (int i = 0; i < triggerIds.length; i++) {
-					// Store the Id of each geofence
-					triggerIds[i] = triggerList.get(i).getRequestId();
+				final String[] triggerIds = new String[triggerList.size()];
+				
+				if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
+					for (int i = 0; i < triggerIds.length; i++) {
+						// Store the Id of each geofence
+						triggerIds[i] = triggerList.get(i).getRequestId();
+						Log.i(NAME, "Goefence Triggered" + triggerIds[i]);
+					}
+					//start activity recognition for still
+					final PendingIntent pi = ActivityRecognitionAtStopIntentService.getActivityRecognitionAtStopPI(getApplicationContext());
+					ActivityRecognitionHandler.startActivityRecognition(getApplicationContext(), pi);
 				}
+
+				
 				/*
 				 * At this point, you can store the IDs for further use
 				 * display them, or display the details associated with

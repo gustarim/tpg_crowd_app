@@ -1,8 +1,6 @@
 package ch.unige.tpgcrowd.google;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -20,6 +18,8 @@ public final class GooglePlayServiceCheckUtility {
      */
     public final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    
+    private static FragmentActivity mainActivity;
     
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
@@ -44,35 +44,12 @@ public final class GooglePlayServiceCheckUtility {
         }
     }
     
-    /*
-     * Handle results returned to the FragmentActivity
-     * by Google Play services
-     */
-    public static void toCallInActivityOnActivityResult(final int requestCode, 
-    		final int resultCode, final Intent data, final FragmentActivity activity) {
-        // Decide what to do based on the original request code
-        switch (requestCode) {
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST :
-            /*
-             * If the result code is Activity.RESULT_OK, try
-             * to connect again
-             */
-                switch (resultCode) {
-                    case Activity.RESULT_OK :
-                    /*
-                     * Try the request again
-                     */
-                    servicesConnected(activity);
-                    break;
-                }
-        }
-    }
-    
     public static boolean servicesConnected(final FragmentActivity activity) {
         // Check that Google Play services is available
+    	mainActivity = activity;
         final int resultCode =
                 GooglePlayServicesUtil.
-                        isGooglePlayServicesAvailable(activity);
+                        isGooglePlayServicesAvailable(mainActivity);
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
             // In debug mode, log the status
@@ -82,16 +59,16 @@ public final class GooglePlayServiceCheckUtility {
             return true;
         // Google Play services was not available for some reason
         } else {
-            generateErrorDialog(activity, resultCode);
+            generateErrorDialog(resultCode);
             return false;
         }
     }
     
-    public static void generateErrorDialog(final FragmentActivity activity, final int errorCode) {
+    public static void generateErrorDialog(final int errorCode) {
     	// Get the error dialog from Google Play services
         final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
                 errorCode,
-                activity,
+                mainActivity,
                 CONNECTION_FAILURE_RESOLUTION_REQUEST);
         // If Google Play services can provide an error dialog
         if (errorDialog != null) {
@@ -102,15 +79,15 @@ public final class GooglePlayServiceCheckUtility {
             errorFragment.setDialog(errorDialog);
             // Show the error dialog in the DialogFragment
             errorFragment.show(
-                    activity.getSupportFragmentManager(),
+            		mainActivity.getSupportFragmentManager(),
                     "Location/Activity Service");
         }
     }
     
-    public static void tryResolutionOnConnectionError(final ConnectionResult connectionResult, final FragmentActivity activity) {
+    public static void tryResolutionOnConnectionError(final ConnectionResult connectionResult) {
     	try {
             connectionResult.startResolutionForResult(
-                    activity,
+            		mainActivity,
                     GooglePlayServiceCheckUtility.CONNECTION_FAILURE_RESOLUTION_REQUEST);
         } catch (final SendIntentException e) {
             // Log the error
