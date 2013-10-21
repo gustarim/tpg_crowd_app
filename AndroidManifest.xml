@@ -7,10 +7,17 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="18" />
+    
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
     <application
         android:allowBackup="true"
@@ -35,6 +42,9 @@
             android:name="ch.unige.tpgcrowd.google.activity.ActivityRecognitionAtStopIntentService"
             android:enabled="true" >
         </service>
+        <meta-data
+    		android:name="com.google.android.maps.v2.API_KEY"
+    		android:value="AIzaSyBlRY444KW-W9KHYkB-rl1cBtG8XM6FrhM"/>
     </application>
 
 </manifest>

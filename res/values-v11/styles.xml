@@ -6,6 +6,12 @@
     -->
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!-- API 11 theme customizations can go here. -->
+        <item name="android:actionBarStyle">@style/TpgActionBar</item>
+    </style>
+    
+    <style name="TpgActionBar"
+           parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/tpg</item>
     </style>
 
 </resources>

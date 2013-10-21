@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        android:background="@color/stop_name_back"
+        android:padding="@dimen/element_nobutton_horizontal_margin"
+        android:text="@string/stop_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/tpg"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:id="@+id/lineMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/stop" >
+
+    </FrameLayout>
+
+</RelativeLayout>

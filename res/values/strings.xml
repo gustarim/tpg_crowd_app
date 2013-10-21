@@ -9,5 +9,8 @@
     <string name="loading">Loading&#8230;</string>
     <string name="error">ERROR</string>
     <string name="connection_not_found">No connection found!</string>
+    <string name="stop_name">Stop Name</string>
+    <string name="lines">Lines</string>
+    <string name="stop_crowd">Crowd at stop</string>
 
 </resources>

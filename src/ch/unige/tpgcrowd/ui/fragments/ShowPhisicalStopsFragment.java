@@ -7,64 +7,39 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
 import ch.unige.tpgcrowd.google.geofence.SimpleGeofence;
 import ch.unige.tpgcrowd.google.geofence.SimpleGeofenceStore;
 import ch.unige.tpgcrowd.google.geofence.StopTransitionsIntentService;
-import ch.unige.tpgcrowd.manager.ITPGStops;
-import ch.unige.tpgcrowd.manager.TPGManager;
 import ch.unige.tpgcrowd.model.Connection;
 import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
-import ch.unige.tpgcrowd.model.Stop;
-import ch.unige.tpgcrowd.model.StopList;
-import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
+import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.location.Geofence;
 
-public class ShowPhisicalStopsFragment extends Fragment {
+public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopRender {
 	protected static final String STOP_GEOFENCE_ID = "StopGeofence";
 	protected static final float STOP_GEOFENCE_RADIUS = 15;
 	protected static final long STOP_GEOFENCE_EXPIRATION = 1200000;
-
-	private final TPGObjectListener<StopList> stopsListener = new TPGObjectListener<StopList>() {
-		
-		@Override
-		public void onSuccess(final StopList results) {
-			final List<Stop> stops = results.getStops();
-			if (stops != null && !stops.isEmpty()) {
-				progres.setVisibility(View.GONE);
-				final Stop stop = results.getStops().get(0);
-				final List<PhysicalStop> phyStops = stop.getPhysicalStops();
-				adapter = new PhysicalStopsExpandableListAdapter(phyStops, getActivity());
-				list.setAdapter(adapter);
-				list.setOnChildClickListener(lineClick);
-			}
-		}
-		
-		@Override
-		public void onFailure() {
-			progres.setText(R.string.error);
-		}
-	};
 	
 	private final OnChildClickListener lineClick = new OnChildClickListener() {
 		
 		@Override
 		public boolean onChildClick(ExpandableListView parent, View v,
 				int groupPosition, int childPosition, long id) {
-			Log.i("LIST", "STOP CLICK");
-			final PhysicalStop stop = (PhysicalStop)adapter.getGroup(groupPosition);
+			final PhysicalStopsExpandableListAdapter.Line line = (PhysicalStopsExpandableListAdapter.Line)adapter.getGroup(groupPosition);
+			final PhysicalStop stop = line.getConnectionPhysicalStop(childPosition);
 			final Coordinates pos = stop.getCoordinates();
 			final SimpleGeofence sg = new SimpleGeofence(STOP_GEOFENCE_ID, pos.getLatitude(), 
 					pos.getLongitude(), STOP_GEOFENCE_RADIUS, STOP_GEOFENCE_EXPIRATION,
@@ -86,13 +61,9 @@ public class ShowPhisicalStopsFragment extends Fragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
 			final Bundle savedInstanceState) {
-		final View layout = inflater.inflate(R.layout.show_phisical_stops, container, false);
+		final View layout = inflater.inflate(R.layout.show_phisical_stops, null, false);
 		progres = (TextView)layout.findViewById(R.id.progres);
 		list = (ExpandableListView)layout.findViewById(R.id.list);
-		
-		final ITPGStops phisicalStops = TPGManager.getStopsManager(getActivity());
-		phisicalStops.getPhysicalStopByCode("CVIN", stopsListener);
-		
 		return layout;
 	}
 	
@@ -101,18 +72,81 @@ public class ShowPhisicalStopsFragment extends Fragment {
 		super.onStart();
 	}
 	
+	@Override
+	public void setPhysicalStops(final List<PhysicalStop> stops) {
+		progres.setVisibility(View.GONE);
+		adapter = new PhysicalStopsExpandableListAdapter(stops, getActivity());
+		list.setAdapter(adapter);
+		list.setOnChildClickListener(lineClick);
+	}
+	
+	@Override
+	public void showError() {
+		progres.setText(R.string.error);
+	}
+	
 	private class PhysicalStopsExpandableListAdapter extends BaseExpandableListAdapter {
-		private final List<PhysicalStop> stops;
+		private final List<Line> lines;
 		private final Context context;
 		
+		public final class Line {
+			private final String lineCode;
+			private final LinkedList<Connection> connections;
+			private final SparseArray<PhysicalStop> connStops;
+			
+			public Line(final String lineCode) {
+				this.lineCode = lineCode;
+				connections = new LinkedList<Connection>();
+				connStops = new SparseArray<PhysicalStop>();
+			}
+			
+			public String getLineCode() {
+				return lineCode;
+			}
+			
+			public void addConnection(final Connection conn, final PhysicalStop stop) {
+				connections.add(conn);
+				connStops.append(connections.size() - 1, stop);
+			}
+			
+			public Connection getConnection(final int index) {
+				return connections.get(index);
+			}
+			
+			public PhysicalStop getConnectionPhysicalStop(final int index) {
+				return connStops.get(index);
+			}
+			
+			public int getConnectionsSize() {
+				return connections.size();
+			}
+		}
+		
 		public PhysicalStopsExpandableListAdapter(final List<PhysicalStop> stops, final Context context) {
-			this.stops = stops;
 			this.context = context;
+			lines = new LinkedList<Line>();
+			final LinkedList<String> tempLines = new LinkedList<String>();
+			for (int i = 0; i < stops.size(); i++) {
+				final PhysicalStop stop = stops.get(i);
+				final List<Connection> conns = stop.getConnections();
+				for (int j = 0; j < conns.size(); j++) {
+					final Connection conn = conns.get(j);
+					final String lineCode = conn.getLineCode();
+					Line line = null;
+					if (!tempLines.contains(lineCode)) {
+						tempLines.add(lineCode);
+						line = new Line(lineCode);
+						lines.add(line);
+					}
+					line = lines.get(tempLines.indexOf(lineCode));
+					line.addConnection(conn, stop);
+				}
+			}
 		}
 
 		@Override
-		public Object getChild(final int stop, final int conn) {
-			return stops.get(stop).getConnections().get(conn);
+		public Object getChild(final int line, final int conn) {
+			return lines.get(line).getConnection(conn);
 		}
 
 		@Override
@@ -127,9 +161,6 @@ public class ShowPhisicalStopsFragment extends Fragment {
 			        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final View rowView = inflater.inflate(R.layout.list_row_show_connection, parent, false);
 			final Connection conn = (Connection)getChild(groupPosition, childPosition);
-			final TextView lineIcon = (TextView)rowView.findViewById(R.id.lineIcon);
-			lineIcon.setText(conn.getLineCode());
-			lineIcon.setBackgroundColor(ColorStore.getColor(context, conn.getLineCode()));
 			final TextView destination = (TextView)rowView.findViewById(R.id.direction);
 			destination.setText(conn.getDestinationName());
 			return rowView;
@@ -137,17 +168,17 @@ public class ShowPhisicalStopsFragment extends Fragment {
 
 		@Override
 		public int getChildrenCount(int groupPosition) {
-			return stops.get(groupPosition).getConnections().size();
+			return lines.get(groupPosition).getConnectionsSize();
 		}
 
 		@Override
 		public Object getGroup(int groupPosition) {
-			return stops.get(groupPosition);
+			return lines.get(groupPosition);
 		}
 
 		@Override
 		public int getGroupCount() {
-			return stops.size();
+			return lines.size();
 		}
 
 		@Override
@@ -160,25 +191,29 @@ public class ShowPhisicalStopsFragment extends Fragment {
 				View convertView, ViewGroup parent) {
 			final LayoutInflater inflater = (LayoutInflater) context
 			        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			final View rowView = inflater.inflate(R.layout.show_physical_stop, parent, false);
-			final TextView name = (TextView)rowView.findViewById(R.id.stopName);
-			final PhysicalStop stop = (PhysicalStop)getGroup(groupPosition);
-			name.setText(stop.getStopCode());
-			if (!isExpanded) {
-				final List<String> seen = new LinkedList<String>();
-				final List<Connection> conns = stop.getConnections();
-				final LinearLayout icons = (LinearLayout)rowView.findViewById(R.id.lineIcons);
-				for (Connection conn : conns) {
-					final String code = conn.getLineCode();
-					if (!seen.contains(code)) {
-						final TextView icon = (TextView)inflater.inflate(R.layout.large_line_icon, parent, false);
-						icon.setText(code);
-						icon.setBackgroundColor(ColorStore.getColor(context, code));
-						icons.addView(icon);
-						seen.add(code);
-					}
-				}
-			}
+			final View rowView = inflater.inflate(R.layout.show_line, parent, false);
+			final TextView lineIcon = (TextView)rowView.findViewById(R.id.lineIcon);
+			final Line line = lines.get(groupPosition);
+			lineIcon.setText(line.getLineCode());
+			lineIcon.setBackgroundColor(ColorStore.getColor(context, line.getLineCode()));
+//			final TextView name = (TextView)rowView.findViewById(R.id.stopName);
+//			final PhysicalStop stop = (PhysicalStop)getGroup(groupPosition);
+//			name.setText(stop.getStopCode());
+//			if (!isExpanded) {
+//				final List<String> seen = new LinkedList<String>();
+//				final List<Connection> conns = stop.getConnections();
+//				final LinearLayout icons = (LinearLayout)rowView.findViewById(R.id.lineIcons);
+//				for (Connection conn : conns) {
+//					final String code = conn.getLineCode();
+//					if (!seen.contains(code)) {
+//						final TextView icon = (TextView)inflater.inflate(R.layout.large_line_icon, parent, false);
+//						icon.setText(code);
+//						icon.setBackgroundColor(ColorStore.getColor(context, code));
+//						icons.addView(icon);
+//						seen.add(code);
+//					}
+//				}
+//			}
 			return rowView;
 		}
 

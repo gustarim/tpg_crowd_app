@@ -10,11 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
-import ch.unige.tpgcrowd.ui.fragments.ShowPhisicalStopsFragment;
+import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 public class MainActivity extends FragmentActivity {
-	private ShowPhisicalStopsFragment spsf;
+	private ShowStopFragment spsf;
 
 
 	@Override
@@ -33,8 +33,12 @@ public class MainActivity extends FragmentActivity {
 		if (spsf == null) {
 			final FragmentManager fm = getSupportFragmentManager();
 			final FragmentTransaction ft = fm.beginTransaction();
-			spsf = new ShowPhisicalStopsFragment();
-			ft.add(R.id.main, spsf, "stops");
+			spsf = new ShowStopFragment();
+			final Bundle b = new Bundle();
+			b.putString(ShowStopFragment.EXTRA_STOP_NAME, "Gare Cornavin");
+			b.putString(ShowStopFragment.EXTRA_STOP_CODE, "CVIN");
+			spsf.setArguments(b);
+			ft.add(R.id.main, spsf, ShowStopFragment.TAG);
 			ft.commit();
 		}
 	}
