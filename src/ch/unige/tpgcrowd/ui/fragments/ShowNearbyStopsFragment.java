@@ -35,7 +35,7 @@ public class ShowNearbyStopsFragment extends Fragment{
 				}else{
 					//TODO display something like 'waiting for accuracy <=accuracyLimit - current accuracy XX'
 				}
-			}else{
+			}else if(!userPoint){
 					updateNearbyStops(currentLocation, userPoint);
 			}
 		}
