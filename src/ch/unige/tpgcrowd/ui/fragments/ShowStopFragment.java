@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,19 @@ public class ShowStopFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+//		ShowLinesFragment f = (ShowLinesFragment) getFragmentManager().findFragmentByTag(ShowLinesFragment.class.getSimpleName());
+//	    if (f != null) {
+//	    	Log.d("TAG", "TEST");
+//	        getFragmentManager().beginTransaction().remove(f).commit();
+//	    }
+//	    
+//	    ShowLinesMapFragment linesMap = (ShowLinesMapFragment) getFragmentManager().findFragmentByTag(ShowLinesMapFragment.class.getSimpleName());
+//	    if (linesMap != null) {
+//	    	Log.d("TAG", "TEST");
+//	        getFragmentManager().beginTransaction().remove(linesMap).commit();
+//	    }
+		
 		final View layout = inflater.inflate(R.layout.show_stop, container, false);
 		final Bundle b = getArguments();
 		final TextView name = (TextView)layout.findViewById(R.id.stop);
@@ -67,9 +81,9 @@ public class ShowStopFragment extends Fragment
 		final FragmentManager fm = getFragmentManager();
 		final FragmentTransaction ft = fm.beginTransaction();
 		slf = new ShowLinesFragment();
-		ft.add(R.id.lineMapFragment, slf);
+		ft.add(R.id.lineMapFragment, slf, ShowLinesFragment.class.getSimpleName());
 		slmf = new ShowLinesMapFragment();
-		ft.add(R.id.lineMapFragment, slmf);
+		ft.add(R.id.lineMapFragment, slmf, ShowLinesMapFragment.class.getSimpleName());
 		ft.hide(slmf);
 		ft.commit();
 		renders = new LinkedList<ShowStopFragment.PhysicalStopRender>();
