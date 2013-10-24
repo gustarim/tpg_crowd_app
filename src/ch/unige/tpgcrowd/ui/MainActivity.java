@@ -8,19 +8,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.LinearLayout;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 import ch.unige.tpgcrowd.model.Stop;
-import ch.unige.tpgcrowd.ui.component.StopViewItem;
-import ch.unige.tpgcrowd.ui.fragments.NearbyStopsFragment;
+import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment;
+import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment.StopRender;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment;
 import ch.unige.tpgcrowd.util.ColorStore;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements StopRender {
 	private ShowStopFragment spsf;
-	private NearbyStopsFragment nearbyFragment;
+	private ShowNearbyStopsFragment nearbyFragment;
 
 
 	@Override
@@ -35,22 +33,25 @@ public class MainActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
-		final FragmentManager fm = getSupportFragmentManager();
-		final FragmentTransaction ft = fm.beginTransaction();
-		nearbyFragment = new NearbyStopsFragment();
-		ft.add(R.id.main, nearbyFragment, ShowStopFragment.TAG);		
+		if (nearbyFragment == null) {
+			final FragmentManager fm = getSupportFragmentManager();
+			final FragmentTransaction ft = fm.beginTransaction();
+			nearbyFragment = new ShowNearbyStopsFragment();
+			ft.add(R.id.main, nearbyFragment, ShowStopFragment.TAG);		
 
-		Log.i("TPG", "CALL VIEW ACT.");
-		if (spsf == null) {
-			spsf = new ShowStopFragment();
-			final Bundle b = new Bundle();
-			b.putString(ShowStopFragment.EXTRA_STOP_NAME, "Gare Cornavin");
-			b.putString(ShowStopFragment.EXTRA_STOP_CODE, "CVIN");
-			spsf.setArguments(b);
-			ft.add(R.id.main, spsf, ShowStopFragment.TAG);
+			//		Log.i("TPG", "CALL VIEW ACT.");
+			//		if (spsf == null) {
+			//			spsf = new ShowStopFragment();
+			//			final Bundle b = new Bundle();
+			//			b.putString(ShowStopFragment.EXTRA_STOP_NAME, "Gare Cornavin");
+			//			b.putString(ShowStopFragment.EXTRA_STOP_CODE, "CVIN");
+			//			spsf.setArguments(b);
+			//			ft.add(R.id.main, spsf, ShowStopFragment.TAG);
+			//		}
+
+			ft.commit();
 		}
 
-		ft.commit();
 	}
 
 	@Override
@@ -76,6 +77,27 @@ public class MainActivity extends FragmentActivity {
 				GooglePlayServiceCheckUtility.servicesConnected(this);
 				break;
 			}
+		}
+	}
+
+	@Override
+	public void onStopSelected(Stop stop) {
+		final Bundle b = new Bundle();
+		b.putString(ShowStopFragment.EXTRA_STOP_NAME, stop.getStopName());
+		b.putString(ShowStopFragment.EXTRA_STOP_CODE, stop.getStopCode());
+		
+		if (spsf == null) {
+			final FragmentManager fm = getSupportFragmentManager();
+			final FragmentTransaction ft = fm.beginTransaction();
+			
+			spsf = new ShowStopFragment();
+			spsf.setArguments(b);
+			ft.add(R.id.main, spsf, ShowStopFragment.TAG);
+			
+			ft.commit();
+		}
+		else {
+			spsf.updateContent(b);
 		}
 	}
 

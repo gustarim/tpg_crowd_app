@@ -57,27 +57,15 @@ public class ShowStopFragment extends Fragment
 			}
 		}
 	};
+	private TextView name;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-//		ShowLinesFragment f = (ShowLinesFragment) getFragmentManager().findFragmentByTag(ShowLinesFragment.class.getSimpleName());
-//	    if (f != null) {
-//	    	Log.d("TAG", "TEST");
-//	        getFragmentManager().beginTransaction().remove(f).commit();
-//	    }
-//	    
-//	    ShowLinesMapFragment linesMap = (ShowLinesMapFragment) getFragmentManager().findFragmentByTag(ShowLinesMapFragment.class.getSimpleName());
-//	    if (linesMap != null) {
-//	    	Log.d("TAG", "TEST");
-//	        getFragmentManager().beginTransaction().remove(linesMap).commit();
-//	    }
-		
 		final View layout = inflater.inflate(R.layout.show_stop, container, false);
-		final Bundle b = getArguments();
-		final TextView name = (TextView)layout.findViewById(R.id.stop);
-		name.setText(b.getString(EXTRA_STOP_NAME));
+		name = (TextView)layout.findViewById(R.id.stop);
+		
 		final FragmentManager fm = getFragmentManager();
 		final FragmentTransaction ft = fm.beginTransaction();
 		slf = new ShowLinesFragment();
@@ -89,11 +77,22 @@ public class ShowStopFragment extends Fragment
 		renders = new LinkedList<ShowStopFragment.PhysicalStopRender>();
 		renders.add(slf);
 		renders.add(slmf);
+		
+		final Bundle b = getArguments();
+		updateContent(b);
+		
+		return layout;
+	}
+	
+	public void updateContent(Bundle b) {
+		
+		name.setText(b.getString(EXTRA_STOP_NAME));
+		
 		final String stopCode = b.getString(EXTRA_STOP_CODE);
 		final ITPGStops phisicalStops = TPGManager.getStopsManager(getActivity());
 		phisicalStops.getPhysicalStopByCode(stopCode, stopsListener);
-		return layout;
 	}
+	
 
 	@Override
 	public void onMapClick() {

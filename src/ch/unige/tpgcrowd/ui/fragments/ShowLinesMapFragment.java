@@ -84,27 +84,21 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		View layout = getView();
-//		
-//	    SupportMapFragment f = (SupportMapFragment) getFragmentManager().findFragmentByTag("bigMap");
-//	    if (f != null) {
-//	        getFragmentManager().beginTransaction().remove(f).commit();
-//	    }
-//	    
-//		if (savedInstanceState == null) {
-		View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
-			final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineLayout);
-			lines.setOnClickListener(click);
-			final FragmentManager fm = getFragmentManager();
-			map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
 
-//		}
-		
+		View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
+		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineLayout);
+		lines.setOnClickListener(click);
+		final FragmentManager fm = getFragmentManager();
+		map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
+
 		return layout;
 	}
 
 	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
+		//Remove old entries
+		map.clear();
+		
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
 		for (final PhysicalStop stop : stops) {
 			final Coordinates c = stop.getCoordinates();
@@ -112,6 +106,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			final MarkerOptions mo = new MarkerOptions();
 			mo.position(ll);
 			final Marker m = map.addMarker(mo);
+
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16));
 			siwa.addConnections(m, stop.getConnections());
 		}

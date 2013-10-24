@@ -43,29 +43,24 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 			Bundle savedInstanceState) {
 
 		View layout = getView();		
-//	    SupportMapFragment f = (SupportMapFragment) getFragmentManager().findFragmentByTag(SMALL_MAP_FRAGMENT);
-//	    if (f != null) {
-//	        getFragmentManager().beginTransaction().remove(f).commit();
-//	    }
-//	    
-//		if (savedInstanceState == null) {
-			layout = inflater.inflate(R.layout.show_stop_lines, null, false);
 
-			final FragmentManager fm = getFragmentManager();
-			final SupportMapFragment map = (SupportMapFragment)fm.findFragmentByTag(SMALL_MAP_FRAGMENT);
-			final GoogleMap gmap = map.getMap();
-			gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.204705, 6.1431301), 10));
-			final UiSettings settings = gmap.getUiSettings();
-			settings.setAllGesturesEnabled(false);
-			settings.setMyLocationButtonEnabled(false);
-			settings.setZoomControlsEnabled(false);
-			map.getMap().setOnMapClickListener(mapClick);
+		layout = inflater.inflate(R.layout.show_stop_lines, null, false);
 
-			final FragmentTransaction ft = fm.beginTransaction();
-			spsf = new ShowPhisicalStopsFragment();
-			ft.add(R.id.phisicalStopsFragment, spsf, null);
-			ft.commit();
-//		}
+		final FragmentManager fm = getFragmentManager();
+		final SupportMapFragment map = (SupportMapFragment)fm.findFragmentByTag(SMALL_MAP_FRAGMENT);
+		final GoogleMap gmap = map.getMap();
+		gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.204705, 6.1431301), 10));
+		final UiSettings settings = gmap.getUiSettings();
+		settings.setAllGesturesEnabled(false);
+		settings.setMyLocationButtonEnabled(false);
+		settings.setZoomControlsEnabled(false);
+		map.getMap().setOnMapClickListener(mapClick);
+
+		final FragmentTransaction ft = fm.beginTransaction();
+		spsf = new ShowPhisicalStopsFragment();
+		ft.add(R.id.phisicalStopsFragment, spsf, null);
+		ft.commit();
+
 		return layout;
 	}
 

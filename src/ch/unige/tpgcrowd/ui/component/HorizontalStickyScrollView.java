@@ -2,6 +2,7 @@ package ch.unige.tpgcrowd.ui.component;
 
 import java.util.List;
 
+import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.PhysicalStop;
 import ch.unige.tpgcrowd.model.Stop;
 import android.content.Context;
@@ -14,8 +15,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
@@ -92,14 +95,14 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
 	public HorizontalStickyScrollView(Context context, AttributeSet attrs,
 			int defStyle) {
-		super(context, attrs, defStyle);
+		super(context, attrs, defStyle);		
 	}
 	
 	protected void setSelectedStop(StopViewItem stop) {
 		ViewGroup parent = (ViewGroup) getChildAt(0);
 		int nbChild = parent.getChildCount();
 		
-		//Remove previsously selected stop
+		//Remove previously selected stop
 		for (int i = 0; i < nbChild; i++) {
 			parent.getChildAt(i).setSelected(false);
 		}
@@ -194,63 +197,8 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
 		}
 
-
-
-		//		if(next && prevIndex < nbChild -1) prevIndex++;
-		//		else if (!next && prevIndex > 0) prevIndex--;
-		//		else return;
-		//
-		//		View view = parent.getChildAt(prevIndex);
-		//
-		//		//        DisplayMetrics metrics = new DisplayMetrics();
-		//		//        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		//		//        int screenWidth = metrics.widthPixels;
-		//
-		//		int scrollX = (view.getLeft());        
-		//
-		//		this.smoothScrollTo(scrollX, 0);
 	}
 
-
-	public void setFakeItems(int nb) {
-
-		ViewGroup parent = (ViewGroup) getChildAt(0);
-
-		parent.removeAllViews();
-		parent.setBackgroundColor(Color.BLUE);
-		
-		for (int i = 0; i < nb; i++) {
-			Stop stopTmp = new Stop();
-			stopTmp.setStopName("Stop " + i);
-			stopTmp.setDistance(20*i);
-			
-			LinearLayout.LayoutParams layParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-
-			StopViewItem stView = new StopViewItem(getContext(),stopTmp);
-			stView.setId(i);
-
-			stView.setOnClickListener(childClickListener);
-			stView.setLongClickable(false);
-			stView.setOnTouchListener(touchListener);
-			
-			if (i > 1) {	
-				stView.extendView(false);
-				layParam.weight = 0.15f;
-			}
-			if (i > 3) {
-				stView.extendView(false);
-				stView.setVisibility(GONE);
-				layParam.weight = 0.15f;
-			}
-			if (i <= 1) {
-				layParam.weight = 0.35f;
-			}
-			
-			parent.addView(stView, layParam);
-		}
-		
-		parent.forceLayout();
-	}
 
 	public void setAdapter(Context context, ListAdapter mAdapter) {
 		fillViewWithAdapter(mAdapter);

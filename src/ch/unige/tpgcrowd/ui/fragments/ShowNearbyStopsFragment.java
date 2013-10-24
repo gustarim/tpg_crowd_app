@@ -1,7 +1,5 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
-import java.io.Serializable;
-
 import com.google.android.gms.location.LocationClient;
 
 import ch.unige.tpgcrowd.R;
@@ -13,14 +11,13 @@ import ch.unige.tpgcrowd.model.StopList;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView;
 import ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView.StopSelectedListener;
-import ch.unige.tpgcrowd.ui.component.StopViewItem;
 import android.support.v4.app.Fragment;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.Camera.PreviewCallback;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,55 +28,67 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class ShowNearbyStopsFragment extends Fragment implements StopSelectedListener {
+
 	public static final String TAG = "nearbyStops";
 	private LinearLayout layoutLeft;
 	private LinearLayout layoutRight;
 	private HorizontalStickyScrollView scrollView;
-	
-	float accuracyLimit = 400; //min accuracy to display nearby stops without user input
-	float distMin = 50;
-	float[] dist;
+
+	float accuracyLimit = 50; //min accuracy to display nearby stops without user input
+	float distMin = 150;
+	//float dist;
 	int locationAttemptsMax = 10; //number of attempts before stopping
 	int locationAttempts;
-	
+
 	Location curLocation; // Location from google API
 	Location curLocationUsed;// Holds the location from google API currently being used for nearby stops call
-	
+
 	boolean userPoint = false; //True if user pointed in map for more accurate position
-	
+
 	private PendingIntent penInt;
-	
+
 	private static final String ACTION_GET_LOCATION = "ch.unige.tpgcrowd.action.GET_LOCATION";
 
+	public interface StopRender {
+		public void onStopSelected(Stop stop);
+	}
+	
+	private StopRender mListener;
+	
 	private BroadcastReceiver locationReceiver = new BroadcastReceiver() {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			curLocation = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
 			updateMap(curLocation);
-			Location.distanceBetween(curLocationUsed.getLatitude(), curLocationUsed.getLongitude(), curLocation.getLatitude(),curLocation.getLongitude(), dist);
-			
+
 			if(!userPoint){
-				if(curLocation.hasAccuracy()){
-					if(curLocation.getAccuracy()<=accuracyLimit && (curLocation.getAccuracy()<curLocationUsed.getAccuracy() || dist[0]>=distMin)){
-						updateNearbyStops(curLocation, userPoint);
-						locationAttempts = 0;
-						curLocationUsed = curLocation;
-					}else{
-						//TODO display something like 'waiting for accuracy <=accuracyLimit - current accuracy XX'
-						locationAttempts+=1;
-					}
-				}
 				
-				if(locationAttempts>locationAttemptsMax){
-//					LocationHandler.stopLocation(getActivity(), penInt); //NOTE:(do not stop yet!! Need it to update the map. Stop it when user has selected a stop!)
-					//TODO prompt user to select a manual location
+				if(curLocation.hasAccuracy()){
+					if(curLocation.getAccuracy()<=accuracyLimit) {
+						//We have a good fix, update nearby stops
+						//if it's the first good fix or if the user has moved more than distMin meters
+						if (curLocationUsed == null || curLocation.distanceTo(curLocationUsed) >= distMin) {
+							//Save the location used to get the stops
+							curLocationUsed = curLocation;
+							updateNearbyStops(curLocationUsed, false);
+							locationAttempts = 0;
+						}
+					}
+				}else{
+					//TODO display something like 'waiting for accuracy <=accuracyLimit - current accuracy XX'
+					//TODO once locationAttempts > ~10-15 take the last position (We can't wait ad vitam aeternam..)
+					locationAttempts+=1;
 				}
 			}
-			
+
+			if(locationAttempts>locationAttemptsMax){
+				//LocationHandler.stopLocation(getActivity(), penInt); //NOTE:(do not stop yet!! Need it to update the map. Stop it when user has selected a stop!)
+				//TODO prompt user to select a manual location
+			}
 		}
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -101,38 +110,50 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 				0,
 				intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		LocationHandler.startLocation(getActivity(), penInt);
-		
-		
+
+
 		layoutLeft = (LinearLayout)getView().findViewById(R.id.layout_left);
 		layoutRight = (LinearLayout)getView().findViewById(R.id.layout_right);
-		
+
 		scrollView = (HorizontalStickyScrollView)getView().findViewById(R.id.horizontalScrollView);
-		
+
 		scrollView.setStopSelectedListener(this);
-		
+
 		layoutLeft.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				scrollView.move(false);
 			}
 		});
-		
+
 		layoutRight.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				scrollView.move(true);
 			}
 		});
-		
+
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		try {
+            mListener = (StopRender) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement StopRender");
+        }
+	}
+	
+	@Override
 	public void setSelectedStop(Stop stop) {
 		Log.d(TAG, "Stop selected : " + stop.getStopName());
+		mListener.onStopSelected(stop);
 	}
 
 	public void updateMap(Location location){
@@ -141,30 +162,30 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 
 	public void updateNearbyStops(Location location, boolean userPointHolder){
 		Log.d(TAG, "Update nearby stops!");
-		
+
 		userPoint = userPointHolder;
-		
-//		double latitude = 46.2022200;
-//		double longitude = 6.1456900;
+
+		//		double latitude = 46.2022200;
+		//		double longitude = 6.1456900;
 		double latitude = location.getLatitude();
 		double longitude = location.getLongitude();
-		
+
 		ITPGStops stopsManager = TPGManager.getStopsManager(getActivity());
 		stopsManager.getStopsByPosition(latitude, longitude, new TPGObjectListener<StopList>() {
 
 			@Override
 			public void onSuccess(StopList results) {
-				scrollView.setNearbyStops(results.getStops());		
+				scrollView.setNearbyStops(results.getStops());
 			}
 
 			@Override
 			public void onFailure() {
 				// TODO Maybe wait a bit and try again. LOG!!
-				
+
 			}
 		});
 
 	}
 
-	
+
 }
