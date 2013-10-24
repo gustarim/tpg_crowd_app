@@ -17,13 +17,13 @@
         android:textColor="@color/tpg"
         android:textStyle="bold" />
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/lineMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/stop" >
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

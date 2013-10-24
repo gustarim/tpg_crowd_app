@@ -1,5 +1,7 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
+import java.io.Serializable;
+
 import com.google.android.gms.location.LocationClient;
 
 import ch.unige.tpgcrowd.google.location.LocationHandler;
@@ -14,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.util.Log;
 
 public class ShowNearbyStopsFragment extends Fragment{
 	
@@ -27,7 +30,9 @@ public class ShowNearbyStopsFragment extends Fragment{
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			currentLocation = (Location) intent.getSerializableExtra(LocationClient.KEY_LOCATION_CHANGED);
+			//currentLocation = (Location) intent.getSerializableExtra(LocationClient.KEY_LOCATION_CHANGED);
+			Location test = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+			Log.d("TEST", "test to string : " + test);
 			updateMap(currentLocation);
 			if(currentLocation.hasAccuracy() && !userPoint){
 				if(currentLocation.getAccuracy()<=accuracyLimit){

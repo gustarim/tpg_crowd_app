@@ -6,6 +6,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,9 +33,9 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public void onLinesClick();
 	}
 	private GoogleMap map;
-	
+
 	private final OnClickListener click = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(final View v) {
 			final FragmentManager fm = getFragmentManager();
@@ -43,19 +44,19 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			lines.onLinesClick();
 		}
 	};
-	
+
 	private class StopInfoWindowAdapter implements InfoWindowAdapter {
 		private final Hashtable<Marker, List<Connection>> connections;
-		
+
 		public StopInfoWindowAdapter() {
 			connections = new Hashtable<Marker, List<Connection>>();
 		}
-		
+
 		@Override
 		public View getInfoWindow(final Marker marker) {
 			return null;
 		}
-		
+
 		@Override
 		public View getInfoContents(final Marker marker) {
 			final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -74,23 +75,34 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			}
 			return v;
 		}
-		
+
 		public void addConnections(final Marker m, final List<Connection> conns) {
 			connections.put(m, conns);
 		}
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
-		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineLayout);
-		lines.setOnClickListener(click);
-		final FragmentManager fm = getFragmentManager();
-		map = ((SupportMapFragment)fm.findFragmentById(R.id.mapBig)).getMap();
+//		View layout = getView();
+//		
+//	    SupportMapFragment f = (SupportMapFragment) getFragmentManager().findFragmentByTag("bigMap");
+//	    if (f != null) {
+//	        getFragmentManager().beginTransaction().remove(f).commit();
+//	    }
+//	    
+//		if (savedInstanceState == null) {
+		View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
+			final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineLayout);
+			lines.setOnClickListener(click);
+			final FragmentManager fm = getFragmentManager();
+			map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
+
+//		}
+		
 		return layout;
 	}
-	
+
 	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
@@ -105,10 +117,10 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		}
 		map.setInfoWindowAdapter(siwa);
 	}
-	
+
 	@Override
 	public void showError() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
