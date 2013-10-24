@@ -16,14 +16,14 @@
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/element_nobutton_horizontal_margin" >
+            android:padding="10dp" >
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stop_crowd"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="@style/StopTitle" />
 
             <TextView
                 android:id="@+id/textView1"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@drawable/nearby_stop"
     android:layout_height="match_parent" >
 
     <TextView
@@ -9,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
-        android:background="@color/stop_name_back"
+        android:background="@drawable/nearby_stop_selected"
         android:padding="@dimen/element_nobutton_horizontal_margin"
         android:text="@string/stop_name"
         android:textAppearance="?android:attr/textAppearanceLarge"

@@ -32,7 +32,7 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 	}
 	
 	protected StopSelectedListener fragmentListener;
-	
+	protected StopViewItem selectedView;
 	int currentIndex = 0;
 	
 	protected OnTouchListener touchListener = new View.OnTouchListener() {
@@ -69,12 +69,24 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 		@Override
 		public void onClick(View v) {
 			if (v instanceof StopViewItem) {
-				StopViewItem stopView = (StopViewItem)v;
-				setSelectedStop(stopView);
+				StopViewItem tmpSelected = (StopViewItem)v;
+				if (tmpSelected == selectedView) {
+					selectedView = null;
+					tmpSelected.setSelected(false);
+				}
+				else {
+					selectedView = tmpSelected;
+					setSelectedStop(selectedView);
+				}
 				
 				if (fragmentListener != null) {
-					fragmentListener.setSelectedStop(stopView.getStop());
+					Stop selectedStop = null;
+					if (selectedView != null) {
+						selectedStop = selectedView.getStop();
+					}
+					fragmentListener.setSelectedStop(selectedStop);
 				}
+
 			}
 			else {
 				Log.d(TAG, "Error getting event source view.");
@@ -252,7 +264,8 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 			id += 1;
 		}
 		
-		parent.forceLayout();
+		//parent.forceLayout();
+		this.forceLayout();
 	}
 
 }

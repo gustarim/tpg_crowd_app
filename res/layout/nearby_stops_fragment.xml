@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tool"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:orientation="horizontal" >
 
     <LinearLayout
@@ -21,7 +22,7 @@
     <ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dip"
-        android:layout_height="fill_parent"
+        android:layout_height="170dp"
         android:layout_weight="0.8"
         android:fillViewport="true" >
 

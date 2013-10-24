@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lineIcon"
+    android:layout_width="@dimen/small_line_icon_width"
+    android:layout_height="@dimen/small_line_icon_heigth"
+    android:background="@android:color/black"
+    android:gravity="center"
+    android:minHeight="@dimen/small_line_icon_heigth"
+    android:minWidth="@dimen/small_line_icon_width"
+    android:text="@string/default_line"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textColor="@android:color/white"
+    android:textSize="12sp" >
+
+</TextView>

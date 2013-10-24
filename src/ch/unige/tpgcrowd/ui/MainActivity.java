@@ -2,6 +2,7 @@ package ch.unige.tpgcrowd.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -11,16 +12,20 @@ import android.view.Menu;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 import ch.unige.tpgcrowd.model.Stop;
+import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment;
+import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment;
 import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment.StopRender;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment;
 import ch.unige.tpgcrowd.util.ColorStore;
 
-public class MainActivity extends FragmentActivity implements StopRender {
+public class MainActivity extends FragmentActivity implements StopRender, MapEventListener {
 	private ShowStopFragment spsf;
 	private ShowNearbyStopsFragment nearbyFragment;
+	private InitialMapFragment map;
 
-
+	private boolean init = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,18 +44,13 @@ public class MainActivity extends FragmentActivity implements StopRender {
 			nearbyFragment = new ShowNearbyStopsFragment();
 			ft.add(R.id.main, nearbyFragment, ShowStopFragment.TAG);		
 
-			//		Log.i("TPG", "CALL VIEW ACT.");
-			//		if (spsf == null) {
-			//			spsf = new ShowStopFragment();
-			//			final Bundle b = new Bundle();
-			//			b.putString(ShowStopFragment.EXTRA_STOP_NAME, "Gare Cornavin");
-			//			b.putString(ShowStopFragment.EXTRA_STOP_CODE, "CVIN");
-			//			spsf.setArguments(b);
-			//			ft.add(R.id.main, spsf, ShowStopFragment.TAG);
-			//		}
+			map = new InitialMapFragment();
+			map.setMapEventListener(this);
+			ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
 
 			ft.commit();
 		}
+
 
 	}
 
@@ -82,23 +82,68 @@ public class MainActivity extends FragmentActivity implements StopRender {
 
 	@Override
 	public void onStopSelected(Stop stop) {
-		final Bundle b = new Bundle();
-		b.putString(ShowStopFragment.EXTRA_STOP_NAME, stop.getStopName());
-		b.putString(ShowStopFragment.EXTRA_STOP_CODE, stop.getStopCode());
-		
-		if (spsf == null) {
+
+		if (stop != null) {
+			
+			final Bundle b = new Bundle();
+			b.putString(ShowStopFragment.EXTRA_STOP_NAME, stop.getStopName());
+			b.putString(ShowStopFragment.EXTRA_STOP_CODE, stop.getStopCode());
+			
+			if (spsf == null) {
+				final FragmentManager fm = getSupportFragmentManager();
+				final FragmentTransaction ft = fm.beginTransaction();
+
+				spsf = new ShowStopFragment();
+				spsf.setArguments(b);
+
+				ft.hide(map);
+				ft.add(R.id.main, spsf, ShowStopFragment.TAG);
+
+				ft.commit();
+				
+				init = true;
+			}
+			else {
+				if (init) {
+					spsf.updateContent(b);
+				}
+				else {
+					final FragmentManager fm = getSupportFragmentManager();
+					final FragmentTransaction ft = fm.beginTransaction();
+
+					ft.hide(map);
+					ft.show(spsf);
+					ft.commit();
+					
+					spsf.updateContent(b);
+					init = true;
+				}
+			}
+		}
+		else {
 			final FragmentManager fm = getSupportFragmentManager();
 			final FragmentTransaction ft = fm.beginTransaction();
 			
-			spsf = new ShowStopFragment();
-			spsf.setArguments(b);
-			ft.add(R.id.main, spsf, ShowStopFragment.TAG);
-			
+			ft.hide(spsf);
+			ft.show(map);
 			ft.commit();
+			
+			init = false;
 		}
-		else {
-			spsf.updateContent(b);
+	}
+
+	@Override
+	public void setMapLocation(Location loc) {
+		double accuracy = -1;
+		if (loc.hasAccuracy()){
+			accuracy = loc.getAccuracy();
 		}
+		map.setLocation(loc.getLatitude(), loc.getLongitude(), accuracy);
+	}
+
+	@Override
+	public void onLongClick(double latitude, double longitude) {
+		nearbyFragment.setUserLocation(latitude, longitude);
 	}
 
 }

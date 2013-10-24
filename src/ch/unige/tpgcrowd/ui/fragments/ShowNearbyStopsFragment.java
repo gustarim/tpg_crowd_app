@@ -51,27 +51,36 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 
 	public interface StopRender {
 		public void onStopSelected(Stop stop);
+		public void setMapLocation(Location loc);
 	}
-	
+
 	private StopRender mListener;
-	
+
 	private BroadcastReceiver locationReceiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			curLocation = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
-			updateMap(curLocation);
 
 			if(!userPoint){
-				
+
 				if(curLocation.hasAccuracy()){
 					if(curLocation.getAccuracy()<=accuracyLimit) {
 						//We have a good fix, update nearby stops
 						//if it's the first good fix or if the user has moved more than distMin meters
-						if (curLocationUsed == null || curLocation.distanceTo(curLocationUsed) >= distMin) {
+						if (curLocationUsed == null) {
 							//Save the location used to get the stops
 							curLocationUsed = curLocation;
-							updateNearbyStops(curLocationUsed, false);
+							
+							updateMap(curLocationUsed);
+							updateNearbyStops(curLocationUsed.getLatitude(), curLocationUsed.getLongitude(), false);
+							locationAttempts = 0;
+						}
+						
+						if (curLocation.distanceTo(curLocationUsed) >= distMin) {
+							//Save the location used to get the stops
+							curLocationUsed = curLocation;
+							updateNearbyStops(curLocationUsed.getLatitude(), curLocationUsed.getLongitude(), false);
 							locationAttempts = 0;
 						}
 					}
@@ -142,36 +151,30 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+
 		try {
-            mListener = (StopRender) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement StopRender");
-        }
+			mListener = (StopRender) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement StopRender");
+		}
 	}
-	
+
 	@Override
 	public void setSelectedStop(Stop stop) {
-		Log.d(TAG, "Stop selected : " + stop.getStopName());
 		mListener.onStopSelected(stop);
 	}
 
 	public void updateMap(Location location){
-		//TODO update location on map
+		mListener.setMapLocation(location);
 	}
 
-	public void updateNearbyStops(Location location, boolean userPointHolder){
+	public void updateNearbyStops(double lat, double lon, boolean userPointHolder){
 		Log.d(TAG, "Update nearby stops!");
 
 		userPoint = userPointHolder;
 
-		//		double latitude = 46.2022200;
-		//		double longitude = 6.1456900;
-		double latitude = location.getLatitude();
-		double longitude = location.getLongitude();
-
 		ITPGStops stopsManager = TPGManager.getStopsManager(getActivity());
-		stopsManager.getStopsByPosition(latitude, longitude, new TPGObjectListener<StopList>() {
+		stopsManager.getStopsByPosition(lat, lon, new TPGObjectListener<StopList>() {
 
 			@Override
 			public void onSuccess(StopList results) {
@@ -185,6 +188,11 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 			}
 		});
 
+	}
+
+	public void setUserLocation(double latitude, double longitude) {
+		// TODO Auto-generated method stub
+		updateNearbyStops(latitude, longitude, true);
 	}
 
 
