@@ -30,7 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class NearbyStopsFragment extends Fragment implements StopSelectedListener {
+public class ShowNearbyStopsFragment extends Fragment implements StopSelectedListener {
 	public static final String TAG = "nearbyStops";
 	private LinearLayout layoutLeft;
 	private LinearLayout layoutRight;
