@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Camera.PreviewCallback;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,8 +37,14 @@ public class NearbyStopsFragment extends Fragment implements StopSelectedListene
 	private HorizontalStickyScrollView scrollView;
 	
 	float accuracyLimit = 400; //min accuracy to display nearby stops without user input
+	float distMin = 50;
+	float[] dist;
+	int locationAttemptsMax = 10; //number of attempts before stopping
+	int locationAttempts;
 	
-	Location currentLocation; // Location from google API
+	Location curLocation; // Location from google API
+	Location curLocationUsed;// Holds the location from google API currently being used for nearby stops call
+	
 	boolean userPoint = false; //True if user pointed in map for more accurate position
 	
 	private PendingIntent penInt;
@@ -48,19 +55,28 @@ public class NearbyStopsFragment extends Fragment implements StopSelectedListene
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			currentLocation = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+			curLocation = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+			updateMap(curLocation);
+			Location.distanceBetween(curLocationUsed.getLatitude(), curLocationUsed.getLongitude(), curLocation.getLatitude(),curLocation.getLongitude(), dist);
 			
-			updateMap(currentLocation);
-			if(currentLocation.hasAccuracy() && !userPoint){
-				if(currentLocation.getAccuracy()<=accuracyLimit){
-					LocationHandler.stopLocation(getActivity(), penInt);
-					updateNearbyStops(currentLocation, userPoint);
-				}else{
-					//TODO display something like 'waiting for accuracy <=accuracyLimit - current accuracy XX'
+			if(!userPoint){
+				if(curLocation.hasAccuracy()){
+					if(curLocation.getAccuracy()<=accuracyLimit && (curLocation.getAccuracy()<curLocationUsed.getAccuracy() || dist[0]>=distMin)){
+						updateNearbyStops(curLocation, userPoint);
+						locationAttempts = 0;
+						curLocationUsed = curLocation;
+					}else{
+						//TODO display something like 'waiting for accuracy <=accuracyLimit - current accuracy XX'
+						locationAttempts+=1;
+					}
 				}
-			}else if(userPoint){
-					updateNearbyStops(currentLocation, userPoint);
+				
+				if(locationAttempts>locationAttemptsMax){
+//					LocationHandler.stopLocation(getActivity(), penInt); //NOTE:(do not stop yet!! Need it to update the map. Stop it when user has selected a stop!)
+					//TODO prompt user to select a manual location
+				}
 			}
+			
 		}
 	};
 	
