@@ -134,12 +134,18 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 
 		return layout;
 	}
+	
+	@Override
+	public void setAsReloading() {
+		if (map != null) {
+			//Remove old entries
+			map.clear();			
+		}
+	}
 
 	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
-		//Remove old entries
-		map.clear();
-		
+//		setAsReloading();
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
 		for (final PhysicalStop stop : stops) {
 			final Coordinates c = stop.getCoordinates();

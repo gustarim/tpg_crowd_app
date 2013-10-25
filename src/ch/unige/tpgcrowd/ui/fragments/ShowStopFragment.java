@@ -31,6 +31,7 @@ public class ShowStopFragment extends Fragment
 	private ShowLinesMapFragment slmf;
 	private LinkedList<PhysicalStopRender> renders;
 	public interface PhysicalStopRender {
+		public void setAsReloading();
 		public void setPhysicalStops(final List<PhysicalStop> stops);
 		public void showError();
 	}
@@ -88,6 +89,9 @@ public class ShowStopFragment extends Fragment
 	public void updateContent(Bundle b) {
 		
 		name.setText(b.getString(EXTRA_STOP_NAME));
+		for (final PhysicalStopRender rend : renders) {
+			rend.setAsReloading();
+		}
 		
 		final String stopCode = b.getString(EXTRA_STOP_CODE);
 		final ITPGStops phisicalStops = TPGManager.getStopsManager(getActivity());
