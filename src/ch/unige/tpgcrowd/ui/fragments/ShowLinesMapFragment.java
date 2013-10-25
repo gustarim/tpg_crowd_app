@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,13 +17,16 @@ import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.Connection;
 import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
+import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -45,6 +47,22 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			lines.onLinesClick();
 		}
 	};
+
+	private OnLineMapLongClickListener listener;
+	public interface OnLineMapLongClickListener {
+		public void onLineMapLongClick(float zoom, LatLng currentCenter, LatLng pressPosition);
+		
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			listener = (OnLineMapLongClickListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement OnLineMapLongClickListener");
+		}
+	}
 
 	private class StopInfoWindowAdapter implements InfoWindowAdapter {
 		private final Hashtable<Marker, List<Connection>> connections;
@@ -91,6 +109,17 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		lines.setOnClickListener(click);
 		final FragmentManager fm = getFragmentManager();
 		map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
+		
+		map.setOnMapLongClickListener(new OnMapLongClickListener() {
+			
+			@Override
+			public void onMapLongClick(LatLng arg0) {
+				CameraPosition curMapPosition = map.getCameraPosition();
+				LatLng ll = curMapPosition.target;
+				float zoom = curMapPosition.zoom;
+				listener.onLineMapLongClick(zoom, ll, arg0);
+			}
+		});
 
 		return layout;
 	}

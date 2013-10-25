@@ -1,5 +1,7 @@
 package ch.unige.tpgcrowd.ui;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -14,12 +16,13 @@ import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
+import ch.unige.tpgcrowd.ui.fragments.ShowLinesMapFragment.OnLineMapLongClickListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment;
 import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment.StopRender;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment;
 import ch.unige.tpgcrowd.util.ColorStore;
 
-public class MainActivity extends FragmentActivity implements StopRender, MapEventListener {
+public class MainActivity extends FragmentActivity implements StopRender, MapEventListener, OnLineMapLongClickListener {
 	private ShowStopFragment spsf;
 	private ShowNearbyStopsFragment nearbyFragment;
 	private InitialMapFragment map;
@@ -144,5 +147,22 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	public void onLongClick(double latitude, double longitude) {
 		nearbyFragment.setUserLocation(latitude, longitude);
 	}
+
+	@Override
+	public void onLineMapLongClick(float zoom, LatLng currentCenter,
+			LatLng pressPosition) {
+		final FragmentManager fm = getSupportFragmentManager();
+		final FragmentTransaction ft = fm.beginTransaction();
+		
+		ft.hide(spsf);
+		ft.show(map);
+		ft.commit();
+		
+		init = false;
+		map.setLocationWithMarker(currentCenter, pressPosition, zoom);
+		nearbyFragment.setUserLocation(pressPosition.latitude, pressPosition.longitude);
+	}
+
+	
 
 }

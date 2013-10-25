@@ -53,10 +53,12 @@ public class InitialMapFragment extends SupportMapFragment {
 	}
 	
 	public void setLocation(double latitude, double longitude, double accuracy) {
-		float zoom = 14.f;
+		float zoom;
 		
 		if (accuracy > -1) {
-			
+			zoom = 13.f;
+		}else{
+			zoom = 16.f;
 		}
 		
 		final LatLng ll = new LatLng(latitude, longitude);
@@ -72,5 +74,16 @@ public class InitialMapFragment extends SupportMapFragment {
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement MapEventListener");
 		}
+	}
+
+	public void setLocationWithMarker(LatLng currentCenter,
+			LatLng pressPosition, float zoom) {
+		this.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(currentCenter, zoom));
+		
+		final MarkerOptions mo = new MarkerOptions();
+		mo.position(pressPosition);
+		
+		getMap().clear();				
+		getMap().addMarker(mo);
 	}
 }
