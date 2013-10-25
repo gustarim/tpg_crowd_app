@@ -1,9 +1,11 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,16 +19,19 @@ import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.Connection;
 import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
-import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,6 +41,11 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public void onLinesClick();
 	}
 	private GoogleMap map;
+	
+	List<Marker> markersStops = new ArrayList<Marker>();
+	Marker userLocMarker = null;
+	Marker sysLocMarker = null;
+	Circle sysLocCircle = null;
 
 	private final OnClickListener click = new OnClickListener() {
 
@@ -49,6 +59,17 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	};
 
 	private OnLineMapLongClickListener listener;
+
+	private final OnInfoWindowClickListener infoclick = new OnInfoWindowClickListener() {
+		
+		@Override
+		public void onInfoWindowClick(final Marker marker) {
+			if (marker.isInfoWindowShown()) {
+				marker.hideInfoWindow();
+			}
+		}
+	};
+	
 	public interface OnLineMapLongClickListener {
 		public void onLineMapLongClick(float zoom, LatLng currentCenter, LatLng pressPosition);
 		
@@ -80,7 +101,6 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public View getInfoContents(final Marker marker) {
 			final LayoutInflater inflater = getActivity().getLayoutInflater();
 			final LinearLayout v = (LinearLayout)inflater.inflate(R.layout.info_windows_lines, null);
-			final LatLng ll = marker.getPosition();
 			final List<Connection> conns = connections.get(marker);
 			for (final Connection conn : conns) {
 				final View lineView = inflater.inflate(R.layout.show_line_connection, null);
@@ -98,6 +118,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public void addConnections(final Marker m, final List<Connection> conns) {
 			connections.put(m, conns);
 		}
+
 	};
 
 	@Override
@@ -105,7 +126,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			Bundle savedInstanceState) {
 
 		View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
-		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineLayout);
+		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineButton);
 		lines.setOnClickListener(click);
 		final FragmentManager fm = getFragmentManager();
 		map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
@@ -123,11 +144,28 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 
 		return layout;
 	}
+	
+	@Override
+	public void setAsReloading() {
+		if (map != null) {
+			//Remove old entries
+			map.clear();			
+		}
+	}
 
 	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
+//		setAsReloading();
+
 		//Remove old entries
-		map.clear();
+		if (!markersStops.isEmpty()){
+			for (final Marker m : markersStops) {
+				m.remove();
+			}
+			
+			markersStops.clear();
+			
+		}
 		
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
 		for (final PhysicalStop stop : stops) {
@@ -136,16 +174,60 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			final MarkerOptions mo = new MarkerOptions();
 			mo.position(ll);
 			final Marker m = map.addMarker(mo);
+			
+			markersStops.add(m);
 
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16));
 			siwa.addConnections(m, stop.getConnections());
 		}
 		map.setInfoWindowAdapter(siwa);
+		map.setOnInfoWindowClickListener(infoclick);
 	}
 
 	@Override
 	public void showError() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void setRefMarker(double latitude, double longitude) {
+		final MarkerOptions mo = new MarkerOptions();
+		final LatLng ll = new LatLng(latitude,longitude);
+		mo.position(ll);
+		
+		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
+		
+		if (userLocMarker!=null){
+			userLocMarker.remove();					
+		}
+		final Marker m = map.addMarker(mo);
+		userLocMarker = m;	
+		
+	}
+
+	public void setSystemLocation(Location loc) {
+		final MarkerOptions mo = new MarkerOptions();
+		LatLng ll = new LatLng(loc.getLatitude(),loc.getLongitude());
+		mo.position(ll);
+		
+		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+		
+		if (sysLocMarker!=null){
+			sysLocMarker.remove();					
+		}
+		final Marker m = map.addMarker(mo);
+		sysLocMarker = m;	
+		
+		final CircleOptions co = new CircleOptions();
+		co.center(ll);
+		co.radius(loc.getAccuracy());
+		
+		if (sysLocCircle!=null){
+			sysLocCircle.remove();					
+		}
+		
+		final Circle c = map.addCircle(co);
+		sysLocCircle = c;
+		
 	}
 }

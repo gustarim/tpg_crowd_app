@@ -3,11 +3,11 @@ package ch.unige.tpgcrowd.ui.fragments;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +27,12 @@ public class ShowStopFragment extends Fragment
 	public static final String TAG = "stop";
 	public static final String EXTRA_STOP_CODE = "ch.unige.tpgcrowd.extra.STOP_CODE";
 	public static final String EXTRA_STOP_NAME = "ch.unige.tpgcrowd.extra.STOP_NAME";
-//	private static final String LINE_MAP_FRAGMENT = "linemap";
+	private static final String FRAGMENT_LINE_MAP = "linemap";
 	private ShowLinesFragment slf;
 	private ShowLinesMapFragment slmf;
 	private LinkedList<PhysicalStopRender> renders;
 	public interface PhysicalStopRender {
+		public void setAsReloading();
 		public void setPhysicalStops(final List<PhysicalStop> stops);
 		public void showError();
 	}
@@ -73,6 +74,8 @@ public class ShowStopFragment extends Fragment
 		slmf = new ShowLinesMapFragment();
 		ft.add(R.id.lineMapFragment, slmf, ShowLinesMapFragment.class.getSimpleName());
 		ft.hide(slmf);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//		ft.add(R.id.lineMapFragment, slf, FRAGMENT_LINE_MAP);
 		ft.commit();
 		renders = new LinkedList<ShowStopFragment.PhysicalStopRender>();
 		renders.add(slf);
@@ -87,6 +90,9 @@ public class ShowStopFragment extends Fragment
 	public void updateContent(Bundle b) {
 		
 		name.setText(b.getString(EXTRA_STOP_NAME));
+		for (final PhysicalStopRender rend : renders) {
+			rend.setAsReloading();
+		}
 		
 		final String stopCode = b.getString(EXTRA_STOP_CODE);
 		final ITPGStops phisicalStops = TPGManager.getStopsManager(getActivity());
@@ -100,6 +106,9 @@ public class ShowStopFragment extends Fragment
 		final FragmentTransaction ft = fm.beginTransaction();
 		ft.hide(slf);
 		ft.show(slmf);
+		ft.addToBackStack(FRAGMENT_LINE_MAP);
+//		ft.replace(R.id.lineMapFragment, slmf, FRAGMENT_LINE_MAP);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
 
@@ -109,6 +118,19 @@ public class ShowStopFragment extends Fragment
 		final FragmentTransaction ft = fm.beginTransaction();
 		ft.hide(slmf);
 		ft.show(slf);
+		ft.addToBackStack(FRAGMENT_LINE_MAP);
+//		ft.replace(R.id.lineMapFragment, slf, FRAGMENT_LINE_MAP);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
+	}
+
+	public void setRefMarker(double latitude, double longitude) {
+		slmf.setRefMarker(latitude, longitude);
+		
+	}
+
+	public void setSystemLocation(Location loc) {
+		slmf.setSystemLocation(loc);
+		
 	}
 }
