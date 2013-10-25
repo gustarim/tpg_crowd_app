@@ -17,13 +17,13 @@ import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.Connection;
 import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
-import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -49,6 +49,17 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	};
 
 	private OnLineMapLongClickListener listener;
+
+	private final OnInfoWindowClickListener infoclick = new OnInfoWindowClickListener() {
+		
+		@Override
+		public void onInfoWindowClick(final Marker marker) {
+			if (marker.isInfoWindowShown()) {
+				marker.hideInfoWindow();
+			}
+		}
+	};
+	
 	public interface OnLineMapLongClickListener {
 		public void onLineMapLongClick(float zoom, LatLng currentCenter, LatLng pressPosition);
 		
@@ -80,7 +91,6 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public View getInfoContents(final Marker marker) {
 			final LayoutInflater inflater = getActivity().getLayoutInflater();
 			final LinearLayout v = (LinearLayout)inflater.inflate(R.layout.info_windows_lines, null);
-			final LatLng ll = marker.getPosition();
 			final List<Connection> conns = connections.get(marker);
 			for (final Connection conn : conns) {
 				final View lineView = inflater.inflate(R.layout.show_line_connection, null);
@@ -98,6 +108,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public void addConnections(final Marker m, final List<Connection> conns) {
 			connections.put(m, conns);
 		}
+
 	};
 
 	@Override
@@ -105,7 +116,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			Bundle savedInstanceState) {
 
 		View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
-		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineLayout);
+		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineButton);
 		lines.setOnClickListener(click);
 		final FragmentManager fm = getFragmentManager();
 		map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
@@ -141,6 +152,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			siwa.addConnections(m, stop.getConnections());
 		}
 		map.setInfoWindowAdapter(siwa);
+		map.setOnInfoWindowClickListener(infoclick);
 	}
 
 	@Override
