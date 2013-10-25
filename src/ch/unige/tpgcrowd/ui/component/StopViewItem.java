@@ -5,9 +5,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -34,7 +38,7 @@ public class StopViewItem extends LinearLayout {
 	public StopViewItem(Context context) {
 		super(context);
 	}
-	public StopViewItem(Context context, Stop stop) {
+	public StopViewItem(Context context, Stop stop, final OnClickListener listener) {
 		this(context);
 		this.stop = stop;
 		
@@ -48,11 +52,23 @@ public class StopViewItem extends LinearLayout {
         GridView imageLayout = (GridView)findViewById(R.id.stop_images);
         GridView imageSmallLayout = (GridView)findViewById(R.id.stop_small_images);
 
-        imageLayout.setOnItemClickListener(null);
-        imageSmallLayout.setOnItemClickListener(null);        
-        
         imageLayout.setAdapter(new StopViewAdapter(stop));
         imageSmallLayout.setAdapter(new StopViewAdapter(stop));
+
+        imageLayout.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				listener.onClick(StopViewItem.this);
+			}
+		});
+        imageSmallLayout.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				listener.onClick(StopViewItem.this);
+			}
+		});
         
         smallView = (LinearLayout)findViewById(R.id.stopview_small);
         TextView stopSmallContent = (TextView)findViewById(R.id.stop_small_content);
@@ -74,7 +90,6 @@ public class StopViewItem extends LinearLayout {
 	public Stop getStop() {
 		return stop;
 	}
-
 	
 	protected class StopViewAdapter extends BaseAdapter {
 

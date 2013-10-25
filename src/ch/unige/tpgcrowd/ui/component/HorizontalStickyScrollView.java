@@ -253,7 +253,7 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
 			LinearLayout.LayoutParams layParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
 
-			StopViewItem stView = new StopViewItem(getContext(),stop);
+			StopViewItem stView = new StopViewItem(getContext(),stop, childClickListener);
 			stView.setId(id);
 
 			stView.setOnClickListener(childClickListener);

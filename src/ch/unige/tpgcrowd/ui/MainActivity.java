@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 import ch.unige.tpgcrowd.model.Stop;
@@ -45,14 +46,15 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 			final FragmentManager fm = getSupportFragmentManager();
 			final FragmentTransaction ft = fm.beginTransaction();
 			nearbyFragment = new ShowNearbyStopsFragment();
+			
 			ft.add(R.id.main, nearbyFragment, ShowStopFragment.TAG);		
 
 			map = new InitialMapFragment();
-			ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
 
+			ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
+			
 			ft.commit();
 		}
-
 
 	}
 
