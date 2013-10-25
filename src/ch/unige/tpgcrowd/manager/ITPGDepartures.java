@@ -24,6 +24,17 @@ public interface ITPGDepartures {
 	public void getNextDepartures(String stopCode, Integer departureCode, final TPGObjectListener<DepartureList> listener);
 
 	/**
+	 * Return the list of all departures in the next hour for the specified stop code, line code, and destination code
+	 * 
+	 * @param stopCode			the stop code
+	 * @param departureCode		timecode (for connection only, can be null)
+	 * @param listener			listener called on result
+	 */
+	public void getNextDepartures(String stopCode,
+			String lineCode, String destinationCode,
+			TPGObjectListener<DepartureList> departureListener);
+	
+	/**
 	 * Return the list of all departures in the next hour for the specified stop code, filtered by lines and destination codes
 	 * 
 	 * @param stopCode			the stop code

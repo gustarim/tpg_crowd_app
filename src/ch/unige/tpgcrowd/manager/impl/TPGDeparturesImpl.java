@@ -1,5 +1,6 @@
 package ch.unige.tpgcrowd.manager.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,17 @@ public class TPGDeparturesImpl extends TPGAbstractImpl implements ITPGDepartures
 			arguments += "&" + DEPARTURECODE_PARAM + departureCode;
 			addRequest(TpgJsonObjectRequest.METHOD_GET_DEPARTURES, arguments, listener);
 		}
+	}
+	
+	@Override
+	public void getNextDepartures(final String stopCode, final String lineCode,
+			final String destinationCode,
+			final TPGObjectListener<DepartureList> departureListener) {
+		final List<String> lineCodes = new ArrayList<String>();
+		lineCodes.add(lineCode);
+		final List<String> destinationCodes = new ArrayList<String>();
+		destinationCodes.add(destinationCode);
+		getNextDepartures(stopCode, null, lineCodes, destinationCodes, departureListener);
 	}
 
 	@Override

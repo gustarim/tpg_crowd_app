@@ -153,6 +153,9 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			final MarkerOptions mo = new MarkerOptions();
 			mo.position(ll);
 			final Marker m = map.addMarker(mo);
+			if (stops.size() == 1) {
+				m.showInfoWindow();
+			}
 
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16));
 			siwa.addConnections(m, stop.getConnections());

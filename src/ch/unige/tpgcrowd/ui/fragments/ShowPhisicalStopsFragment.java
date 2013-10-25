@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -32,6 +33,9 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 	protected static final String STOP_GEOFENCE_ID = "StopGeofence";
 	protected static final float STOP_GEOFENCE_RADIUS = 15;
 	protected static final long STOP_GEOFENCE_EXPIRATION = 1200000;
+	public interface OnConnectionClickListener {
+		public void onConnectionClick(final Connection c);
+	}
 	
 	private final OnChildClickListener lineClick = new OnChildClickListener() {
 		
@@ -40,6 +44,12 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 				int groupPosition, int childPosition, long id) {
 			final PhysicalStopsExpandableListAdapter.Line line = (PhysicalStopsExpandableListAdapter.Line)adapter.getGroup(groupPosition);
 			final PhysicalStop stop = line.getConnectionPhysicalStop(childPosition);
+
+			final Connection conn = line.connections.get(childPosition);
+			final FragmentManager fm = getFragmentManager();
+			OnConnectionClickListener connClickListener = (OnConnectionClickListener)fm.findFragmentByTag(ShowStopFragment.TAG);
+			connClickListener.onConnectionClick(conn);
+				
 			final Coordinates pos = stop.getCoordinates();
 			final SimpleGeofence sg = new SimpleGeofence(STOP_GEOFENCE_ID, pos.getLatitude(), 
 					pos.getLongitude(), STOP_GEOFENCE_RADIUS, STOP_GEOFENCE_EXPIRATION,

@@ -12,5 +12,7 @@
     <string name="stop_name">Stop Name</string>
     <string name="lines">Lines</string>
     <string name="stop_crowd">Crowd at stop</string>
+    <string name="crowd_on_board">Crowd on board</string>
+    <string name="next_departures">Next departures</string>
 
 </resources>
