@@ -17,10 +17,11 @@
         android:baselineAligned="false" >
 
         <LinearLayout
+            android:id="@+id/mapLineButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:background="@drawable/default_background"
             android:orientation="vertical"
             android:padding="10dp" >
@@ -42,8 +43,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/list_container_heigth"
-            android:layout_weight="0.5"
+            android:layout_height="1dp"
+            android:layout_weight="1"
             android:visibility="invisible" >
         </FrameLayout>
     </LinearLayout>
