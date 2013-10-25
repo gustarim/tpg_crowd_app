@@ -1,16 +1,24 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
-import android.app.Activity;
+import java.util.ArrayList;
+import java.util.List;
 
+import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import ch.unige.tpgcrowd.R;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class InitialMapFragment extends SupportMapFragment {
@@ -19,6 +27,11 @@ public class InitialMapFragment extends SupportMapFragment {
 	}
 
 	private MapEventListener listener;
+	
+	Marker sysLocMarker = null;
+	Marker userLocMarker = null;
+	Circle sysLocCircle = null;
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,8 +59,13 @@ public class InitialMapFragment extends SupportMapFragment {
 				final MarkerOptions mo = new MarkerOptions();
 				mo.position(point);
 				
-				getMap().clear();				
-				getMap().addMarker(mo);
+				mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
+			
+				if (userLocMarker!=null){
+					userLocMarker.remove();					
+				}
+				final Marker m = getMap().addMarker(mo);
+				userLocMarker = m;	
 			}
 		});
 	}
@@ -56,13 +74,14 @@ public class InitialMapFragment extends SupportMapFragment {
 		float zoom;
 		
 		if (accuracy > -1) {
-			zoom = 13.f;
-		}else{
 			zoom = 16.f;
+		}else{
+			zoom = 13.f;
 		}
 		
 		final LatLng ll = new LatLng(latitude, longitude);
 		this.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(ll, zoom));
+		
 	}
 	
 	@Override
@@ -83,7 +102,37 @@ public class InitialMapFragment extends SupportMapFragment {
 		final MarkerOptions mo = new MarkerOptions();
 		mo.position(pressPosition);
 		
-		getMap().clear();				
-		getMap().addMarker(mo);
+		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
+		
+		if (userLocMarker!=null){
+			userLocMarker.remove();					
+		}
+		final Marker m = getMap().addMarker(mo);
+		userLocMarker = m;	
+	}
+
+	public void setSystemLocation(Location loc) {
+		final MarkerOptions mo = new MarkerOptions();
+		LatLng ll = new LatLng(loc.getLatitude(),loc.getLongitude());
+		mo.position(ll);
+		
+		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+		
+		if (sysLocMarker!=null){
+			sysLocMarker.remove();					
+		}
+		final Marker m = getMap().addMarker(mo);
+		sysLocMarker = m;	
+		
+		final CircleOptions co = new CircleOptions();
+		co.center(ll);
+		co.radius(loc.getAccuracy());
+		
+		if (sysLocCircle!=null){
+			sysLocCircle.remove();					
+		}
+		
+		final Circle c = getMap().addCircle(co);
+		sysLocCircle = c;
 	}
 }
