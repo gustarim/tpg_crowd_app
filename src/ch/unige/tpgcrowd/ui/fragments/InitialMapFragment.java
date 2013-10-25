@@ -1,6 +1,7 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
-import android.location.Location;
+import android.app.Activity;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class InitialMapFragment extends SupportMapFragment {
@@ -63,7 +63,14 @@ public class InitialMapFragment extends SupportMapFragment {
 		this.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(ll, zoom));
 	}
 	
-	public void setMapEventListener(MapEventListener listener) {
-		this.listener = listener;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		try {
+			listener = (MapEventListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement MapEventListener");
+		}
 	}
 }

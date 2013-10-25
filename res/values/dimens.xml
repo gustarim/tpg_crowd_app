@@ -7,8 +7,8 @@
     <dimen name="large_line_icon_width">48dp</dimen>
     <dimen name="large_line_icon_heigth">32dp</dimen>
 
-        <dimen name="small_line_icon_width">30dp</dimen>
-    <dimen name="small_line_icon_heigth">24dp</dimen>
+        <dimen name="small_line_icon_width">24dp</dimen>
+    <dimen name="small_line_icon_heigth">20dp</dimen>
     
     <dimen name="element_nobutton_horizontal_margin">4dp</dimen>
     <dimen name="element_nobutton_vertical_margin">8dp</dimen>

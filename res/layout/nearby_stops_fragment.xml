@@ -41,14 +41,10 @@
                 android:gravity="center"
                 android:orientation="horizontal" >
 
-                <ImageView
+                <ProgressBar
+                    android:id="@+id/sync_progress_bar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/spinner"
-                    android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
-                    android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
-                    android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-                    android:layout_marginTop="@dimen/element_nobutton_vertical_margin" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +53,7 @@
                     android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
                     android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
                     android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-                    android:text="Loading.." />
+                    android:text="@string/loading" />
             </LinearLayout>
         </LinearLayout>
     </ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView>

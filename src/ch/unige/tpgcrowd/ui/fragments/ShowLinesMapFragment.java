@@ -3,6 +3,7 @@ package ch.unige.tpgcrowd.ui.fragments;
 import java.util.Hashtable;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

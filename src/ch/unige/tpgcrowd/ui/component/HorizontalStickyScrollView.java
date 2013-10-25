@@ -22,19 +22,28 @@ import android.widget.TextView;
 
 public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
-    private static final int SWIPE_MIN_DISTANCE = 25;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-    
+	//private static final int SWIPE_MIN_DISTANCE = 25;
+	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
 	protected static final String TAG = HorizontalStickyScrollView.class.getSimpleName();
-	
+
+	private static final float RELATIVE_SIZE_1_ELEM = 1f;
+	private static final float RELATIVE_SIZE_2_ELEM = 0.5f;
+	private static final float RELATIVE_SIZE_3_ELEM = 0.425f;
+	private static final float DEFAULT_RELATIVE_SIZE = 0.35f;
+
+	private static final float RELATIVE_SIZE_SMALL = 0.15f;
+
 	public interface StopSelectedListener {
 		public void setSelectedStop(Stop stop);
 	}
-	
+
 	protected StopSelectedListener fragmentListener;
 	protected StopViewItem selectedView;
-	int currentIndex = 0;
+	int currentIndex = -1;
 	
+	float relativeSize = 0.35f;
+
 	protected OnTouchListener touchListener = new View.OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
@@ -44,28 +53,28 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 	};
 
 	protected GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
-		
+
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                // right to left swipe
-                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	move(true);
-                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	move(false);
-                }
-            } catch (Exception e) {
-                // nothing
-            }
-            return false;
-        }
+			try {
+				// right to left swipe
+				if(velocityX < 0 && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+					move(true);
+				}  else if (velocityX > 0 && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+					move(false);
+				}
+			} catch (Exception e) {
+				// nothing
+			}
+			return true;
+		}
 	});
 
 	public void setStopSelectedListener(StopSelectedListener listener) {
 		this.fragmentListener = listener;
 	}
-	
+
 	private OnClickListener childClickListener = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(View v) {
 			if (v instanceof StopViewItem) {
@@ -78,7 +87,7 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 					selectedView = tmpSelected;
 					setSelectedStop(selectedView);
 				}
-				
+
 				if (fragmentListener != null) {
 					Stop selectedStop = null;
 					if (selectedView != null) {
@@ -109,16 +118,16 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 			int defStyle) {
 		super(context, attrs, defStyle);		
 	}
-	
+
 	protected void setSelectedStop(StopViewItem stop) {
 		ViewGroup parent = (ViewGroup) getChildAt(0);
 		int nbChild = parent.getChildCount();
-		
+
 		//Remove previously selected stop
 		for (int i = 0; i < nbChild; i++) {
 			parent.getChildAt(i).setSelected(false);
 		}
-		
+
 		//Move to display the selected in full view
 		while(stop.getId() > currentIndex + 1) {
 			move(true);
@@ -126,89 +135,89 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 		while(stop.getId() < currentIndex) {
 			move(false);
 		}
-		
+
 		stop.setSelected(true);
 	}
-	
+
 	public void move(boolean next) {
+		if (currentIndex > -1) {
+			ViewGroup parent = (ViewGroup) getChildAt(0);
 
-		ViewGroup parent = (ViewGroup) getChildAt(0);
+			int nbChild = parent.getChildCount();
 
-		int nbChild = parent.getChildCount();
+			StopViewItem view = (StopViewItem)parent.getChildAt(currentIndex);
 
-		StopViewItem view = (StopViewItem)parent.getChildAt(currentIndex);
-		
-		Log.d("NEXT", "nbChild : " + nbChild + " - current Index : " + currentIndex);
-		
-		if (next) {
-			if (currentIndex < nbChild - 2) {
-				LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-				mLayParamCollapse.weight = 0.15f;
-				view.setLayoutParams(mLayParamCollapse);
+			Log.d("NEXT", "nbChild : " + nbChild + " - current Index : " + currentIndex);
 
-				view.extendView(false);
+			if (next) {
+				if (currentIndex < nbChild - 2) {
+					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					mLayParamCollapse.weight = RELATIVE_SIZE_SMALL;
+					view.setLayoutParams(mLayParamCollapse);
 
-				StopViewItem viewToExtend = (StopViewItem)parent.getChildAt(currentIndex + 2);
-				LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-				mLayParamExtend.weight = 0.35f;
-				viewToExtend.setLayoutParams(mLayParamExtend);
-				viewToExtend.extendView(true);
-				
-				if (currentIndex < nbChild - 3) {
-					StopViewItem viewToDisplay = (StopViewItem)parent.getChildAt(currentIndex + 3);
-					//Not really needed but just to be sure...
-					LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-					mLayParam.weight = 0.15f;
-					viewToDisplay.setLayoutParams(mLayParam);
-					viewToDisplay.setVisibility(VISIBLE);
-					//viewToDisplay.extendView(false);
-					
-					if (currentIndex > 0) {
-						StopViewItem viewToRemove = (StopViewItem)parent.getChildAt(currentIndex - 1);
-						viewToRemove.setVisibility(GONE);
+					view.extendView(false);
+
+					StopViewItem viewToExtend = (StopViewItem)parent.getChildAt(currentIndex + 2);
+					LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					mLayParamExtend.weight = relativeSize;
+					viewToExtend.setLayoutParams(mLayParamExtend);
+					viewToExtend.extendView(true);
+
+					if (currentIndex < nbChild - 3) {
+						StopViewItem viewToDisplay = (StopViewItem)parent.getChildAt(currentIndex + 3);
+						//Not really needed but just to be sure...
+						LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+						mLayParam.weight = RELATIVE_SIZE_SMALL;
+						viewToDisplay.setLayoutParams(mLayParam);
+						viewToDisplay.setVisibility(VISIBLE);
+						//viewToDisplay.extendView(false);
+
+						if (currentIndex > 0) {
+							StopViewItem viewToRemove = (StopViewItem)parent.getChildAt(currentIndex - 1);
+							viewToRemove.setVisibility(GONE);
+						}
 					}
+
+					currentIndex++;
 				}
-				
-				currentIndex++;
+			}
+			else {
+
+				if (currentIndex > 0) {
+					StopViewItem viewToExtend = (StopViewItem)parent.getChildAt(currentIndex - 1);
+					LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					mLayParamExtend.weight = relativeSize;
+					viewToExtend.setLayoutParams(mLayParamExtend);
+					viewToExtend.extendView(true);
+
+					StopViewItem viewToCollapse = (StopViewItem)parent.getChildAt(currentIndex + 1);
+					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					mLayParamCollapse.weight = RELATIVE_SIZE_SMALL;
+					viewToCollapse.setLayoutParams(mLayParamCollapse);
+					viewToCollapse.extendView(false);
+
+
+					if (currentIndex > 1) {
+						StopViewItem viewToDisplay = (StopViewItem)parent.getChildAt(currentIndex - 2);
+						//Not really needed but just to be sure...
+						LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+						mLayParam.weight = RELATIVE_SIZE_SMALL;
+						viewToDisplay.setLayoutParams(mLayParam);
+						viewToDisplay.setVisibility(VISIBLE);
+						//viewToDisplay.extendView(false);
+
+						if (currentIndex < nbChild - 2) {
+							StopViewItem viewToRemove = (StopViewItem)parent.getChildAt(currentIndex + 2);
+							viewToRemove.setVisibility(GONE);
+
+						}
+					}
+
+					currentIndex--;
+				}
+
 			}
 		}
-		else {
-			
-			if (currentIndex > 0) {
-				StopViewItem viewToExtend = (StopViewItem)parent.getChildAt(currentIndex - 1);
-				LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-				mLayParamExtend.weight = 0.35f;
-				viewToExtend.setLayoutParams(mLayParamExtend);
-				viewToExtend.extendView(true);
-				
-				StopViewItem viewToCollapse = (StopViewItem)parent.getChildAt(currentIndex + 1);
-				LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-				mLayParamCollapse.weight = 0.15f;
-				viewToCollapse.setLayoutParams(mLayParamCollapse);
-				viewToCollapse.extendView(false);
-				
-			
-				if (currentIndex > 1) {
-					StopViewItem viewToDisplay = (StopViewItem)parent.getChildAt(currentIndex - 2);
-					//Not really needed but just to be sure...
-					LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
-					mLayParam.weight = 0.15f;
-					viewToDisplay.setLayoutParams(mLayParam);
-					viewToDisplay.setVisibility(VISIBLE);
-					//viewToDisplay.extendView(false);
-					
-					if (currentIndex < nbChild - 2) {
-						StopViewItem viewToRemove = (StopViewItem)parent.getChildAt(currentIndex + 2);
-						viewToRemove.setVisibility(GONE);
-					
-					}
-				}
-
-				currentIndex--;
-			}
-
-		}
-
 	}
 
 
@@ -234,10 +243,14 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 		ViewGroup parent = (ViewGroup) getChildAt(0);
 
 		parent.removeAllViews();
+		currentIndex = 0;
+		
+		relativeSize = getRelativeSize(stops.size());
+		
 		//parent.setBackgroundColor(Color.BLUE);
 		int id = 0;
 		for (Stop stop : stops) {
-						
+
 			LinearLayout.LayoutParams layParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
 
 			StopViewItem stView = new StopViewItem(getContext(),stop);
@@ -246,26 +259,39 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 			stView.setOnClickListener(childClickListener);
 			stView.setLongClickable(false);
 			stView.setOnTouchListener(touchListener);
-			
+
 			if (id > 1) {	
 				stView.extendView(false);
-				layParam.weight = 0.15f;
+				layParam.weight = RELATIVE_SIZE_SMALL;
 			}
 			if (id > 3) {
 				stView.extendView(false);
 				stView.setVisibility(GONE);
-				layParam.weight = 0.15f;
+				layParam.weight = RELATIVE_SIZE_SMALL;
 			}
 			if (id <= 1) {
-				layParam.weight = 0.35f;
+				layParam.weight = relativeSize;
 			}
-			
+
 			parent.addView(stView, layParam);
 			id += 1;
 		}
-		
+
 		//parent.forceLayout();
 		this.forceLayout();
+	}
+
+	private float getRelativeSize(int size) {
+		if (size == 1){
+			return RELATIVE_SIZE_1_ELEM;
+		}
+		else if (size == 2) {
+			return RELATIVE_SIZE_2_ELEM;
+		}
+		else if (size == 3)  {
+			return RELATIVE_SIZE_3_ELEM;
+		}
+		return DEFAULT_RELATIVE_SIZE;
 	}
 
 }

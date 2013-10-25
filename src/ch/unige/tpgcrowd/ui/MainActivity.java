@@ -45,7 +45,6 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 			ft.add(R.id.main, nearbyFragment, ShowStopFragment.TAG);		
 
 			map = new InitialMapFragment();
-			map.setMapEventListener(this);
 			ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
 
 			ft.commit();
