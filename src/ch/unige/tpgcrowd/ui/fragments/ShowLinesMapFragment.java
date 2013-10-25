@@ -155,8 +155,6 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 
 	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
-//		setAsReloading();
-
 		//Remove old entries
 		if (!markersStops.isEmpty()){
 			for (final Marker m : markersStops) {
@@ -166,7 +164,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			markersStops.clear();
 			
 		}
-		
+
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
 		for (final PhysicalStop stop : stops) {
 			final Coordinates c = stop.getCoordinates();

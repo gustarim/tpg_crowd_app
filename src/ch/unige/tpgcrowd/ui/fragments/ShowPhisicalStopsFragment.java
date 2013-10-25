@@ -54,7 +54,7 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 		}
 	};
 	
-	private TextView progres;
+	private View progres;
 	private ExpandableListView list;
 	private PhysicalStopsExpandableListAdapter adapter;
 
@@ -62,7 +62,7 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
 			final Bundle savedInstanceState) {
 		final View layout = inflater.inflate(R.layout.show_phisical_stops, null, false);
-		progres = (TextView)layout.findViewById(R.id.progres);
+		progres = layout.findViewById(R.id.progres);
 		list = (ExpandableListView)layout.findViewById(R.id.list);
 		return layout;
 	}
@@ -73,16 +73,26 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 	}
 	
 	@Override
+	public void setAsReloading() {
+		list.setVisibility(View.GONE);
+		progres.setVisibility(View.VISIBLE);
+	}
+	
+	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
 		progres.setVisibility(View.GONE);
 		adapter = new PhysicalStopsExpandableListAdapter(stops, getActivity());
 		list.setAdapter(adapter);
+		if (adapter.getGroupCount() == 1) {
+			list.expandGroup(0, true);
+		}
 		list.setOnChildClickListener(lineClick);
+		list.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
 	public void showError() {
-		progres.setText(R.string.error);
+		//progres.setText(R.string.error);
 	}
 	
 	private class PhysicalStopsExpandableListAdapter extends BaseExpandableListAdapter {

@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tool"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     android:layout_marginBottom="10dp"
     android:orientation="horizontal" >
 
@@ -11,7 +11,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:layout_weight="0.1"
-        android:background="@drawable/nearby_btn_background" >
+        android:background="@drawable/btn_background" >
 
         <ImageView
             android:layout_width="fill_parent"
@@ -22,7 +22,7 @@
     <ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dip"
-        android:layout_height="170dp"
+        android:layout_height="fill_parent"
         android:layout_weight="0.8"
         android:fillViewport="true" >
 
@@ -34,27 +34,10 @@
             android:orientation="horizontal"
             android:weightSum="1" >
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="@drawable/nearby_stop"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
-                <ProgressBar
-                    android:id="@+id/sync_progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
-                    android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
-                    android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-                    android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-                    android:text="@string/loading" />
-            </LinearLayout>
+            <include
+        		android:layout_width="match_parent"
+        		android:layout_height="match_parent"
+        		layout="@layout/loading" />
         </LinearLayout>
     </ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView>
 
@@ -64,7 +47,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:layout_weight="0.1"
-        android:background="@drawable/nearby_btn_background" >
+        android:background="@drawable/btn_background" >
 
         <ImageView
             android:layout_width="fill_parent"

@@ -4,32 +4,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <TextView
+    <include
         android:id="@+id/progres"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/loading"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <!-- <ScrollView
-        android:id="@+id/stopsScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <LinearLayout
-            android:id="@+id/phisicalStops"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
-    </ScrollView> -->
+        android:layout_height="match_parent"
+        layout="@layout/loading" />
 
     <ExpandableListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawSelectorOnTop="false" >
-
+        android:drawSelectorOnTop="false"
+        android:visibility="gone">
     </ExpandableListView>
 
 </LinearLayout>

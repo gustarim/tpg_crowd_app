@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +61,13 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 		ft.commit();
 
 		return layout;
+	}
+	
+	@Override
+	public void setAsReloading() {
+		if (spsf != null) {			
+			((PhysicalStopRender)spsf).setAsReloading();
+		}
 	}
 
 	@Override

@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal" >
     
     <include
         android:id="@+id/lineIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/large_line_icon"
-        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin" />
+        layout="@layout/small_line_icon"
+        />
     
     <TextView
         android:id="@+id/direction"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
         android:gravity="center_vertical"
         android:text="@string/default_direction"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
 </LinearLayout>
