@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
 public class ShowNearbyStopsFragment extends Fragment implements StopSelectedListener {
@@ -101,7 +102,6 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.d("Create", "CREATE");
 		return inflater.inflate(R.layout.nearby_stops_fragment, container, false);
 	}
 

@@ -11,12 +11,16 @@
         android:layout_height="fill_parent"
         android:background="@drawable/nearby_stop_background"
         android:orientation="vertical"
-        android:padding="6dp" >
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingLeft="9dp"
+        android:paddingRight="8dp" >
 
         <TextView
             android:id="@+id/stop_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:textAppearance="@style/StopTitle" />
 
         <LinearLayout
@@ -25,7 +29,7 @@
             android:layout_weight="0.8"
             android:gravity="center">
 
-            <GridView
+           <GridView
                 android:id="@+id/stop_images"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,6 +38,7 @@
                 android:horizontalSpacing="1dp"
                 android:numColumns="auto_fit"
                 android:scrollbars="none"
+                android:clipChildren="true"
                 android:stretchMode="none"
                 android:verticalSpacing="1dp" />
         </LinearLayout>
@@ -42,6 +47,7 @@
             android:id="@+id/stop_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
             android:layout_gravity="right"
             android:textAppearance="@style/StopContent" />
     </LinearLayout>
