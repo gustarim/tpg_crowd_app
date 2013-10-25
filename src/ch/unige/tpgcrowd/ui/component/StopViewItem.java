@@ -1,9 +1,7 @@
 package ch.unige.tpgcrowd.ui.component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
