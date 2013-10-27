@@ -1,7 +1,20 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
-import com.google.android.gms.location.LocationClient;
-
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.location.LocationHandler;
 import ch.unige.tpgcrowd.manager.ITPGStops;
@@ -11,22 +24,8 @@ import ch.unige.tpgcrowd.model.StopList;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView;
 import ch.unige.tpgcrowd.ui.component.HorizontalStickyScrollView.StopSelectedListener;
-import android.support.v4.app.Fragment;
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.location.Location;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
+
+import com.google.android.gms.location.LocationClient;
 
 public class ShowNearbyStopsFragment extends Fragment implements StopSelectedListener {
 
@@ -202,5 +201,11 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 		updateNearbyStops(latitude, longitude, true);
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		LocationHandler.stopLocation(getActivity(), penInt);
+		getActivity().unregisterReceiver(locationReceiver);
+	}
 
 }

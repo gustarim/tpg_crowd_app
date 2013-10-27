@@ -1,7 +1,5 @@
 package ch.unige.tpgcrowd.ui;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -10,8 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 import ch.unige.tpgcrowd.model.Stop;
@@ -22,6 +18,8 @@ import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment;
 import ch.unige.tpgcrowd.ui.fragments.ShowNearbyStopsFragment.StopRender;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment;
 import ch.unige.tpgcrowd.util.ColorStore;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends FragmentActivity implements StopRender, MapEventListener, OnLineMapLongClickListener {
 	private ShowStopFragment spsf;
@@ -35,6 +33,7 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 		super.onCreate(savedInstanceState);
 		ColorStore.updateColors(this);
 		setContentView(R.layout.activity_main);
+		//if this call return false we must stop all the rest..
 		GooglePlayServiceCheckUtility.servicesConnected(this);
 	}
 
