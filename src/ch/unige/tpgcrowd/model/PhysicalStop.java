@@ -1,6 +1,7 @@
 package ch.unige.tpgcrowd.model;
 
 import java.util.List;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,6 +18,12 @@ public class PhysicalStop {
 	
 	@JsonProperty("coordinates")
 	Coordinates coordinates;
+	
+	final int crowd;
+	
+	public PhysicalStop() {
+		crowd = new Random().nextInt(10);
+	}
 
 	public String getStopCode() {
 		return stopCode;
@@ -50,4 +57,7 @@ public class PhysicalStop {
 		this.coordinates = coordinates;
 	}
 
+	public int getCrowd() {
+		return crowd;
+	}
 }

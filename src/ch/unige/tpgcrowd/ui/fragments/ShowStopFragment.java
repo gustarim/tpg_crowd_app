@@ -32,6 +32,7 @@ public class ShowStopFragment extends Fragment
 	private static final String FRAGMENT_LINE_MAP = "linemap";
 	private ShowLinesFragment slf;
 	private ShowLinesMapFragment slmf;
+	private ShowNextDeparturesFragment sndf; 
 	private LinkedList<PhysicalStopRender> renders;
 	public interface PhysicalStopRender {
 		public void setAsReloading();
@@ -91,7 +92,7 @@ public class ShowStopFragment extends Fragment
 	}
 	
 	public void updateContent(Bundle b) {
-		
+		removeConnectionFragment();
 		name.setText(b.getString(EXTRA_STOP_NAME));
 		for (final PhysicalStopRender rend : renders) {
 			rend.setAsReloading();
@@ -134,7 +135,7 @@ public class ShowStopFragment extends Fragment
 		b.putString(ShowNextDeparturesFragment.EXTRA_LINE_CODE, c.getLineCode());
 		b.putString(ShowNextDeparturesFragment.EXTRA_DEST_CODE, c.getDestinationCode());
 		b.putString(ShowNextDeparturesFragment.EXTRA_DEST_NAME, c.getDestinationName());
-		final ShowNextDeparturesFragment sndf = new ShowNextDeparturesFragment();
+		sndf = new ShowNextDeparturesFragment();
 		sndf.setArguments(b);
 		final FragmentManager fm = getFragmentManager();
 		final FragmentTransaction ft = fm.beginTransaction();
@@ -153,5 +154,16 @@ public class ShowStopFragment extends Fragment
 	public void setSystemLocation(Location loc) {
 		slmf.setSystemLocation(loc);
 		
+	}
+	
+	private void removeConnectionFragment() {
+		if (sndf != null) {
+			final FragmentManager fm = getFragmentManager();
+			final FragmentTransaction ft = fm.beginTransaction();
+			ft.remove(sndf);
+			ft.show(slf);
+			ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			ft.commit();
+		}
 	}
 }

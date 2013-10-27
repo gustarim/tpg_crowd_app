@@ -12,8 +12,21 @@
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical|left"
         android:text="@string/default_direction"
+        android:textAppearance="?android:attr/textAppearanceListItem" />
+    
+    <TextView
+        android:id="@+id/crowd"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="1"
+        android:gravity="center_vertical|right"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 
 </LinearLayout>

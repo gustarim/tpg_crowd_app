@@ -17,4 +17,5 @@
     <dimen name="button_vertical_margin">4dp</dimen>
     
     <dimen name="list_container_heigth">48dp</dimen>
+    <dimen name="button_heigth">48dp</dimen>
 </resources>

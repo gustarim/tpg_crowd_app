@@ -8,27 +8,43 @@
         android:id="@+id/lineInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/large_show_line_connection" />
+        layout="@layout/large_show_line_connection"
+        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView1"
+        <Button
+            android:id="@+id/sortCrowd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_heigth"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
             android:layout_weight="3"
+            android:background="@android:color/white"
+            android:gravity="center"
             android:text="@string/crowd_on_board"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <TextView
-            android:id="@+id/textView2"
+        <Button
+            android:id="@+id/sortTime"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_heigth"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
             android:layout_weight="3"
+            android:background="@android:color/white"
+            android:gravity="center"
             android:text="@string/next_departures"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/textView3"
@@ -36,7 +52,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:text="(I)"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        	android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        	android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        	android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        	android:gravity="center" />
     </LinearLayout>
 
     <include

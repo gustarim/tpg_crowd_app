@@ -2,6 +2,7 @@ package ch.unige.tpgcrowd.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -38,6 +39,12 @@ public class Departure {
 	
 	@JsonProperty("line")
 	Line line;
+	
+	final int crowd;
+	
+	public Departure() {
+		crowd = new Random().nextInt(5);
+	}
 	
 	public Date getTimestamp() {
 		return timestamp;
@@ -127,5 +134,8 @@ public class Departure {
 		this.line = line;
 	}
 	
+	public int getCrowd() {
+		return crowd;
+	}
 	
 }

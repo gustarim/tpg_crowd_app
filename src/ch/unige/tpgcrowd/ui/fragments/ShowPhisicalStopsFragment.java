@@ -183,6 +183,9 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 			final Connection conn = (Connection)getChild(groupPosition, childPosition);
 			final TextView destination = (TextView)rowView.findViewById(R.id.direction);
 			destination.setText(conn.getDestinationName());
+			final PhysicalStop stop = ((Line)getGroup(groupPosition)).getConnectionPhysicalStop(childPosition);
+			final TextView crowd = (TextView)rowView.findViewById(R.id.crowd);
+			crowd.setText("" + stop.getCrowd());
 			return rowView;
 		}
 
