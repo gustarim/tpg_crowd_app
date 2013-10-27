@@ -3,6 +3,7 @@ package ch.unige.tpgcrowd.ui.fragments;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -142,5 +143,15 @@ public class ShowStopFragment extends Fragment
 		ft.addToBackStack(FRAGMENT_LINE_MAP);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
+	}
+
+	public void setRefMarker(double latitude, double longitude) {
+		slmf.setRefMarker(latitude, longitude);
+		
+	}
+
+	public void setSystemLocation(Location loc) {
+		slmf.setSystemLocation(loc);
+		
 	}
 }

@@ -1,9 +1,11 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,7 +28,10 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,6 +41,11 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public void onLinesClick();
 	}
 	private GoogleMap map;
+	
+	List<Marker> markersStops = new ArrayList<Marker>();
+	Marker userLocMarker = null;
+	Marker sysLocMarker = null;
+	Circle sysLocCircle = null;
 
 	private final OnClickListener click = new OnClickListener() {
 
@@ -138,24 +148,34 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	@Override
 	public void setAsReloading() {
 		if (map != null) {
+//			//Remove old entries
+//			map.clear();		
 			//Remove old entries
-			map.clear();			
+			if (!markersStops.isEmpty()){
+				for (final Marker m : markersStops) {
+					m.remove();
+				}
+				
+				markersStops.clear();
+				
+			}
 		}
 	}
 
 	@Override
 	public void setPhysicalStops(final List<PhysicalStop> stops) {
-//		setAsReloading();
+		
+
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
+
 		for (final PhysicalStop stop : stops) {
 			final Coordinates c = stop.getCoordinates();
 			final LatLng ll = new LatLng(c.getLatitude(), c.getLongitude());
 			final MarkerOptions mo = new MarkerOptions();
 			mo.position(ll);
 			final Marker m = map.addMarker(mo);
-			if (stops.size() == 1) {
-				m.showInfoWindow();
-			}
+			
+			markersStops.add(m);
 
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16));
 			siwa.addConnections(m, stop.getConnections());
@@ -168,5 +188,46 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	public void showError() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void setRefMarker(double latitude, double longitude) {
+		final MarkerOptions mo = new MarkerOptions();
+		final LatLng ll = new LatLng(latitude,longitude);
+		mo.position(ll);
+		
+		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
+		
+		if (userLocMarker!=null){
+			userLocMarker.remove();					
+		}
+		final Marker m = map.addMarker(mo);
+		userLocMarker = m;	
+		
+	}
+
+	public void setSystemLocation(Location loc) {
+		final MarkerOptions mo = new MarkerOptions();
+		LatLng ll = new LatLng(loc.getLatitude(),loc.getLongitude());
+		mo.position(ll);
+		
+		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_dot));
+		
+		if (sysLocMarker!=null){
+			sysLocMarker.remove();					
+		}
+		final Marker m = map.addMarker(mo);
+		sysLocMarker = m;	
+		
+		final CircleOptions co = new CircleOptions();
+		co.center(ll);
+		co.radius(loc.getAccuracy());
+		
+		if (sysLocCircle!=null){
+			sysLocCircle.remove();					
+		}
+		
+		final Circle c = map.addCircle(co);
+		sysLocCircle = c;
+		
 	}
 }

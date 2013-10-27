@@ -148,6 +148,10 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	@Override
 	public void onLongClick(double latitude, double longitude) {
 		nearbyFragment.setUserLocation(latitude, longitude);
+		if(spsf!=null){
+			spsf.setRefMarker(latitude, longitude);
+		}
+	
 	}
 
 	@Override
@@ -163,6 +167,15 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 		init = false;
 		map.setLocationWithMarker(currentCenter, pressPosition, zoom);
 		nearbyFragment.setUserLocation(pressPosition.latitude, pressPosition.longitude);
+		spsf.setRefMarker(pressPosition.latitude, pressPosition.longitude);
+	}
+
+	@Override
+	public void setSystemLocation(Location loc) {
+		map.setSystemLocation(loc);
+		if(spsf!=null){
+			spsf.setSystemLocation(loc);
+		}	
 	}
 
 	

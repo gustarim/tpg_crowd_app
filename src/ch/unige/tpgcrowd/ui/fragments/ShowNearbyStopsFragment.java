@@ -53,6 +53,7 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	public interface StopRender {
 		public void onStopSelected(Stop stop);
 		public void setMapLocation(Location loc);
+		public void setSystemLocation(Location loc);
 	}
 
 	private StopRender mListener;
@@ -62,6 +63,7 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			curLocation = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
+			updateSystemLocation(curLocation);
 
 			if(!userPoint){
 
@@ -103,6 +105,11 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.nearby_stops_fragment, container, false);
+	}
+
+	protected void updateSystemLocation(Location loc) {
+		mListener.setSystemLocation(loc);
+		
 	}
 
 	@Override
