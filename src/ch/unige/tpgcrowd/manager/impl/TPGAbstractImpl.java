@@ -1,7 +1,6 @@
 package ch.unige.tpgcrowd.manager.impl;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import org.json.JSONObject;
 
@@ -48,7 +47,9 @@ public abstract class TPGAbstractImpl {
 	protected abstract Class<? extends ITPGModelEntity> getResponseClass();
 	
 	protected void addRequest(final String method, final String arguments, final TPGObjectListener<? extends ITPGModelEntity> listener) {
-		final TpgJsonObjectRequest req = new TpgJsonObjectRequest(method, arguments, createSuccessListener(listener), createErrorListener(listener));
+		final String encodedArguments = arguments.replaceAll(" ", "%20");
+		final TpgJsonObjectRequest req = new TpgJsonObjectRequest(method, encodedArguments, createSuccessListener(listener), createErrorListener(listener));
+		Log.d("Volley", req.toString());
 		requestQueue.add(req);
 	}
 	
