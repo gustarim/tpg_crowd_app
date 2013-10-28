@@ -18,8 +18,8 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
-import ch.unige.tpgcrowd.google.geofence.SimpleGeofence;
-import ch.unige.tpgcrowd.google.geofence.SimpleGeofenceStore;
+import ch.unige.tpgcrowd.google.geofence.StopGeofence;
+import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
 import ch.unige.tpgcrowd.google.geofence.StopTransitionsIntentService;
 import ch.unige.tpgcrowd.model.Connection;
 import ch.unige.tpgcrowd.model.Coordinates;
@@ -30,9 +30,6 @@ import ch.unige.tpgcrowd.util.ColorStore;
 import com.google.android.gms.location.Geofence;
 
 public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopRender {
-	protected static final String STOP_GEOFENCE_ID = "StopGeofence";
-	protected static final float STOP_GEOFENCE_RADIUS = 15;
-	protected static final long STOP_GEOFENCE_EXPIRATION = 1200000;
 	public interface OnConnectionClickListener {
 		public void onConnectionClick(final Connection c);
 	}
@@ -51,14 +48,13 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 			connClickListener.onConnectionClick(conn);
 				
 			final Coordinates pos = stop.getCoordinates();
-			final SimpleGeofence sg = new SimpleGeofence(STOP_GEOFENCE_ID, pos.getLatitude(), 
-					pos.getLongitude(), STOP_GEOFENCE_RADIUS, STOP_GEOFENCE_EXPIRATION,
-					Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
-			SimpleGeofenceStore.setGeofence(getActivity(), STOP_GEOFENCE_ID, sg);
-			final boolean added =  GeofenceHandler.addGeofences(getActivity(), new String[] {STOP_GEOFENCE_ID}, 
+			final StopGeofence sg = new StopGeofence(pos.getLatitude(), 
+					pos.getLongitude(), Geofence.GEOFENCE_TRANSITION_ENTER, conn.getLineCode(), conn.getDestinationCode(), stop.getStopCode());
+			StopGeofenceStore.setGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID, sg);
+			final boolean added =  GeofenceHandler.addGeofences(getActivity(), new String[] {StopGeofence.STOP_GEOFENCE_ID}, 
 					StopTransitionsIntentService.getTransitionPendingIntent(getActivity().getApplicationContext()));
 			if (added) {
-				Log.i(STOP_GEOFENCE_ID, "Geofence added");
+				Log.i(StopGeofence.STOP_GEOFENCE_ID, "Geofence added");
 			}
 			return added;
 		}

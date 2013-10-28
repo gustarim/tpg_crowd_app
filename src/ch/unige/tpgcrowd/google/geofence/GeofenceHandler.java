@@ -48,13 +48,13 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 		return gh.connectLocationService(context);
 	}
 
-	public boolean removeGeofencesByPendingIntent(final Context context,
+	public static boolean removeGeofencesByPendingIntent(final Context context,
 			final PendingIntent transitionPendingIntent) {
 		final GeofenceHandler gh = new GeofenceHandler(transitionPendingIntent, new String[] {}, REQUEST_TYPE.REMOVE_PENDING);
 		return gh.connectLocationService(context);
 	}
 	
-	public boolean removeGeofencesByIds(final Context context, final String[] ids,
+	public static boolean removeGeofencesByIds(final Context context, final String[] ids,
 			final PendingIntent transitionPendingIntent) {
 		final GeofenceHandler gh = new GeofenceHandler(transitionPendingIntent, ids, REQUEST_TYPE.REMOVE_IDS);
 		return gh.connectLocationService(context);
@@ -67,7 +67,7 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 	private boolean connectLocationService(final Context context) {
 		boolean result = false;
 		for (int i = 0; i < ids.length; i++) {
-			currentGeofences.add(SimpleGeofenceStore.getGeofence(context, ids[i]).toGeofence());
+			currentGeofences.add(StopGeofenceStore.getGeofence(context, ids[i]).toGeofence());
 		}
 		/*
 		 * Test for Google Play services after setting the request type.

@@ -7,22 +7,28 @@ import android.content.SharedPreferences.Editor;
 /**
  * Storage for geofence values, implemented in SharedPreferences.
  */
-public class SimpleGeofenceStore {
+public class StopGeofenceStore {
 
 	// Keys for flattened geofences stored in SharedPreferences
 	public static final String KEY_LATITUDE =
-			"com.example.android.geofence.KEY_LATITUDE";
+			"ch.unige.tpgcrowd.geofence.KEY_LATITUDE";
 	public static final String KEY_LONGITUDE =
-			"com.example.android.geofence.KEY_LONGITUDE";
+			"ch.unige.tpgcrowd.geofence.KEY_LONGITUDE";
 	public static final String KEY_RADIUS =
-			"com.example.android.geofence.KEY_RADIUS";
+			"ch.unige.tpgcrowd.geofence.KEY_RADIUS";
 	public static final String KEY_EXPIRATION_DURATION =
-			"com.example.android.geofence.KEY_EXPIRATION_DURATION";
+			"ch.unige.tpgcrowd.geofence.KEY_EXPIRATION_DURATION";
 	public static final String KEY_TRANSITION_TYPE =
-			"com.example.android.geofence.KEY_TRANSITION_TYPE";
+			"ch.unige.tpgcrowd.geofence.KEY_TRANSITION_TYPE";
+	public static final String KEY_DESTINATION_CODE = 
+			"ch.unige.tpgcrowd.geofence.KEY_DIRECTION_CODE";
+	public static final String KEY_STOP_CODE = 
+			"ch.unige.tpgcrowd.geofence.KEY_STOP_CODE";
+	public static final String KEY_LINE_CODE = 
+			"ch.unige.tpgcrowd.geofence.KEY_LINE_CODE";
 	// The prefix for flattened geofence keys
 	public static final String KEY_PREFIX =
-			"com.example.android.geofence.KEY";
+			"ch.unige.tpgcrowd.geofence.KEY";
 	/*
 	 * Invalid values, used to test geofence storage when
 	 * retrieving geofences
@@ -30,6 +36,7 @@ public class SimpleGeofenceStore {
 	public static final long INVALID_LONG_VALUE = -999l;
 	public static final float INVALID_FLOAT_VALUE = -999.0f;
 	public static final int INVALID_INT_VALUE = -999;
+	public static final String INVALID_CODE = "invalid";
 	// The SharedPreferences object in which geofences are stored
 	private final SharedPreferences mPrefs;
 	// The name of the SharedPreferences
@@ -37,23 +44,23 @@ public class SimpleGeofenceStore {
 			"SharedPreferences";
 	
 	public static void setGeofence(final Context context, final String id, 
-			final SimpleGeofence geofence) {
-		final SimpleGeofenceStore store = new SimpleGeofenceStore(context);
+			final StopGeofence geofence) {
+		final StopGeofenceStore store = new StopGeofenceStore(context);
 		store.setGeofence(id, geofence);
 	}
 	
-	public static SimpleGeofence getGeofence(final Context context, final String id) {
-		final SimpleGeofenceStore store = new SimpleGeofenceStore(context);
+	public static StopGeofence getGeofence(final Context context, final String id) {
+		final StopGeofenceStore store = new StopGeofenceStore(context);
 		return store.getGeofence(id);
 	}
 			
 	public static void clearGeofence(final Context context, final String id) {
-		final SimpleGeofenceStore store = new SimpleGeofenceStore(context);
+		final StopGeofenceStore store = new StopGeofenceStore(context);
 		store.clearGeofence(id);
 	}
 	
 	// Create the SharedPreferences storage with private access only
-	private SimpleGeofenceStore(final Context context) {
+	private StopGeofenceStore(final Context context) {
 		mPrefs =
 				context.getSharedPreferences(
 						SHARED_PREFERENCES,
@@ -67,7 +74,7 @@ public class SimpleGeofenceStore {
 	 * @param id The ID of a stored geofence
 	 * @return A geofence defined by its center and radius. See
 	 */
-	private SimpleGeofence getGeofence(final String id) {
+	private StopGeofence getGeofence(final String id) {
 		/*
 		 * Get the latitude for the geofence identified by id, or
 		 * INVALID_FLOAT_VALUE if it doesn't exist
@@ -103,6 +110,10 @@ public class SimpleGeofenceStore {
 		final int transitionType = mPrefs.getInt(
 				getGeofenceFieldKey(id, KEY_TRANSITION_TYPE),
 				INVALID_INT_VALUE);
+		
+		final String lineCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_LINE_CODE), INVALID_CODE);
+		final String directionCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_DESTINATION_CODE), INVALID_CODE);
+		final String stopCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_STOP_CODE), INVALID_CODE);
 		// If none of the values is incorrect, return the object
 		if (
 				lat != INVALID_FLOAT_VALUE &&
@@ -110,12 +121,14 @@ public class SimpleGeofenceStore {
 				radius != INVALID_FLOAT_VALUE &&
 				expirationDuration !=
 				INVALID_LONG_VALUE &&
-				transitionType != INVALID_INT_VALUE) {
+				transitionType != INVALID_INT_VALUE &&
+				!lineCode.equals(INVALID_CODE) &&
+				!directionCode.equals(INVALID_CODE) &&
+				!stopCode.equals(INVALID_CODE)) {
 
 			// Return a true Geofence object
-			return new SimpleGeofence(
-					id, lat, lng, radius, expirationDuration,
-					transitionType);
+			return new StopGeofence(lat, lng,
+					transitionType, lineCode, directionCode, stopCode);
 			// Otherwise, return null.
 		} else {
 			return null;
@@ -127,7 +140,7 @@ public class SimpleGeofenceStore {
 	 * @param geofence The SimpleGeofence containing the
 	 * values you want to save in SharedPreferences
 	 */
-	private void setGeofence(final String id, final SimpleGeofence geofence) {
+	private void setGeofence(final String id, final StopGeofence geofence) {
 		/*
 		 * Get a SharedPreferences editor instance. Among other
 		 * things, SharedPreferences ensures that updates are atomic
@@ -150,6 +163,15 @@ public class SimpleGeofenceStore {
 		editor.putInt(
 				getGeofenceFieldKey(id, KEY_TRANSITION_TYPE),
 				geofence.getTransitionType());
+		editor.putString(
+				getGeofenceFieldKey(id, KEY_LINE_CODE),
+				geofence.getLineCode());
+		editor.putString(
+				getGeofenceFieldKey(id, KEY_DESTINATION_CODE),
+				geofence.getDestinationCode());
+		editor.putString(
+				getGeofenceFieldKey(id, KEY_STOP_CODE),
+				geofence.getStopCode());
 		// Commit the changes
 		editor.commit();
 	}
@@ -166,6 +188,9 @@ public class SimpleGeofenceStore {
 		editor.remove(getGeofenceFieldKey(id,
 				KEY_EXPIRATION_DURATION));
 		editor.remove(getGeofenceFieldKey(id, KEY_TRANSITION_TYPE));
+		editor.remove(getGeofenceFieldKey(id, KEY_LINE_CODE));
+		editor.remove(getGeofenceFieldKey(id, KEY_DESTINATION_CODE));
+		editor.remove(getGeofenceFieldKey(id, KEY_STOP_CODE));
 		editor.commit();
 	}
 	

@@ -72,9 +72,21 @@ public class StopTransitionsIntentService extends IntentService {
 						Log.i(NAME, "Goefence Triggered" + triggerIds[i]);
 					}
 					//start activity recognition for still
-					final PendingIntent pi = ActivityRecognitionAtStopIntentService.getActivityRecognitionAtStopPI(getApplicationContext());
+					final PendingIntent pi = ActivityRecognitionAtStopIntentService.getActivityRecognitionAtStopStill(getApplicationContext());
 					ActivityRecognitionHandler.startActivityRecognition(getApplicationContext(), pi);
 				}
+				else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
+					for (int i = 0; i < triggerIds.length; i++) {
+						// Store the Id of each geofence
+						triggerIds[i] = triggerList.get(i).getRequestId();
+						Log.i(NAME, "Goefence Triggered" + triggerIds[i]);
+					}
+					//start activity recognition for still
+					final PendingIntent pi = ActivityRecognitionAtStopIntentService.getActivityRecognitionAtStopVehicle(getApplicationContext());
+					ActivityRecognitionHandler.startActivityRecognition(getApplicationContext(), pi);
+				}
+				
+				GeofenceHandler.removeGeofencesByIds(getApplicationContext(), triggerIds, getTransitionPendingIntent(getApplicationContext()));
 
 				
 				/*

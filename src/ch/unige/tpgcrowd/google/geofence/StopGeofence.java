@@ -5,14 +5,20 @@ import com.google.android.gms.location.Geofence;
 /**
  * A single Geofence object, defined by its center and radius.
  */
-public class SimpleGeofence {
+public class StopGeofence {
+	public static final String STOP_GEOFENCE_ID = "StopGeofence";
+	private static final float STOP_GEOFENCE_RADIUS = 15;
+	private static final long STOP_GEOFENCE_EXPIRATION = 36000000;
 	// Instance variables
 	private final String mId;
 	private final double mLatitude;
 	private final double mLongitude;
 	private final float mRadius;
-	private long mExpirationDuration;
+	private final long mExpirationDuration;
 	private int mTransitionType;
+	private final String lineCode;
+	private final String destinationCode;
+	private final String stopCode;
 
 	/**
 	 * @param geofenceId The Geofence's request ID
@@ -22,20 +28,23 @@ public class SimpleGeofence {
 	 * @param expiration Geofence expiration duration
 	 * @param transition Type of Geofence transition.
 	 */
-	public SimpleGeofence(
-			final String geofenceId,
+	public StopGeofence(
 			final double latitude,
 			final double longitude,
-			final float radius,
-			final long expiration,
-			final int transition) {
+			final int transition,
+			final String lineCode,
+			final String destinationCode,
+			final String stopCode) {
 		// Set the instance fields from the constructor
-		this.mId = geofenceId;
+		this.mId = STOP_GEOFENCE_ID;
 		this.mLatitude = latitude;
 		this.mLongitude = longitude;
-		this.mRadius = radius;
-		this.mExpirationDuration = expiration;
+		this.mRadius = STOP_GEOFENCE_RADIUS;
+		this.mExpirationDuration = STOP_GEOFENCE_EXPIRATION;
 		this.mTransitionType = transition;
+		this.lineCode = lineCode;
+		this.stopCode = stopCode;
+		this.destinationCode = destinationCode;
 	}
 	// Instance field getters
 	public String getId() {
@@ -55,6 +64,22 @@ public class SimpleGeofence {
 	}
 	public int getTransitionType() {
 		return mTransitionType;
+	}
+	
+	public void setTransitionType(final int mTransitionType) {
+		this.mTransitionType = mTransitionType;
+	}
+	
+	public String getDestinationCode() {
+		return destinationCode;
+	}
+	
+	public String getLineCode() {
+		return lineCode;
+	}
+	
+	public String getStopCode() {
+		return stopCode;
 	}
 	
 	/**
