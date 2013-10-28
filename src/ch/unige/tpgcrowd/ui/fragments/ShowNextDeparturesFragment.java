@@ -1,7 +1,9 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -13,7 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,12 +46,24 @@ public class ShowNextDeparturesFragment extends Fragment {
 			final DepartureListAdapter adapter = new DepartureListAdapter(deps);
 			list.setAdapter(adapter);
 			list.setVisibility(View.VISIBLE);
+			final TextView update = (TextView)getView().findViewById(R.id.updateTime);
+			update.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
 		}
 		
 		@Override
 		public void onFailure() {
 			// TODO Auto-generated method stub
 			
+		}
+	};
+	
+	private final OnClickListener refreshClick = new OnClickListener() {
+		
+		@Override
+		public void onClick(final View v) {
+			requestNextDepartures();
+			final TextView update = (TextView)getView().findViewById(R.id.updateTime);
+			update.setText(R.string.loading);
 		}
 	};
 	
@@ -76,35 +90,43 @@ public class ShowNextDeparturesFragment extends Fragment {
 	private View progres;
 	private ListView list;
 	private List<Departure> deps;
+	private String lineCode;
+	private String destinationCode;
+	private String stopCode;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		final LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.show_line_next_departures, container, false);
 		final Bundle b = getArguments();
-		final String lineCode = b.getString(EXTRA_LINE_CODE);
+		lineCode = b.getString(EXTRA_LINE_CODE);
 		
 		final LinearLayout lineInfo = (LinearLayout)layout.findViewById(R.id.lineInfo);
 		final TextView lineIcon = (TextView)lineInfo.findViewById(R.id.lineIcon);
 		lineIcon.setText(lineCode);
 		lineIcon.setBackgroundColor(ColorStore.getColor(getActivity(), lineCode));
+		final ImageButton refresh = (ImageButton)layout.findViewById(R.id.refresh);
+		refresh.setOnClickListener(refreshClick);
 		final TextView dir = (TextView)lineInfo.findViewById(R.id.direction);
 		dir.setText(b.getString(EXTRA_DEST_NAME));
-		final Button sortCrowd = (Button)layout.findViewById(R.id.sortCrowd);
+		final ImageButton sortCrowd = (ImageButton)layout.findViewById(R.id.sortCrowd);
 		sortCrowd.setOnClickListener(crowdSortClick);
-		final Button sortTime = (Button)layout.findViewById(R.id.sortTime);
+		final ImageButton sortTime = (ImageButton)layout.findViewById(R.id.sortTime);
 		sortTime.setOnClickListener(timeSortClick);
 		
 		progres = layout.findViewById(R.id.progres);
 		list = (ListView)layout.findViewById(R.id.departuresList);
 		
-		final ITPGDepartures depMan = TPGManager.getDeparturesManager(getActivity());
-		final String destinationCode = b.getString(EXTRA_DEST_CODE);
-		final String stopCode = b.getString(EXTRA_STOP_CODE);
+		destinationCode = b.getString(EXTRA_DEST_CODE);
+		stopCode = b.getString(EXTRA_STOP_CODE);
 		Log.d("dep", stopCode + " " + lineCode + " " + destinationCode);
-		depMan.getNextDepartures(stopCode, lineCode, destinationCode, departureListener);
-		
+		requestNextDepartures();
 		return layout;
+	}
+	
+	private void requestNextDepartures() {
+		final ITPGDepartures depMan = TPGManager.getDeparturesManager(getActivity());
+		depMan.getNextDepartures(stopCode, lineCode, destinationCode, departureListener);
 	}
 	
 	private class DepartureListAdapter extends ArrayAdapter<Departure> {

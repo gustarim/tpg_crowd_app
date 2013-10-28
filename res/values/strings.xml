@@ -14,5 +14,10 @@
     <string name="stop_crowd">Crowd at stop</string>
     <string name="crowd_on_board">Crowd on board</string>
     <string name="next_departures">Next departures</string>
+    <string name="refresh">refresh</string>
+    <string name="information">information</string>
+    <string name="updated">updated</string>
+    <string name="sort_time">sort by time</string>
+    <string name="sort_crowd">sort by crowd</string>
 
 </resources>

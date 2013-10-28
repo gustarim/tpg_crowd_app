@@ -4,60 +4,100 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/lineInfo"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/large_show_line_connection"
-        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginTop="@dimen/element_nobutton_vertical_margin" />
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin" >
+
+        <include
+            android:id="@+id/lineInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            layout="@layout/large_show_line_connection" />
+
+        <ImageButton
+            android:id="@+id/refresh"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:background="@android:color/white"
+            android:contentDescription="@string/refresh"
+            android:src="@drawable/ic_refresh_departures" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/sortCrowd"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_heigth"
-            android:layout_marginBottom="@dimen/button_vertical_margin"
-            android:layout_marginLeft="@dimen/button_horizontal_margin"
-            android:layout_marginRight="@dimen/button_horizontal_margin"
-            android:layout_marginTop="@dimen/button_vertical_margin"
-            android:layout_weight="3"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:text="@string/crowd_on_board"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <Button
-            android:id="@+id/sortTime"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_heigth"
-            android:layout_marginBottom="@dimen/button_vertical_margin"
-            android:layout_marginLeft="@dimen/button_horizontal_margin"
-            android:layout_marginRight="@dimen/button_horizontal_margin"
-            android:layout_marginTop="@dimen/button_vertical_margin"
-            android:layout_weight="3"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:text="@string/next_departures"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/updated"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        	android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"/>
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
+            android:id="@+id/updateTime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="(I)"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
-        	android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
-        	android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-        	android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        	android:gravity="center" />
+            android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+            android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_heigth" >
+
+        <ImageButton
+            android:id="@+id/sortCrowd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="3"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_sort_crowd"
+            android:contentDescription="@string/sort_crowd"
+            />
+
+        <ImageButton
+            android:id="@+id/sortTime"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="3"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_sort_time"
+            android:contentDescription="@string/sort_time" 
+            />
+
+        <ImageButton
+            android:id="@+id/getInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="3"
+            android:contentDescription="@string/information"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_info_departure" />
+
     </LinearLayout>
 
     <include
@@ -71,7 +111,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" >
-
     </ListView>
 
 </LinearLayout>

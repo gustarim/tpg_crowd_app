@@ -2,38 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" xmlns:tools="http://schemas.android.com/tools" tools:context=".ui.fragments.ShowNextDeparturesFragment$DepartureListAdapter">
+
     <TextView
         android:id="@+id/crowd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
         android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="3"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
         android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="3"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
         android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="3"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 
 </LinearLayout>
