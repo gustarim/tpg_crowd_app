@@ -3,6 +3,7 @@ package ch.unige.tpgcrowd.google.activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -58,9 +59,11 @@ public class ActivityRecognitionHandler implements ConnectionCallbacks,
 			activityRecognitionClient.requestActivityUpdates(
 	                DETECTION_INTERVAL_MILLISECONDS,
 	                activityRecognitionPendingIntent);
+			Log.i("ActivityRecHandler", "started activity recognition");
 			break;
 		case STOP:
 			activityRecognitionClient.removeActivityUpdates(activityRecognitionPendingIntent);
+			Log.i("ActivityRecHandler", "stop activity recognition");
 			break;
 		}
 		

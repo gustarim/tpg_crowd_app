@@ -40,7 +40,11 @@
             android:enabled="true" >
         </service>
         <service
-            android:name="ch.unige.tpgcrowd.google.activity.ActivityRecognitionAtStopIntentService"
+            android:name="ch.unige.tpgcrowd.google.activity.StillAtStopIntentService"
+            android:enabled="true" >
+        </service>
+        <service
+            android:name="ch.unige.tpgcrowd.google.activity.VehicleLeavingStopIntentService"
             android:enabled="true" >
         </service>
         <meta-data

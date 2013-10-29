@@ -8,8 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import ch.unige.tpgcrowd.google.activity.ActivityRecognitionAtStopIntentService;
 import ch.unige.tpgcrowd.google.activity.ActivityRecognitionHandler;
+import ch.unige.tpgcrowd.google.activity.StillAtStopIntentService;
+import ch.unige.tpgcrowd.google.activity.VehicleLeavingStopIntentService;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
@@ -69,25 +70,24 @@ public class StopTransitionsIntentService extends IntentService {
 					for (int i = 0; i < triggerIds.length; i++) {
 						// Store the Id of each geofence
 						triggerIds[i] = triggerList.get(i).getRequestId();
-						Log.i(NAME, "Goefence Triggered" + triggerIds[i]);
+						Log.i(NAME, "Goefence Triggered enter " + triggerIds[i]);
 					}
 					//start activity recognition for still
-					final PendingIntent pi = ActivityRecognitionAtStopIntentService.getActivityRecognitionAtStopStill(getApplicationContext());
+					final PendingIntent pi = StillAtStopIntentService.getAtStopStill(getApplicationContext());
 					ActivityRecognitionHandler.startActivityRecognition(getApplicationContext(), pi);
 				}
 				else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
 					for (int i = 0; i < triggerIds.length; i++) {
 						// Store the Id of each geofence
 						triggerIds[i] = triggerList.get(i).getRequestId();
-						Log.i(NAME, "Goefence Triggered" + triggerIds[i]);
+						Log.i(NAME, "Goefence Triggered exit " + triggerIds[i]);
 					}
 					//start activity recognition for still
-					final PendingIntent pi = ActivityRecognitionAtStopIntentService.getActivityRecognitionAtStopVehicle(getApplicationContext());
+					final PendingIntent pi = VehicleLeavingStopIntentService.getLeavingStopVehicle(getApplicationContext());
 					ActivityRecognitionHandler.startActivityRecognition(getApplicationContext(), pi);
+					
+					GeofenceHandler.removeGeofencesByIds(getApplicationContext(), triggerIds, getTransitionPendingIntent(getApplicationContext()));
 				}
-				
-				GeofenceHandler.removeGeofencesByIds(getApplicationContext(), triggerIds, getTransitionPendingIntent(getApplicationContext()));
-
 				
 				/*
 				 * At this point, you can store the IDs for further use
