@@ -220,6 +220,9 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		
 		final CircleOptions co = new CircleOptions();
 		co.center(ll);
+		co.strokeWidth(2);
+		co.strokeColor(0x440000ff);
+		co.fillColor(0x220000ff);
 		co.radius(loc.getAccuracy());
 		
 		if (sysLocCircle!=null){
