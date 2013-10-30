@@ -14,11 +14,12 @@
     <TextView
         android:id="@+id/direction"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:gravity="center_vertical"
         android:text="@string/default_direction"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+        android:textColor="@android:color/white"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse" />
 
 </LinearLayout>

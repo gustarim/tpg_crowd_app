@@ -19,5 +19,7 @@
     <string name="updated">updated</string>
     <string name="sort_time">sort by time</string>
     <string name="sort_crowd">sort by crowd</string>
+    <string name="waiting">You are waiting for</string>
+    <string name="contribute">click to know about your connection and register the crowd</string>
 
 </resources>

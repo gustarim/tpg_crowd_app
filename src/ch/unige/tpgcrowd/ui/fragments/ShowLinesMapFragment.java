@@ -103,7 +103,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			final LinearLayout v = (LinearLayout)inflater.inflate(R.layout.info_windows_lines, null);
 			final List<Connection> conns = connections.get(marker);
 			for (final Connection conn : conns) {
-				final View lineView = inflater.inflate(R.layout.show_line_connection, null);
+				final View lineView = inflater.inflate(R.layout.small_line_connection, null);
 				final TextView icon = (TextView)lineView.findViewById(R.id.lineIcon);
 				final String lineCode = conn.getLineCode();
 				icon.setText(lineCode);
