@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -148,8 +149,8 @@ public class ShowNextDeparturesFragment extends Fragment {
 			final TextView time = (TextView)rowView.findViewById(R.id.time);
 			time.setText(dep.getWaitingTime().equals(STRING_HOUR) ? ">60" : dep.getWaitingTime());
 			
-			final TextView crowd = (TextView)rowView.findViewById(R.id.crowd);
-			crowd.setText(dep.getCrowd() + "");
+			final ImageView crowd = (ImageView)rowView.findViewById(R.id.crowd);
+			crowd.setImageLevel(dep.getCrowd());
 			
 			return rowView;
 		}

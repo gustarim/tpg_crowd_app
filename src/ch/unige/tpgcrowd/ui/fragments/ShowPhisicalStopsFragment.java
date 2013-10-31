@@ -4,40 +4,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.RemoteViews;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 import ch.unige.tpgcrowd.R;
-import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
-import ch.unige.tpgcrowd.google.geofence.StopGeofence;
-import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
-import ch.unige.tpgcrowd.google.geofence.StopTransitionsIntentService;
 import ch.unige.tpgcrowd.model.Connection;
-import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
 import ch.unige.tpgcrowd.model.Stop;
-import ch.unige.tpgcrowd.ui.StopNotificationView;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopSelectedListener;
 import ch.unige.tpgcrowd.util.ColorStore;
-
-import com.google.android.gms.location.Geofence;
 
 public class ShowPhisicalStopsFragment extends DialogFragment implements PhysicalStopRender {
 	
@@ -203,8 +188,8 @@ public class ShowPhisicalStopsFragment extends DialogFragment implements Physica
 			final TextView destination = (TextView)rowView.findViewById(R.id.direction);
 			destination.setText(conn.getDestinationName());
 			final PhysicalStop stop = ((Line)getGroup(groupPosition)).getConnectionPhysicalStop(childPosition);
-			final TextView crowd = (TextView)rowView.findViewById(R.id.crowd);
-			crowd.setText("" + stop.getCrowd());
+			final ImageView crowd = (ImageView)rowView.findViewById(R.id.crowd);
+			crowd.setImageLevel(stop.getCrowd());
 			return rowView;
 		}
 
