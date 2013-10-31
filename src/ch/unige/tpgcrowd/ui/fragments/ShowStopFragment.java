@@ -118,12 +118,12 @@ public class ShowStopFragment extends Fragment
 	@Override
 	public void onLinesClick() {
 		final FragmentManager fm = getFragmentManager();
-		final FragmentTransaction ft = fm.beginTransaction();
-		ft.hide(slmf);
-		ft.show(slf);
-//		ft.addToBackStack(FRAGMENT_LINE_MAP);
+//		final FragmentTransaction ft = fm.beginTransaction();
+//		ft.hide(slmf);
+//		ft.show(slf);
+		fm.popBackStackImmediate();
 //		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.commit();
+//		ft.commit();
 	}
 
 	@Override

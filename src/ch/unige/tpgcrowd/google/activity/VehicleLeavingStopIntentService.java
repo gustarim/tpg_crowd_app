@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.geofence.StopGeofence;
 import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
+import ch.unige.tpgcrowd.ui.VehicleNotificationView;
+import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
@@ -65,9 +68,25 @@ public class VehicleLeavingStopIntentService extends IntentService {
 					
 					final StopGeofence geofence = StopGeofenceStore.getGeofence(getApplicationContext(), StopGeofence.STOP_GEOFENCE_ID);
 					final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
-					notificationBuilder.setContentTitle("Left the stop " + geofence.getStopCode());
-					notificationBuilder.setContentText("On " + geofence.getLineCode() + " towards " + geofence.getDestinationCode());
+					//Small view
+					final RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notification_small_in_vehicle);
+					rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getApplicationContext(), geofence.getLineCode()));
+
+					rv.setTextViewText(R.id.lineIcon, geofence.getLineCode());
+					rv.setTextViewText(R.id.textDirection, geofence.getDestinationName());
+
+					notificationBuilder.setContent(rv);
+
 					notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+					
+					/* Creates an explicit intent for an Activity in your app */
+					final Intent resultIntent = new Intent(getApplicationContext(), VehicleNotificationView.class);
+					resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					/* Adds the Intent that starts the Activity to the top of the stack */
+					final PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+					notificationBuilder.setContentIntent(resultPendingIntent);
+					
 					final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					notificationManager.notify(TPG_NOTIFICATION, notificationBuilder.build());
 				}

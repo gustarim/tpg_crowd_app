@@ -43,7 +43,7 @@ public class Departure {
 	final int crowd;
 	
 	public Departure() {
-		crowd = new Random().nextInt(5);
+		crowd = new Random().nextInt(8);
 	}
 	
 	public Date getTimestamp() {

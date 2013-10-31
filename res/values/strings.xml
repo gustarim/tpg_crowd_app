@@ -27,5 +27,9 @@
     <string name="sort_crowd">sort by crowd</string>
     <string name="waiting">You are waiting for</string>
     <string name="contribute">click to know about your connection and register the crowd</string>
-
+    <string name="contribute2">click to know about your next stops and register the crowd</string>
+    <string name="next_stops">Next stops</string>
+    <string name="standing">standing</string>
+	<string name="sitting">sitting</string>
+	<string name="wrong_vehicle">Wrong bus/tram?</string>
 </resources>

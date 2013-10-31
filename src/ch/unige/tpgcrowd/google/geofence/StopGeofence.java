@@ -12,7 +12,7 @@ public class StopGeofence implements Serializable {
 	private static final long serialVersionUID = -4561650328188941513L;
 	
 	public static final String STOP_GEOFENCE_ID = "StopGeofence";
-	private static final float STOP_GEOFENCE_RADIUS = 15;
+	private static final float STOP_GEOFENCE_RADIUS = 50;
 	private static final long STOP_GEOFENCE_EXPIRATION = 36000000;
 	// Instance variables
 	private final String mId;
