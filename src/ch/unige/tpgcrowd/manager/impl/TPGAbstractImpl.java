@@ -48,7 +48,8 @@ public abstract class TPGAbstractImpl {
 	protected abstract Class<? extends ITPGModelEntity> getResponseClass();
 
 	protected void addRequest(final String method, final String arguments, final TPGObjectListener<? extends ITPGModelEntity> listener) {
-		final String encodedArguments = arguments.replaceAll(" ", "%20");
+		final String encodedArguments = arguments.replaceAll(" ", "%20").replaceAll("\\+", "%2B");
+
 		final TpgJsonObjectRequest req = new TpgJsonObjectRequest(method, encodedArguments, createSuccessListener(listener), createErrorListener(listener));
 		Log.d("Volley", req.toString());
 		requestQueue.add(req);
