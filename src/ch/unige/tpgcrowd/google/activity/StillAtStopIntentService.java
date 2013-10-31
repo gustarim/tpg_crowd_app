@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
 import ch.unige.tpgcrowd.google.geofence.StopGeofence;
 import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
 import ch.unige.tpgcrowd.google.geofence.StopTransitionsIntentService;
+import ch.unige.tpgcrowd.ui.StopNotificationView;
+import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
@@ -19,7 +22,7 @@ import com.google.android.gms.location.Geofence;
 
 public class StillAtStopIntentService extends IntentService {
 	private static final String NAME = "StillAtStopIntentService";
-	private static final int TPG_NOTIFICATION = 0;
+	private static final int TPG_STOP_NOTIFICATION = 0;
 
 	public static PendingIntent getAtStopStill(final Context context) {
 		final Intent intent = new Intent(
@@ -59,21 +62,58 @@ public class StillAtStopIntentService extends IntentService {
 			 * send it to an Activity or Service in a broadcast
 			 * Intent.
 			 */
+
 			if (confidence > 50) {
 				if (activityType == DetectedActivity.STILL) {
 					Log.i(NAME, "Detected still with confidence" + confidence + ", start stop dialog...");
 
 					ActivityRecognitionHandler.stopActivityRecognition(getApplicationContext(), 
 							getAtStopStill(getApplicationContext()));
-					
+
 					final StopGeofence geofence = StopGeofenceStore.getGeofence(getApplicationContext(), StopGeofence.STOP_GEOFENCE_ID);
+
 					final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
-					notificationBuilder.setContentTitle("Waiting at the stop " + geofence.getStopCode());
-					notificationBuilder.setContentText("Waiting for " + geofence.getLineCode() + " towards " + geofence.getDestinationCode());
+
+					//Small view
+					RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notification_small_at_stop);
+					rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getApplicationContext(), geofence.getLineCode()));
+
+					rv.setTextViewText(R.id.lineIcon,geofence.getLineCode());
+					rv.setTextViewText(R.id.textDirection,geofence.getDestinationName());
+
+					notificationBuilder.setContent(rv);
+
 					notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
-					final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-					notificationManager.notify(TPG_NOTIFICATION, notificationBuilder.build());
-					
+
+					/* Creates an explicit intent for an Activity in your app */
+					Intent resultIntent = new Intent(getApplicationContext(), StopNotificationView.class);
+					resultIntent.putExtra("STOP_GEOFENCE_KEY", geofence);
+
+					resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					/* Adds the Intent that starts the Activity to the top of the stack */
+					PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+					notificationBuilder.setContentIntent(resultPendingIntent);
+
+					//Add buttons
+					//				Intent infoIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+					//				infoIntent.setAction("ACTION_SHOW_INFO");
+					//				PendingIntent piInfo = PendingIntent.getService(getActivity().getApplicationContext(), 0, infoIntent, 0);
+					//
+					//				Intent wrongStopIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+					//				wrongStopIntent.setAction("ACTION_CHANGE_STOP");
+					//				PendingIntent piWrongStop = PendingIntent.getService(getActivity().getApplicationContext(), 0, wrongStopIntent, 0);
+					//				
+					//				notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("Next departure : 3min").setBigContentTitle(sg.getLineCode()));
+					//				notificationBuilder.addAction(android.R.drawable.ic_menu_info_details,getString(R.string.more_info), piInfo);
+					//				notificationBuilder.addAction(android.R.drawable.ic_delete,getString(R.string.wrong_stop), piWrongStop);
+
+					final NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+					notificationManager.notify(TPG_STOP_NOTIFICATION, notificationBuilder.build());
+
+
+
+
 					geofence.setTransitionType(Geofence.GEOFENCE_TRANSITION_EXIT);
 					StopGeofenceStore.setGeofence(getApplicationContext(), StopGeofence.STOP_GEOFENCE_ID, geofence);
 					GeofenceHandler.addGeofences(getApplicationContext(), new String[] {StopGeofence.STOP_GEOFENCE_ID}, 

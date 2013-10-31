@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.PhysicalStop;
+import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,8 +72,8 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 	}
 
 	@Override
-	public void setPhysicalStops(final List<PhysicalStop> stops) {
-		((PhysicalStopRender)spsf).setPhysicalStops(stops);
+	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops) {
+		((PhysicalStopRender)spsf).setPhysicalStops(rootStop, stops);
 	}
 
 	@Override

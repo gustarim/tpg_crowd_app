@@ -19,6 +19,7 @@ import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.Connection;
 import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
+import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.util.ColorStore;
 
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -66,6 +68,23 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		public void onInfoWindowClick(final Marker marker) {
 			if (marker.isInfoWindowShown()) {
 				marker.hideInfoWindow();
+			}
+		}
+	};
+
+	private OnMarkerClickListener markerClick = new OnMarkerClickListener() {
+		
+		@Override
+		public boolean onMarkerClick(Marker marker) {
+			//intercept marker click
+			//Display InfoWindow if marker is a stop marker
+			if (markersStops.contains(marker)) {
+				return false;
+			}
+			else {
+				//Else center the marker
+				map.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 400, null);
+				return true;
 			}
 		}
 	};
@@ -163,7 +182,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	}
 
 	@Override
-	public void setPhysicalStops(final List<PhysicalStop> stops) {
+	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops) {
 		
 
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
@@ -173,8 +192,8 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 			final LatLng ll = new LatLng(c.getLatitude(), c.getLongitude());
 			final MarkerOptions mo = new MarkerOptions();
 			mo.position(ll);
+
 			final Marker m = map.addMarker(mo);
-			
 			markersStops.add(m);
 
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 16));
@@ -182,6 +201,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		}
 		map.setInfoWindowAdapter(siwa);
 		map.setOnInfoWindowClickListener(infoclick);
+		map.setOnMarkerClickListener(markerClick );
 	}
 
 	@Override
@@ -196,13 +216,14 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		mo.position(ll);
 		
 		mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
-		
+
 		if (userLocMarker!=null){
 			userLocMarker.remove();					
 		}
 		final Marker m = map.addMarker(mo);
 		userLocMarker = m;	
-		
+	
+
 	}
 
 	public void setSystemLocation(Location loc) {

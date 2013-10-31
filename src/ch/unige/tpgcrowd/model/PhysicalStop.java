@@ -22,7 +22,7 @@ public class PhysicalStop {
 	final int crowd;
 	
 	public PhysicalStop() {
-		crowd = new Random().nextInt(10);
+		crowd = new Random().nextInt(8);
 	}
 
 	public String getStopCode() {

@@ -1,11 +1,16 @@
 package ch.unige.tpgcrowd.google.geofence;
 
+import java.io.Serializable;
+
 import com.google.android.gms.location.Geofence;
 
 /**
  * A single Geofence object, defined by its center and radius.
  */
-public class StopGeofence {
+public class StopGeofence implements Serializable {
+
+	private static final long serialVersionUID = -4561650328188941513L;
+	
 	public static final String STOP_GEOFENCE_ID = "StopGeofence";
 	private static final float STOP_GEOFENCE_RADIUS = 15;
 	private static final long STOP_GEOFENCE_EXPIRATION = 36000000;
@@ -18,7 +23,10 @@ public class StopGeofence {
 	private int mTransitionType;
 	private final String lineCode;
 	private final String destinationCode;
+	private final String physicalStopCode;
 	private final String stopCode;
+	private final String destinationName;
+	private final int stopCrowd;
 
 	/**
 	 * @param geofenceId The Geofence's request ID
@@ -34,7 +42,10 @@ public class StopGeofence {
 			final int transition,
 			final String lineCode,
 			final String destinationCode,
-			final String stopCode) {
+			final String destinationName,
+			final String physicalStopCode,
+			final String stopCode,
+			final int stopCrowd) {
 		// Set the instance fields from the constructor
 		this.mId = STOP_GEOFENCE_ID;
 		this.mLatitude = latitude;
@@ -44,7 +55,10 @@ public class StopGeofence {
 		this.mTransitionType = transition;
 		this.lineCode = lineCode;
 		this.stopCode = stopCode;
+		this.physicalStopCode = physicalStopCode;
 		this.destinationCode = destinationCode;
+		this.destinationName = destinationName;
+		this.stopCrowd = stopCrowd;
 	}
 	// Instance field getters
 	public String getId() {
@@ -74,12 +88,24 @@ public class StopGeofence {
 		return destinationCode;
 	}
 	
+	public String getDestinationName() {
+		return destinationName;
+	}
+	
 	public String getLineCode() {
 		return lineCode;
 	}
 	
 	public String getStopCode() {
 		return stopCode;
+	}
+	
+	public String getPhysicalStopCode() {
+		return physicalStopCode;
+	}
+	
+	public int getStopCrowd() {
+		return stopCrowd;
 	}
 	
 	/**
@@ -98,4 +124,6 @@ public class StopGeofence {
 				.setExpirationDuration(mExpirationDuration)
 				.build();
 	}
+
+
 }

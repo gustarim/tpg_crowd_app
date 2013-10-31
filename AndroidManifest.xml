@@ -35,6 +35,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="ch.unige.tpgcrowd.ui.StopNotificationView"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
         <service
             android:name="ch.unige.tpgcrowd.google.geofence.StopTransitionsIntentService"
             android:enabled="true" >

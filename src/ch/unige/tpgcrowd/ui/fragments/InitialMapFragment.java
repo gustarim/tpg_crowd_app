@@ -1,8 +1,5 @@
 package ch.unige.tpgcrowd.ui.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
@@ -11,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import ch.unige.tpgcrowd.R;
 
 import com.google.android.gms.maps.CameraUpdateFactory;

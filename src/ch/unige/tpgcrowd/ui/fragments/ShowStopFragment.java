@@ -36,7 +36,7 @@ public class ShowStopFragment extends Fragment
 	private LinkedList<PhysicalStopRender> renders;
 	public interface PhysicalStopRender {
 		public void setAsReloading();
-		public void setPhysicalStops(final List<PhysicalStop> stops);
+		public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops);
 		public void showError();
 	}
 	
@@ -49,7 +49,7 @@ public class ShowStopFragment extends Fragment
 				final Stop stop = results.getStops().get(0);
 				final List<PhysicalStop> phyStops = stop.getPhysicalStops();
 				for (final PhysicalStopRender rend : renders) {
-					rend.setPhysicalStops(phyStops);
+					rend.setPhysicalStops(stop, phyStops);
 				}
 			}
 		}

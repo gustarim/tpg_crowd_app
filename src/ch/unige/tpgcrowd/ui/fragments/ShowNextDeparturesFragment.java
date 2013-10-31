@@ -32,6 +32,7 @@ public class ShowNextDeparturesFragment extends Fragment {
 	public static final String EXTRA_LINE_CODE = "ch.unige.tpgcrowd.extra.LINE_CODE";
 	public static final String EXTRA_DEST_CODE = "ch.unige.tpgcrowd.extra.DEST_CODE";
 	public static final String EXTRA_STOP_CODE = "ch.unige.tpgcrowd.extra.STOP_CODE";
+	public static final String EXTRA_PHYSICAL_STOP_CODE = "ch.unige.tpgcrowd.extra.PHYSICAL_STOP_CODE";
 	public static final String EXTRA_DEST_NAME = "ch.unige.tpgcrowd.extra.DEST_NAME";
 	protected static final String STRING_HOUR = "&gt;1h";
 	

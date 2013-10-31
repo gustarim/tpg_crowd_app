@@ -6,26 +6,29 @@
 
     <include
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         layout="@layout/large_line_icon" />
 
     <LinearLayout
         android:id="@+id/n"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textDirection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/default_direction"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+			android:layout_marginLeft="25dp"
             android:text="@string/contribute"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white" />

@@ -22,10 +22,16 @@ public class StopGeofenceStore {
 			"ch.unige.tpgcrowd.geofence.KEY_TRANSITION_TYPE";
 	public static final String KEY_DESTINATION_CODE = 
 			"ch.unige.tpgcrowd.geofence.KEY_DIRECTION_CODE";
+	public static final String KEY_DESTINATION_NAME = 
+			"ch.unige.tpgcrowd.geofence.KEY_DIRECTION_NAME";
 	public static final String KEY_STOP_CODE = 
 			"ch.unige.tpgcrowd.geofence.KEY_STOP_CODE";
+	public static final String KEY_PHYSICAL_STOP_CODE = 
+			"ch.unige.tpgcrowd.geofence.KEY_PHYSICAL_STOP_CODE";
 	public static final String KEY_LINE_CODE = 
 			"ch.unige.tpgcrowd.geofence.KEY_LINE_CODE";
+	public static final String KEY_STOP_CROWD = 
+			"ch.unige.tpgcrowd.geofence.KEY_STOP_CROWD";
 	// The prefix for flattened geofence keys
 	public static final String KEY_PREFIX =
 			"ch.unige.tpgcrowd.geofence.KEY";
@@ -113,7 +119,14 @@ public class StopGeofenceStore {
 		
 		final String lineCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_LINE_CODE), INVALID_CODE);
 		final String directionCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_DESTINATION_CODE), INVALID_CODE);
+		final String directionName = mPrefs.getString(getGeofenceFieldKey(id, KEY_DESTINATION_NAME), INVALID_CODE);
+		final String physicalStopCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_PHYSICAL_STOP_CODE), INVALID_CODE);
 		final String stopCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_STOP_CODE), INVALID_CODE);
+		
+		final int stopCrowd = mPrefs.getInt(
+				getGeofenceFieldKey(id, KEY_STOP_CROWD),
+				INVALID_INT_VALUE);
+		
 		// If none of the values is incorrect, return the object
 		if (
 				lat != INVALID_FLOAT_VALUE &&
@@ -122,13 +135,15 @@ public class StopGeofenceStore {
 				expirationDuration !=
 				INVALID_LONG_VALUE &&
 				transitionType != INVALID_INT_VALUE &&
+				stopCrowd != INVALID_INT_VALUE &&
 				!lineCode.equals(INVALID_CODE) &&
 				!directionCode.equals(INVALID_CODE) &&
+				!physicalStopCode.equals(INVALID_CODE) &&
 				!stopCode.equals(INVALID_CODE)) {
 
 			// Return a true Geofence object
 			return new StopGeofence(lat, lng,
-					transitionType, lineCode, directionCode, stopCode);
+					transitionType, lineCode, directionCode, directionName, physicalStopCode, stopCode, stopCrowd);
 			// Otherwise, return null.
 		} else {
 			return null;
@@ -170,8 +185,17 @@ public class StopGeofenceStore {
 				getGeofenceFieldKey(id, KEY_DESTINATION_CODE),
 				geofence.getDestinationCode());
 		editor.putString(
+				getGeofenceFieldKey(id, KEY_DESTINATION_NAME),
+				geofence.getDestinationName());
+		editor.putString(
+				getGeofenceFieldKey(id, KEY_PHYSICAL_STOP_CODE),
+				geofence.getStopCode());
+		editor.putString(
 				getGeofenceFieldKey(id, KEY_STOP_CODE),
 				geofence.getStopCode());
+		editor.putInt(
+				getGeofenceFieldKey(id, KEY_STOP_CROWD),
+				geofence.getStopCrowd());
 		// Commit the changes
 		editor.commit();
 	}
@@ -190,7 +214,10 @@ public class StopGeofenceStore {
 		editor.remove(getGeofenceFieldKey(id, KEY_TRANSITION_TYPE));
 		editor.remove(getGeofenceFieldKey(id, KEY_LINE_CODE));
 		editor.remove(getGeofenceFieldKey(id, KEY_DESTINATION_CODE));
+		editor.remove(getGeofenceFieldKey(id, KEY_DESTINATION_NAME));
+		editor.remove(getGeofenceFieldKey(id, KEY_PHYSICAL_STOP_CODE));
 		editor.remove(getGeofenceFieldKey(id, KEY_STOP_CODE));
+		editor.remove(getGeofenceFieldKey(id, KEY_STOP_CROWD));
 		editor.commit();
 	}
 	
