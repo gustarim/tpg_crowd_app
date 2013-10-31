@@ -3,11 +3,13 @@ package ch.unige.tpgcrowd.ui.fragments;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
@@ -32,11 +34,19 @@ import ch.unige.tpgcrowd.model.PhysicalStop;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.StopNotificationView;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
+import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopSelectedListener;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.location.Geofence;
 
-public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopRender {
+public class ShowPhisicalStopsFragment extends DialogFragment implements PhysicalStopRender {
+	
+	public static ShowPhisicalStopsFragment newInstance() {
+        return new ShowPhisicalStopsFragment();
+    }
+	
+	private PhysicalStopSelectedListener phySelectedListener;
+	
 	public interface OnConnectionClickListener {
 		public void onConnectionClick(final Connection c);
 	}
@@ -48,23 +58,11 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 				int groupPosition, int childPosition, long id) {
 			final PhysicalStopsExpandableListAdapter.Line line = (PhysicalStopsExpandableListAdapter.Line)adapter.getGroup(groupPosition);
 			final PhysicalStop stop = line.getConnectionPhysicalStop(childPosition);
-
+						
 			final Connection conn = line.connections.get(childPosition);
-			final FragmentManager fm = getFragmentManager();
-			OnConnectionClickListener connClickListener = (OnConnectionClickListener)fm.findFragmentByTag(ShowStopFragment.TAG);
-			connClickListener.onConnectionClick(conn);
-
-			final Coordinates pos = stop.getCoordinates();
-
-			final StopGeofence sg = new StopGeofence(pos.getLatitude(), 
-					pos.getLongitude(), Geofence.GEOFENCE_TRANSITION_ENTER, conn.getLineCode(), conn.getDestinationCode(), conn.getDestinationName(), stop.getStopCode(), adapter.getRootStop().getStopCode(), stop.getCrowd());
-			StopGeofenceStore.setGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID, sg);
-			final boolean added =  GeofenceHandler.addGeofences(getActivity(), new String[] {StopGeofence.STOP_GEOFENCE_ID}, 
-					StopTransitionsIntentService.getTransitionPendingIntent(getActivity().getApplicationContext()));
-			if (added) {
-				Log.i(StopGeofence.STOP_GEOFENCE_ID, "Geofence added");
-			}
-			return added;
+			final Stop rootStop = adapter.getRootStop();
+			
+			return phySelectedListener.onPhysicalStopSelected(rootStop, stop, conn);
 		}
 	};
 
@@ -80,6 +78,15 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 		list = (ExpandableListView)layout.findViewById(R.id.list);
 		return layout;
 	}
+	
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		Dialog dial = super.onCreateDialog(savedInstanceState);
+		
+		dial.setTitle(R.string.select_stop);
+		
+		return dial;
+	}
 
 	@Override
 	public void onStart() {
@@ -93,9 +100,11 @@ public class ShowPhisicalStopsFragment extends Fragment implements PhysicalStopR
 	}
 
 	@Override
-	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops) {
+	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops, PhysicalStopSelectedListener phySelectedListener) {
 		progres.setVisibility(View.GONE);
 		adapter = new PhysicalStopsExpandableListAdapter(rootStop, stops, getActivity());
+		this.phySelectedListener = phySelectedListener;
+		
 		list.setAdapter(adapter);
 		if (adapter.getGroupCount() == 1) {
 			list.expandGroup(0, true);

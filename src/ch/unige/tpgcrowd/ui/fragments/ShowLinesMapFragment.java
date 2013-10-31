@@ -21,6 +21,7 @@ import ch.unige.tpgcrowd.model.Coordinates;
 import ch.unige.tpgcrowd.model.PhysicalStop;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
+import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopSelectedListener;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -182,7 +183,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	}
 
 	@Override
-	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops) {
+	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops, PhysicalStopSelectedListener listener) {
 		
 
 		final StopInfoWindowAdapter siwa = new StopInfoWindowAdapter();
