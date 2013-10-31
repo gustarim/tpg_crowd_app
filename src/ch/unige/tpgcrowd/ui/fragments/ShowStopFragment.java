@@ -111,8 +111,7 @@ public class ShowStopFragment extends Fragment
 		ft.hide(slf);
 		ft.show(slmf);
 		ft.addToBackStack(FRAGMENT_LINE_MAP);
-//		ft.replace(R.id.lineMapFragment, slmf, FRAGMENT_LINE_MAP);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
 
@@ -122,9 +121,8 @@ public class ShowStopFragment extends Fragment
 		final FragmentTransaction ft = fm.beginTransaction();
 		ft.hide(slmf);
 		ft.show(slf);
-		ft.addToBackStack(FRAGMENT_LINE_MAP);
-//		ft.replace(R.id.lineMapFragment, slf, FRAGMENT_LINE_MAP);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//		ft.addToBackStack(FRAGMENT_LINE_MAP);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
 
@@ -142,7 +140,7 @@ public class ShowStopFragment extends Fragment
 		ft.add(R.id.lineMapFragment, sndf, ShowNextDeparturesFragment.class.getSimpleName());
 		ft.hide(slf);
 		ft.addToBackStack(FRAGMENT_LINE_MAP);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
 
@@ -162,7 +160,7 @@ public class ShowStopFragment extends Fragment
 			final FragmentTransaction ft = fm.beginTransaction();
 			ft.remove(sndf);
 			ft.show(slf);
-			ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//			ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			ft.commit();
 		}
 	}
