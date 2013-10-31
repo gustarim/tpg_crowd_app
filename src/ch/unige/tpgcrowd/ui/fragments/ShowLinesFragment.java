@@ -13,6 +13,7 @@ import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.model.PhysicalStop;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
+import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopSelectedListener;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,7 +58,7 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 		map.getMap().setOnMapClickListener(mapClick);
 
 		final FragmentTransaction ft = fm.beginTransaction();
-		spsf = new ShowPhisicalStopsFragment();
+		spsf = ShowPhisicalStopsFragment.newInstance();
 		ft.add(R.id.phisicalStopsFragment, spsf, null);
 		ft.commit();
 
@@ -72,8 +73,8 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 	}
 
 	@Override
-	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops) {
-		((PhysicalStopRender)spsf).setPhysicalStops(rootStop, stops);
+	public void setPhysicalStops(final Stop rootStop, final List<PhysicalStop> stops, PhysicalStopSelectedListener listener) {
+		((PhysicalStopRender)spsf).setPhysicalStops(rootStop, stops, listener);
 	}
 
 	@Override
