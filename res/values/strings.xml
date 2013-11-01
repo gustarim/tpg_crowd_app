@@ -34,4 +34,7 @@
     <string name="standing">standing</string>
 	<string name="sitting">sitting</string>
 	<string name="wrong_vehicle">Wrong bus/tram?</string>
+	<string name="accept">Accept</string>
+	<string name="cancel">Cancel</string>
+	<string name="thx_stop_crowd">Thank you!</string>
 </resources>

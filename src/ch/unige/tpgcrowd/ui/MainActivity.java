@@ -1,15 +1,22 @@
 package ch.unige.tpgcrowd.ui;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
+import android.widget.RemoteViews;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
+import ch.unige.tpgcrowd.google.activity.VehicleLeavingStopIntentService;
+import ch.unige.tpgcrowd.google.geofence.StopGeofence;
+import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
@@ -55,6 +62,29 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 			ft.commit();
 		}
 
+		final StopGeofence geofence = StopGeofenceStore.getGeofence(getApplicationContext(), StopGeofence.STOP_GEOFENCE_ID);
+		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+		//Small view
+		final RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notification_small_in_vehicle);
+		rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getApplicationContext(), geofence.getLineCode()));
+
+		rv.setTextViewText(R.id.lineIcon, geofence.getLineCode());
+		rv.setTextViewText(R.id.textDirection, geofence.getDestinationName());
+
+		notificationBuilder.setContent(rv);
+
+		notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+		
+		/* Creates an explicit intent for an Activity in your app */
+		final Intent resultIntent = new Intent(getApplicationContext(), VehicleNotificationView.class);
+		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		/* Adds the Intent that starts the Activity to the top of the stack */
+		final PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+		notificationBuilder.setContentIntent(resultPendingIntent);
+		
+		final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		notificationManager.notify(VehicleLeavingStopIntentService.TPG_NOTIFICATION, notificationBuilder.build());
 	}
 
 	@Override

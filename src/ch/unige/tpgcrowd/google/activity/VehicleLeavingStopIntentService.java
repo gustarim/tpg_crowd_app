@@ -20,7 +20,7 @@ import com.google.android.gms.location.DetectedActivity;
 
 public class VehicleLeavingStopIntentService extends IntentService {
 	private static final String NAME = "VehicleLeavingStopIntentService";
-	private static final int TPG_NOTIFICATION = 1;
+	public static final int TPG_NOTIFICATION = 1;
 
 	// The SharedPreferences object in which activity recognition timestamp is stored
 	private final SharedPreferences mPrefs;

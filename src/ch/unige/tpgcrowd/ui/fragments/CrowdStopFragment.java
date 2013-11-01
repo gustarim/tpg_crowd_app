@@ -4,10 +4,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Toast;
 import ch.unige.tpgcrowd.R;
 
 public class CrowdStopFragment extends Fragment {
@@ -18,6 +23,23 @@ public class CrowdStopFragment extends Fragment {
 	private int physicalStopCrowd;
 	private ImageView crowdImg;
 	private SeekBar seekBar;
+	private LinearLayout crowdLayout;
+	private LinearLayout btnsLayout;
+	
+	private final OnClickListener btnClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			crowdLayout.setVisibility(LinearLayout.VISIBLE);
+			btnsLayout.setVisibility(LinearLayout.GONE);
+			if (v.equals(btnAccept)) {
+				seekBar.setVisibility(SeekBar.GONE);
+				Toast.makeText(getActivity(), R.string.thx_stop_crowd, Toast.LENGTH_SHORT).show();
+			}
+		}
+	};
+	private Button btnAccept;
+	private Button btnCancel;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,16 +58,26 @@ public class CrowdStopFragment extends Fragment {
 		seekBar.setMax(7);
 		seekBar.setProgress(physicalStopCrowd);
 		
+		crowdLayout = (LinearLayout)layout.findViewById(R.id.crowd_image_layout);
+
+		btnsLayout = (LinearLayout)layout.findViewById(R.id.crowd_btns_layout);
+		
+		btnAccept = (Button) btnsLayout.findViewById(R.id.btn_accept);
+		btnCancel = (Button) btnsLayout.findViewById(R.id.btn_cancel);
+		
+		btnAccept.setOnClickListener(btnClickListener);
+		btnCancel.setOnClickListener(btnClickListener);
+		
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				//DO NOTHING
+				crowdLayout.setVisibility(LinearLayout.GONE);
+				btnsLayout.setVisibility(LinearLayout.VISIBLE);
 			}
 			
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				//DO NOTHING				
+			public void onStartTrackingTouch(SeekBar seekBar) {			
 			}
 			
 			@Override
