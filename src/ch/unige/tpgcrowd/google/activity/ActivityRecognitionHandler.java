@@ -2,6 +2,8 @@ package ch.unige.tpgcrowd.google.activity;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
@@ -20,7 +22,12 @@ public class ActivityRecognitionHandler implements ConnectionCallbacks,
     public static final int DETECTION_INTERVAL_MILLISECONDS =
             MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
     
-    private enum REQUEST_TYPE {START, STOP}
+    public static final String ACTIVITY_RECOGNITION_START_TIME = "ch.unige.tpgcrowd.activity.START_TIME_KEY";
+    
+	private static final String SHARED_PREFERENCES =
+			"SharedPreferences";
+	
+    private enum REQUEST_TYPE {START, STOP};
     /*
      * Store the PendingIntent used to send activity recognition events
      * back to the app
@@ -40,6 +47,14 @@ public class ActivityRecognitionHandler implements ConnectionCallbacks,
     
     public static boolean startActivityRecognition(final Context context, 
     		final PendingIntent activityRecognitionPendingIntent) {
+    	
+    	SharedPreferences mPrefs = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+		final Editor editor = mPrefs.edit();
+		
+		// Write the start time value to SharedPreferences
+		editor.putLong(ACTIVITY_RECOGNITION_START_TIME,System.currentTimeMillis());
+		editor.commit();
+    	    	
     	final ActivityRecognitionHandler ahandler = new ActivityRecognitionHandler(activityRecognitionPendingIntent,
     			REQUEST_TYPE.START);
     	return ahandler.connectToActivityRecognitionclient(context);

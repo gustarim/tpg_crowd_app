@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -21,6 +22,15 @@ public class VehicleLeavingStopIntentService extends IntentService {
 	private static final String NAME = "VehicleLeavingStopIntentService";
 	private static final int TPG_NOTIFICATION = 1;
 
+	// The SharedPreferences object in which activity recognition timestamp is stored
+	private final SharedPreferences mPrefs;
+	// The name of the SharedPreferences
+	private static final String SHARED_PREFERENCES =
+			"SharedPreferences";
+	
+	//Max delay - 10 minutes
+	private static final long MAX_ACTIVITY_RECOGNITION_DELAY = 10 * 60 * 1000;
+	
 	public static PendingIntent getLeavingStopVehicle(final Context context) {
 		final Intent intent = new Intent(
 				context, VehicleLeavingStopIntentService.class);
@@ -30,12 +40,22 @@ public class VehicleLeavingStopIntentService extends IntentService {
 
 	public VehicleLeavingStopIntentService() {
 		super(NAME);
+		mPrefs = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 	}
 
 	@Override
 	protected void onHandleIntent(final Intent intent) {
 		// If the incoming intent contains an update
 		if (ActivityRecognitionResult.hasResult(intent)) {
+			
+			//Get activity recognition start time from SharedPrefs
+			Long startTime = mPrefs.getLong(ActivityRecognitionHandler.ACTIVITY_RECOGNITION_START_TIME, -1);
+			if (System.currentTimeMillis() - startTime > MAX_ACTIVITY_RECOGNITION_DELAY) {
+				//If elapsed time > max delay, stop the activity recognition service
+				ActivityRecognitionHandler.stopActivityRecognition(getApplicationContext(), 
+						getLeavingStopVehicle(getApplicationContext()));
+			}
+			
 			// Get the update
 			final ActivityRecognitionResult result =
 					ActivityRecognitionResult.extractResult(intent);
