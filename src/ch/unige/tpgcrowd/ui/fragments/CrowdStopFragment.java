@@ -53,7 +53,8 @@ public class CrowdStopFragment extends Fragment {
 					boolean fromUser) {
 				//Change image level
 				//TODO: Save crowd value using physicalStopCode
-				crowdImg.setImageLevel(progress);
+				physicalStopCrowd = progress;
+				crowdImg.setImageLevel(physicalStopCrowd);
 			}
 		});
 		
