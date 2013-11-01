@@ -20,6 +20,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.unige.tpgcrowd.R;
+import ch.unige.tpgcrowd.google.activity.StillAtStopIntentService;
 import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
 import ch.unige.tpgcrowd.google.geofence.StopGeofence;
 import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
@@ -153,7 +154,7 @@ public class StopNotificationView extends FragmentActivity {
 		notificationBuilder.setContentIntent(resultPendingIntent);
 
 		final NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(0, notificationBuilder.build());
+		notificationManager.notify(StillAtStopIntentService.TPG_STOP_NOTIFICATION, notificationBuilder.build());
 
 	}
 

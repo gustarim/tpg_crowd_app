@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import ch.unige.tpgcrowd.R;
+import ch.unige.tpgcrowd.google.activity.StillAtStopIntentService;
 import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
 import ch.unige.tpgcrowd.google.geofence.StopGeofence;
 import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
@@ -46,6 +47,7 @@ public class ShowStopFragment extends Fragment
 	public static final String EXTRA_STOP_CODE = "ch.unige.tpgcrowd.extra.STOP_CODE";
 	public static final String EXTRA_STOP_NAME = "ch.unige.tpgcrowd.extra.STOP_NAME";
 	private static final String FRAGMENT_LINE_MAP = "linemap";
+	
 	private ShowLinesFragment slf;
 	private ShowLinesMapFragment slmf;
 	private ShowNextDeparturesFragment sndf; 
@@ -79,6 +81,7 @@ public class ShowStopFragment extends Fragment
 				Log.i(StopGeofence.STOP_GEOFENCE_ID, "Geofence added");
 			}
 			
+			displayNotif(sg);
 			return added;
 		}
 	};
@@ -207,5 +210,39 @@ public class ShowStopFragment extends Fragment
 			ft.commit();
 		}
 	}
+	
+	
+	private void displayNotif(StopGeofence sg) {
 
+		//	TEST METHOD - TO REMOVE
+		//
+		////// 
+		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity().getApplicationContext());
+
+		//Small view
+		RemoteViews rv = new RemoteViews(getActivity().getPackageName(), R.layout.notification_small_at_stop);
+		rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getActivity(), sg.getLineCode()));
+
+		rv.setTextViewText(R.id.lineIcon,sg.getLineCode());
+		rv.setTextViewText(R.id.textDirection,sg.getDestinationName());
+
+		notificationBuilder.setContent(rv);
+
+		notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+
+		/* Creates an explicit intent for an Activity in your app */
+		Intent resultIntent = new Intent(getActivity(), StopNotificationView.class);
+		resultIntent.putExtra("STOP_GEOFENCE_KEY", sg);
+
+		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		/* Adds the Intent that starts the Activity to the top of the stack */
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+		notificationBuilder.setContentIntent(resultPendingIntent);
+
+		final NotificationManager notificationManager = (NotificationManager) getActivity().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(StillAtStopIntentService.TPG_STOP_NOTIFICATION, notificationBuilder.build());
+
+
+	}
 }

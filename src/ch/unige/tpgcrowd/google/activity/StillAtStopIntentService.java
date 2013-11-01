@@ -22,7 +22,7 @@ import com.google.android.gms.location.Geofence;
 
 public class StillAtStopIntentService extends IntentService {
 	private static final String NAME = "StillAtStopIntentService";
-	private static final int TPG_STOP_NOTIFICATION = 0;
+	public static final int TPG_STOP_NOTIFICATION = 1234;
 
 	public static PendingIntent getAtStopStill(final Context context) {
 		final Intent intent = new Intent(
