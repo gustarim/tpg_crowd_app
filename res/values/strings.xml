@@ -40,4 +40,7 @@
         <item quantity="one">(next update in 1 min)</item>
         <item quantity="other">(next update in %d mins)</item>
     </plurals>
+	<string name="accept">Accept</string>
+	<string name="cancel">Cancel</string>
+	<string name="thx_stop_crowd">Thank you!</string>
 </resources>

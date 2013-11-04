@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.CharSequenceUtils;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,11 +24,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.manager.ITPGDepartures;
 import ch.unige.tpgcrowd.manager.TPGManager;
 import ch.unige.tpgcrowd.model.Departure;
 import ch.unige.tpgcrowd.model.DepartureList;
+import ch.unige.tpgcrowd.model.Disruption;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import ch.unige.tpgcrowd.util.ColorStore;
 
@@ -169,7 +173,7 @@ public class ShowNextDeparturesFragment extends Fragment {
 		final ITPGDepartures depMan = TPGManager.getDeparturesManager(getActivity());
 		depMan.getNextDepartures(stopCode, lineCode, destinationCode, departureListener);
 	}
-	
+
 	private class DepartureListAdapter extends ArrayAdapter<Departure> {
 		private final List<Departure> departures;
 
@@ -191,6 +195,21 @@ public class ShowNextDeparturesFragment extends Fragment {
 			final ImageView crowd = (ImageView)rowView.findViewById(R.id.crowd);
 			crowd.setImageLevel(dep.getCrowd());
 			
+			final ImageView info = (ImageView)rowView.findViewById(R.id.info);
+			if (dep.getDisruptions() != null && !dep.getDisruptions().isEmpty()) {
+				info.setImageDrawable(getResources().getDrawable(R.drawable.incident));
+				final Disruption dis = dep.getDisruptions().get(0);
+				info.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						Toast.makeText(getContext(), dis.getConsequence(), Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+			else {
+				info.setOnClickListener(null);
+			}
 			return rowView;
 		}
 	}
