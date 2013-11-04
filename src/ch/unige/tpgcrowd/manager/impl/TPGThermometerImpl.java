@@ -27,6 +27,19 @@ public class TPGThermometerImpl extends TPGAbstractImpl implements ITPGThermomet
 	}
 	
 	@Override
+	public void getThermometerPhisicalStops(final Integer departureCode, final TPGObjectListener<Thermometer> listener) {
+		
+		if (departureCode == null) {
+			listener.onFailure();
+		}
+		else {
+			final String arguments = DEPARTURECODE_PARAM + departureCode;
+			addRequest(TpgJsonObjectRequest.METHOD_GET_THERMO_PHYSICAL_STOPS, arguments, listener);
+		}
+
+	}
+	
+	@Override
 	protected Class<? extends ITPGModelEntity> getResponseClass() {
 		return Thermometer.class;
 	}

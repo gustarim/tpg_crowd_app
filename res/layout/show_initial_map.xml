@@ -8,21 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/element_nobutton_horizontal_margin"
-        android:tag="bigInitMap" />
-
-    <LinearLayout
-        android:id="@+id/mapLineLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false" >
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_weight="0.5"
-            android:visibility="invisible" >
-        </FrameLayout>
-    </LinearLayout>
+        android:tag="bigInitMap"
+        android:id="@+id/initialMap" />
 
     <TextView
         android:id="@+id/map"

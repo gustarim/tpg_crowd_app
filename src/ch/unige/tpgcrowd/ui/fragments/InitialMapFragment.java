@@ -39,7 +39,7 @@ public class InitialMapFragment extends Fragment {
 			Bundle savedInstanceState) {
 //		return super.onCreateView(inflater, container, savedInstanceState);		
 		
-		View layout = inflater.inflate(R.layout.show_initial_map, null, false);
+		View layout = inflater.inflate(R.layout.show_initial_map, container, false);
 		final FragmentManager fm = getFragmentManager();
 		map = ((SupportMapFragment)fm.findFragmentByTag("bigInitMap")).getMap();
 		

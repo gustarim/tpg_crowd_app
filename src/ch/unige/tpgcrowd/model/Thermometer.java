@@ -74,6 +74,56 @@ public class Thermometer implements ITPGModelEntity {
 	public List<Step> getSteps() {
 		return steps;
 	}
+	
+	public int getIndexFirstRemainingStep() {
+		int i = 0;
+		while (i < steps.size() - 1 && steps.get(i).arrivalTime == null) {
+			i++;
+		}
+		if (i == steps.size() - 1) {
+			if (steps.get(i).arrivalTime == null) {
+				i = -1;
+			}
+		}
+		return i;
+	}
+	
+	public Step getFirstNonZeroRemainingStep() {
+		Step step = null;
+		int i = getIndexFirstRemainingStep();
+		if (i != -1) {
+			while (i < steps.size() - 1 && steps.get(i).arrivalTime == 0 ) {
+				i++;
+			}
+			if (i == steps.size() - 1) {
+				if (steps.get(i).arrivalTime != 0) {
+					step = steps.get(i);
+				}
+			}
+			else {
+				step = steps.get(i);
+			}
+		}
+		return step;
+	}
+	
+	public Step getFirstRemainingStep() {
+		Step step = null;
+		final int i = getIndexFirstRemainingStep();
+		if (i != -1) {
+			step = steps.get(i);
+		}
+		return step;
+	}
+	
+	public List<Step> getRemainingSteps() {
+		List<Step> steps = null;
+		final int i = getIndexFirstRemainingStep();
+		if (i != -1) {
+			steps = this.steps.subList(i, this.steps.size());
+		}
+		return steps;
+	}
 
 	public void setSteps(List<Step> steps) {
 		this.steps = steps;

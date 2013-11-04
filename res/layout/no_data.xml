@@ -5,11 +5,6 @@
     android:orientation="horizontal"
     android:background="@drawable/default_background"
     android:gravity="center" >
-    
-    <ProgressBar
-        android:id="@+id/sync_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,6 +13,6 @@
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        android:text="@string/loading" />
+        android:text="@string/no_data" />
 
 </LinearLayout>

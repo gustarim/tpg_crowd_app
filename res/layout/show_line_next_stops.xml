@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin" >
+
+        <include
+            android:id="@+id/lineInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            layout="@layout/large_show_line_connection" />
+
+        <ImageButton
+            android:id="@+id/refresh"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:background="@android:color/white"
+            android:contentDescription="@string/refresh"
+            android:src="@drawable/ic_refresh_departures" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/updated"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        	android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"/>
+
+        <TextView
+            android:id="@+id/updateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+            android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+        <TextView
+            android:id="@+id/nextUpdateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        	android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_heigth"
+        android:weightSum="1" >
+
+        <!-- <ImageButton
+            android:id="@+id/getInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="3"
+            android:contentDescription="@string/information"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_info_departure" /> -->
+        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="0.25"
+            android:background="@android:color/white"
+            />
+        
+        <ImageButton
+            android:id="@+id/sortTime"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="0.4"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_sort_time"
+            android:contentDescription="@string/sort_time" 
+            />
+        
+        <ImageButton
+            android:id="@+id/sortCrowd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="0.35"
+            android:background="@android:color/white"
+            android:src="@drawable/ic_sort_crowd"
+            android:contentDescription="@string/sort_crowd"
+            />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/progres"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/loading" />
+
+    <ListView
+        android:id="@+id/departuresList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+    </ListView>
+
+    <include
+        android:id="@+id/noData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        layout="@layout/no_data" />
+
+</LinearLayout>

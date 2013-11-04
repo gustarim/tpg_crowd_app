@@ -15,6 +15,9 @@ public class Step {
 	@JsonProperty("stop")
 	Stop stop;
 	
+	@JsonProperty("physicalStop")
+	PhysicalStop physicalStop;
+	
 	@JsonProperty("reliability")
 	String reliability;
 	
@@ -94,5 +97,11 @@ public class Step {
 		this.visible = visible;
 	}
 	
+	public PhysicalStop getPhysicalStop() {
+		return physicalStop;
+	}
 	
+	public void setPhysicalStop(PhysicalStop physicalStop) {
+		this.physicalStop = physicalStop;
+	}
 }

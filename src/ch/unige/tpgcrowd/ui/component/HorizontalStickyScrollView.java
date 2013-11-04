@@ -2,23 +2,17 @@ package ch.unige.tpgcrowd.ui.component;
 
 import java.util.List;
 
-import ch.unige.tpgcrowd.R;
-import ch.unige.tpgcrowd.model.PhysicalStop;
-import ch.unige.tpgcrowd.model.Stop;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.TextView;
+import ch.unige.tpgcrowd.model.Stop;
 
 public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
@@ -294,4 +288,10 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 		return DEFAULT_RELATIVE_SIZE;
 	}
 
+	public void deselect() {
+		if (selectedView != null) {
+			selectedView.setSelected(false);
+			selectedView = null;
+		}
+	}
 }

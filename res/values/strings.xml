@@ -34,4 +34,10 @@
     <string name="standing">standing</string>
 	<string name="sitting">sitting</string>
 	<string name="wrong_vehicle">Wrong bus/tram?</string>
+	<string name="no_data">No data available!</string>
+	
+	<plurals name="next_update">
+        <item quantity="one">(next update in 1 min)</item>
+        <item quantity="other">(next update in %d mins)</item>
+    </plurals>
 </resources>

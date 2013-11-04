@@ -145,7 +145,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View layout = inflater.inflate(R.layout.show_stop_lines_map, null, false);
+		View layout = inflater.inflate(R.layout.show_stop_lines_map, container, false);
 		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineButton);
 		lines.setOnClickListener(click);
 		final FragmentManager fm = getFragmentManager();

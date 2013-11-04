@@ -6,7 +6,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
@@ -25,8 +27,27 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	private ShowStopFragment spsf;
 	private ShowNearbyStopsFragment nearbyFragment;
 	private InitialMapFragment map;
-
-	private boolean init = false;
+	private boolean validState;
+	private boolean byHand;
+	private int onBack = -1;
+	private boolean onMapClick;
+	
+	private final OnBackStackChangedListener onBackStackListener = new OnBackStackChangedListener() {
+		
+		@Override
+		public void onBackStackChanged() {
+			final FragmentManager fm = getSupportFragmentManager();
+			final int childrens = fm.getBackStackEntryCount();
+			Log.i("bakcstack", "" + childrens);
+//			if ( && childrens == onBack) {
+			if (!byHand && childrens == 0) {
+				nearbyFragment.deselect();
+//				fm.popBackStack("MAIN" + 0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//				onBack = -1;
+			}
+			byHand = false;
+		}
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,27 +55,10 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 		ColorStore.updateColors(this);
 		setContentView(R.layout.activity_main);
 		//if this call return false we must stop all the rest..
-		GooglePlayServiceCheckUtility.servicesConnected(this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		if (nearbyFragment == null) {
-			final FragmentManager fm = getSupportFragmentManager();
-			final FragmentTransaction ft = fm.beginTransaction();
-			nearbyFragment = new ShowNearbyStopsFragment();
-			
-			ft.add(R.id.main, nearbyFragment, ShowStopFragment.TAG);		
-
-			map = new InitialMapFragment();
-
-			ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
-			
-			ft.commit();
+		validState = GooglePlayServiceCheckUtility.servicesConnected(this);
+		if (validState) {
+			init();
 		}
-
 	}
 
 	@Override
@@ -77,7 +81,10 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 				/*
 				 * Try the request again
 				 */
-				GooglePlayServiceCheckUtility.servicesConnected(this);
+				validState = GooglePlayServiceCheckUtility.servicesConnected(this);
+				if (validState) {
+					init();
+				}
 				break;
 			}
 		}
@@ -85,53 +92,21 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 
 	@Override
 	public void onStopSelected(Stop stop) {
-
+		final FragmentManager fm = getSupportFragmentManager();
+		byHand = true;
+		fm.popBackStack("MAIN", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		
 		if (stop != null) {
-			
-			final Bundle b = new Bundle();
-			b.putString(ShowStopFragment.EXTRA_STOP_NAME, stop.getStopName());
-			b.putString(ShowStopFragment.EXTRA_STOP_CODE, stop.getStopCode());
-			
-			if (spsf == null) {
-				final FragmentManager fm = getSupportFragmentManager();
-				final FragmentTransaction ft = fm.beginTransaction();
-
-				spsf = new ShowStopFragment();
-				spsf.setArguments(b);
-
-				ft.hide(map);
-				ft.add(R.id.main, spsf, ShowStopFragment.TAG);
-
-				ft.commit();
-				
-				init = true;
-			}
-			else {
-				if (init) {
-					spsf.updateContent(b);
-				}
-				else {
-					final FragmentManager fm = getSupportFragmentManager();
-					final FragmentTransaction ft = fm.beginTransaction();
-
-					ft.hide(map);
-					ft.show(spsf);
-					ft.commit();
-					
-					spsf.updateContent(b);
-					init = true;
-				}
-			}
-		}
-		else {
-			final FragmentManager fm = getSupportFragmentManager();
+			spsf.updateContent(stop.getStopName(), stop.getStopCode());
 			final FragmentTransaction ft = fm.beginTransaction();
-			
-			ft.hide(spsf);
-			ft.show(map);
+			ft.hide(map);
+			ft.show(spsf);
+			ft.addToBackStack("MAIN");
 			ft.commit();
-			
-			init = false;
+			if (onMapClick) {
+				spsf.onMapClick();
+				onMapClick = false;
+			}
 		}
 	}
 
@@ -157,16 +132,12 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	public void onLineMapLongClick(float zoom, LatLng currentCenter,
 			LatLng pressPosition) {
 		final FragmentManager fm = getSupportFragmentManager();
-		final FragmentTransaction ft = fm.beginTransaction();
+		fm.popBackStack("MAIN", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		
-		ft.hide(spsf);
-		ft.show(map);
-		ft.commit();
-		
-		init = false;
 		map.setLocationWithMarker(currentCenter, pressPosition, zoom);
 		nearbyFragment.setUserLocation(pressPosition.latitude, pressPosition.longitude);
 		spsf.setRefMarker(pressPosition.latitude, pressPosition.longitude);
+		onMapClick = true;
 	}
 
 	@Override
@@ -178,5 +149,20 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	}
 
 	
-
+	private void init() {
+		final FragmentManager fm = getSupportFragmentManager();
+		fm.addOnBackStackChangedListener(onBackStackListener);
+		byHand = false;
+		final FragmentTransaction ft = fm.beginTransaction();
+		
+		nearbyFragment = new ShowNearbyStopsFragment();
+		map = new InitialMapFragment();
+		spsf = new ShowStopFragment();
+		
+		ft.add(R.id.main, nearbyFragment, ShowNearbyStopsFragment.TAG);		
+		ft.add(R.id.main, spsf, ShowStopFragment.TAG);
+		ft.hide(spsf);
+		ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
+		ft.commit();
+	}
 }

@@ -36,13 +36,14 @@ import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import ch.unige.tpgcrowd.ui.StopNotificationView;
 import ch.unige.tpgcrowd.ui.fragments.ShowLinesFragment.OnLinesMapClickListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowLinesMapFragment.OnLinesClickListener;
+import ch.unige.tpgcrowd.ui.fragments.ShowNextDeparturesFragment.OnDepartureClickListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowPhisicalStopsFragment.OnConnectionClickListener;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.location.Geofence;
 
 public class ShowStopFragment extends Fragment 
-	implements OnLinesMapClickListener, OnLinesClickListener, OnConnectionClickListener {
+	implements OnLinesMapClickListener, OnLinesClickListener, OnConnectionClickListener, OnDepartureClickListener {
 	public static final String TAG = "stop";
 	public static final String EXTRA_STOP_CODE = "ch.unige.tpgcrowd.extra.STOP_CODE";
 	public static final String EXTRA_STOP_NAME = "ch.unige.tpgcrowd.extra.STOP_NAME";
@@ -50,7 +51,8 @@ public class ShowStopFragment extends Fragment
 	
 	private ShowLinesFragment slf;
 	private ShowLinesMapFragment slmf;
-	private ShowNextDeparturesFragment sndf; 
+	private ShowNextDeparturesFragment sndf;
+	private ShowNextStopsFragment snsf;
 	private LinkedList<PhysicalStopRender> renders;
 	public interface PhysicalStopRender {
 		public void setAsReloading();
@@ -131,20 +133,21 @@ public class ShowStopFragment extends Fragment
 		renders.add(slf);
 		renders.add(slmf);
 		
-		final Bundle b = getArguments();
-		updateContent(b);
-		
+//		final Bundle b = getArguments();
+//		updateContent(b.getString(EXTRA_STOP_NAME), b.getString(EXTRA_STOP_CODE));			
 		return layout;
 	}
 	
-	public void updateContent(Bundle b) {
-		removeConnectionFragment();
-		name.setText(b.getString(EXTRA_STOP_NAME));
+	public void updateContent(final String name, final String stopCode) {
+		
+//		removeConnectionFragment();
+//		removeNextStopsFragment();
+		
+		this.name.setText(name);
 		for (final PhysicalStopRender rend : renders) {
 			rend.setAsReloading();
 		}
-		
-		stopCode = b.getString(EXTRA_STOP_CODE);
+		this.stopCode = stopCode;
 		final ITPGStops phisicalStops = TPGManager.getStopsManager(getActivity());
 		phisicalStops.getPhysicalStopByCode(stopCode, stopsListener);
 	}
@@ -181,10 +184,30 @@ public class ShowStopFragment extends Fragment
 		b.putString(ShowNextDeparturesFragment.EXTRA_DEST_NAME, c.getDestinationName());
 		sndf = new ShowNextDeparturesFragment();
 		sndf.setArguments(b);
+		sndf.setOnDepepartureClickListener(this);
 		final FragmentManager fm = getFragmentManager();
 		final FragmentTransaction ft = fm.beginTransaction();
 		ft.add(R.id.lineMapFragment, sndf, ShowNextDeparturesFragment.class.getSimpleName());
 		ft.hide(slf);
+		ft.addToBackStack(FRAGMENT_LINE_MAP);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.commit();
+	}
+	
+	@Override
+	public void onItemListclicked(final String lineCode, final String destinationName,
+			final int departurecode) {
+		final Bundle b = new Bundle();
+		b.putString(ShowNextStopsFragment.EXTRA_LINE_CODE, lineCode);
+		b.putString(ShowNextStopsFragment.EXTRA_DEST_NAME, destinationName);
+		b.putInt(ShowNextStopsFragment.EXTRA_DEP_CODE, departurecode);
+		b.putString(ShowNextStopsFragment.EXTRA_STOP_CODE, stopCode);
+		snsf = new ShowNextStopsFragment();
+		snsf.setArguments(b);
+		final FragmentManager fm = getFragmentManager();
+		final FragmentTransaction ft = fm.beginTransaction();
+		ft.add(R.id.lineMapFragment, snsf, ShowNextStopsFragment.class.getSimpleName());
+		ft.hide(sndf);
 		ft.addToBackStack(FRAGMENT_LINE_MAP);
 //		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
@@ -205,6 +228,17 @@ public class ShowStopFragment extends Fragment
 			final FragmentManager fm = getFragmentManager();
 			final FragmentTransaction ft = fm.beginTransaction();
 			ft.remove(sndf);
+			ft.show(slf);
+//			ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			ft.commit();
+		}
+	}
+	
+	private void removeNextStopsFragment() {
+		if (snsf != null) {
+			final FragmentManager fm = getFragmentManager();
+			final FragmentTransaction ft = fm.beginTransaction();
+			ft.remove(snsf);
 			ft.show(slf);
 //			ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			ft.commit();

@@ -9,11 +9,13 @@ import ch.unige.tpgcrowd.google.geofence.StopGeofence;
 import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
 import ch.unige.tpgcrowd.ui.fragments.CrowdStopFragment;
 import ch.unige.tpgcrowd.ui.fragments.CrowdVehicleFragment;
+import ch.unige.tpgcrowd.ui.fragments.ShowNextStopsFragment;
 
 public class VehicleNotificationView extends FragmentActivity {
 
 	private StopGeofence stop;
-	private CrowdVehicleFragment crvf; 
+	private CrowdVehicleFragment crvf;
+	private ShowNextStopsFragment snsf;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

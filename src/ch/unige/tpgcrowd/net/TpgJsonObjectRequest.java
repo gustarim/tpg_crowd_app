@@ -2,8 +2,6 @@ package ch.unige.tpgcrowd.net;
 
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -25,6 +23,7 @@ public class TpgJsonObjectRequest extends JsonObjectRequest {
 	public static final String METHOD_GET_STOPS = "GetStops";
 	public static final String METHOD_GET_PHYSICAL_STOPS = "GetPhysicalStops";
 	public static final String METHOD_GET_THERMO = "GetThermometer";
+	public static final String METHOD_GET_THERMO_PHYSICAL_STOPS = "GetThermometerPhysicalStops";
 	public static final String METHOD_GET_ALL_DEPARTURES = "GetAllNextDepartures";
 	public static final String METHOD_GET_DEPARTURES = "GetNextDepartures";
 	public static final String METHOD_GET_DISRUPTIONS = "GetDisruptions";

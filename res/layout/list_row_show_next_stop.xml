@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    tools:context=".ui.fragments.ShowNextStopsFragment$StopListAdapter" >
+
+    <TextView
+        android:id="@+id/stopName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="0.25"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:layout_gravity="center_vertical" />
+    
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="0.4"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceListItem" />
+    
+    <ImageView
+        android:id="@+id/crowd"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
+        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+        android:layout_weight="0.35"
+        android:contentDescription="@null"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:src="@drawable/crowd_people_drawable"
+        android:layout_gravity="center_vertical" />
+
+</LinearLayout>

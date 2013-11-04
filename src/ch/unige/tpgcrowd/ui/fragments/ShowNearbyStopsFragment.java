@@ -207,5 +207,8 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 		LocationHandler.stopLocation(getActivity(), penInt);
 		getActivity().unregisterReceiver(locationReceiver);
 	}
-
+	
+	public void deselect() {
+		scrollView.deselect();
+	}
 }

@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,6 +39,12 @@ public class ShowNextDeparturesFragment extends Fragment {
 	public static final String EXTRA_DEST_NAME = "ch.unige.tpgcrowd.extra.DEST_NAME";
 	protected static final String STRING_HOUR = "&gt;1h";
 	
+	public interface OnDepartureClickListener {
+		public void onItemListclicked(final String lineCode, final String destinationName, final int departurecode);
+	}
+	
+	private OnDepartureClickListener depClickListener;
+	
 	private final TPGObjectListener<DepartureList> departureListener = new TPGObjectListener<DepartureList>() {
 		
 		@Override
@@ -45,8 +53,15 @@ public class ShowNextDeparturesFragment extends Fragment {
 			Log.d("dep", "next " + results.getDepartures().size());
 			deps = results.getDepartures();
 			sortByCrowd(deps);
+			final ImageButton sortCrowd = (ImageButton)layout.findViewById(R.id.sortCrowd);
+			sortCrowd.setOnClickListener(crowdSortClick);
+			sortCrowd.setBackgroundResource(R.drawable.background_selected);
+			final ImageButton sortTime = (ImageButton)layout.findViewById(R.id.sortTime);
+			sortTime.setOnClickListener(timeSortClick);
+			sortTime.setBackgroundResource(0);
 			final DepartureListAdapter adapter = new DepartureListAdapter(deps);
 			list.setAdapter(adapter);
+			list.setOnItemClickListener(listItemClick);
 			list.setVisibility(View.VISIBLE);
 			final TextView update = (TextView)getView().findViewById(R.id.updateTime);
 			update.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
@@ -74,6 +89,10 @@ public class ShowNextDeparturesFragment extends Fragment {
 		@Override
 		public void onClick(final View v) {
 			sortByCrowd(deps);
+			final ImageButton sortCrowd = (ImageButton)layout.findViewById(R.id.sortCrowd);
+			sortCrowd.setBackgroundResource(R.drawable.background_selected);
+			final ImageButton sortTime = (ImageButton)layout.findViewById(R.id.sortTime);
+			sortTime.setBackgroundResource(0);
 			final DepartureListAdapter adapter = new DepartureListAdapter(deps);
 			list.setAdapter(adapter);
 		}
@@ -84,9 +103,26 @@ public class ShowNextDeparturesFragment extends Fragment {
 		@Override
 		public void onClick(final View v) {
 			sortByTime(deps);
+			final ImageButton sortCrowd = (ImageButton)layout.findViewById(R.id.sortCrowd);
+			sortCrowd.setBackgroundResource(0);
+			final ImageButton sortTime = (ImageButton)layout.findViewById(R.id.sortTime);
+			sortTime.setBackgroundResource(R.drawable.background_selected);
 			final DepartureListAdapter adapter = new DepartureListAdapter(deps);
 			list.setAdapter(adapter);
 		}
+	};
+	
+	private final OnItemClickListener listItemClick = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position,
+				final long arg3) {
+			if (depClickListener != null) {
+				final Departure dep = deps.get(position);
+				depClickListener.onItemListclicked(lineCode, destinationName, dep.getDepartureCode());
+			}
+		}
+		
 	};
 	
 	private View progres;
@@ -94,14 +130,21 @@ public class ShowNextDeparturesFragment extends Fragment {
 	private List<Departure> deps;
 	private String lineCode;
 	private String destinationCode;
+	private String destinationName;
 	private String stopCode;
+	private LinearLayout layout;
+	
+	public void setOnDepepartureClickListener(final OnDepartureClickListener depClickListener) {
+		this.depClickListener = depClickListener;
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.show_line_next_departures, container, false);
+		layout = (LinearLayout)inflater.inflate(R.layout.show_line_next_departures, container, false);
 		final Bundle b = getArguments();
 		lineCode = b.getString(EXTRA_LINE_CODE);
+		destinationName = b.getString(EXTRA_DEST_NAME);
 		
 		final LinearLayout lineInfo = (LinearLayout)layout.findViewById(R.id.lineInfo);
 		final TextView lineIcon = (TextView)lineInfo.findViewById(R.id.lineIcon);
@@ -110,11 +153,7 @@ public class ShowNextDeparturesFragment extends Fragment {
 		final ImageButton refresh = (ImageButton)layout.findViewById(R.id.refresh);
 		refresh.setOnClickListener(refreshClick);
 		final TextView dir = (TextView)lineInfo.findViewById(R.id.direction);
-		dir.setText(b.getString(EXTRA_DEST_NAME));
-		final ImageButton sortCrowd = (ImageButton)layout.findViewById(R.id.sortCrowd);
-		sortCrowd.setOnClickListener(crowdSortClick);
-		final ImageButton sortTime = (ImageButton)layout.findViewById(R.id.sortTime);
-		sortTime.setOnClickListener(timeSortClick);
+		dir.setText(destinationName);
 		
 		progres = layout.findViewById(R.id.progres);
 		list = (ListView)layout.findViewById(R.id.departuresList);
