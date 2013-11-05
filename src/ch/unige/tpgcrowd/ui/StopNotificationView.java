@@ -2,8 +2,6 @@ package ch.unige.tpgcrowd.ui;
 
 import java.util.List;
 
-import com.google.android.gms.location.Geofence;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -35,14 +33,20 @@ import ch.unige.tpgcrowd.model.StopList;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import ch.unige.tpgcrowd.ui.fragments.CrowdStopFragment;
 import ch.unige.tpgcrowd.ui.fragments.ShowNextDeparturesFragment;
+import ch.unige.tpgcrowd.ui.fragments.ShowNextDeparturesFragment.OnDepartureClickListener;
+import ch.unige.tpgcrowd.ui.fragments.ShowNextStopsFragment;
 import ch.unige.tpgcrowd.ui.fragments.ShowPhisicalStopsFragment;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopRender;
 import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopSelectedListener;
 import ch.unige.tpgcrowd.util.ColorStore;
 
-public class StopNotificationView extends FragmentActivity {
+import com.google.android.gms.location.Geofence;
+
+public class StopNotificationView extends FragmentActivity implements OnDepartureClickListener {
 
 	private static final String TAG = StopNotificationView.class.getSimpleName();
+
+	private static final String FRAGMENT_NEXT_STOPS = "frag_next_stops";
 
 	private StopGeofence stop;
 	private ShowNextDeparturesFragment sndf;
@@ -61,7 +65,8 @@ public class StopNotificationView extends FragmentActivity {
 			final Coordinates pos = stop.getCoordinates();
 
 			final StopGeofence sg = new StopGeofence(pos.getLatitude(), 
-					pos.getLongitude(), Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT, conn.getLineCode(), conn.getDestinationCode(), conn.getDestinationName(), stop.getStopCode(), rootStop.getStopCode(), stop.getCrowd());
+					pos.getLongitude(), Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT, conn.getLineCode(), 
+					conn.getDestinationCode(), conn.getDestinationName(), stop.getStopCode(), rootStop.getStopCode(), stop.getCrowd());
 			StopGeofenceStore.setGeofence(StopNotificationView.this, StopGeofence.STOP_GEOFENCE_ID, sg);
 			final boolean added =  GeofenceHandler.addGeofences(StopNotificationView.this, new String[] {StopGeofence.STOP_GEOFENCE_ID}, 
 					StopTransitionsIntentService.getTransitionPendingIntent(StopNotificationView.this.getApplicationContext()));
@@ -177,6 +182,7 @@ public class StopNotificationView extends FragmentActivity {
 		bNextDep.putString(ShowNextDeparturesFragment.EXTRA_DEST_NAME, sg.getDestinationName());
 		sndf = new ShowNextDeparturesFragment();
 		sndf.setArguments(bNextDep);
+		sndf.setOnDepepartureClickListener(this);
 
 		final FragmentManager fm = getSupportFragmentManager();
 		final FragmentTransaction ft = fm.beginTransaction();
@@ -191,5 +197,24 @@ public class StopNotificationView extends FragmentActivity {
 		super.onResume();
 
 		updateCurrent(stop);
+	}
+
+	@Override
+	public void onItemListclicked(final String lineCode, final String destinationName,
+			final int departurecode) {
+		final Bundle b = new Bundle();
+		b.putString(ShowNextStopsFragment.EXTRA_LINE_CODE, lineCode);
+		b.putString(ShowNextStopsFragment.EXTRA_DEST_NAME, destinationName);
+		b.putInt(ShowNextStopsFragment.EXTRA_DEP_CODE, departurecode);
+		b.putString(ShowNextStopsFragment.EXTRA_STOP_CODE, stop.getStopCode());
+		final ShowNextStopsFragment snsf = new ShowNextStopsFragment();
+		snsf.setArguments(b);
+		final FragmentManager fm = getSupportFragmentManager();
+		final FragmentTransaction ft = fm.beginTransaction();
+		ft.replace(R.id.nextDepFragment, snsf, ShowNextStopsFragment.class.getSimpleName());
+		ft.hide(sndf);
+		ft.addToBackStack(FRAGMENT_NEXT_STOPS);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.commit();
 	}
 }

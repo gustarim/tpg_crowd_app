@@ -31,9 +31,14 @@
     <string name="contribute">click to know about your connection and register the crowd</string>
     <string name="contribute2">click to know about your next stops and register the crowd</string>
     <string name="next_stops">Next stops</string>
-    <string name="standing">standing</string>
-	<string name="sitting">sitting</string>
+    <string name="standing">I\'m standing</string>
+	<string name="sitting">I\'m sitting</string>
 	<string name="wrong_vehicle">Wrong bus/tram?</string>
+	<string name="wrong_vehicle_exp">The vehicle is wrong either, because you didn\'t select a new departure since the last trip, 
+	    or you took a different departure than the one recently selected, or because the live updates from TPG are out of synch.</string>
+	<string name="no_data_vehicle">Why there is no data?</string>
+	<string name="no_data_vehicle_exp">The data is not available, because you didn\'t select a new departure or because the live updates 
+	    from TPG are not working.</string>
 	<string name="no_data">No data available!</string>
 	
 	<plurals name="next_update">
@@ -43,4 +48,6 @@
 	<string name="accept">Accept</string>
 	<string name="cancel">Cancel</string>
 	<string name="thx_stop_crowd">Thank you!</string>
+	<string name="ok">OK</string>
+	<string name="end_of_service">This service is ended!</string>
 </resources>

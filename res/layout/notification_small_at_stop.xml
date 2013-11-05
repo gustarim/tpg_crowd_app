@@ -5,7 +5,7 @@
     android:orientation="horizontal" >
 
     <include
-        android:layout_width="wrap_content"
+        android:layout_width="65dp"
         android:layout_height="fill_parent"
         layout="@layout/large_line_icon" />
 
@@ -28,7 +28,6 @@
             android:id="@+id/textTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:layout_marginLeft="25dp"
             android:text="@string/contribute"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white" />

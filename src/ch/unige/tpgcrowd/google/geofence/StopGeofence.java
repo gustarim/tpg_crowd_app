@@ -14,6 +14,8 @@ public class StopGeofence implements Serializable {
 	public static final String STOP_GEOFENCE_ID = "StopGeofence";
 	private static final float STOP_GEOFENCE_RADIUS = 50;
 	private static final long STOP_GEOFENCE_EXPIRATION = 36000000;
+
+	public static final int UNSET_DEP_CODE = -1;
 	// Instance variables
 	private final String mId;
 	private final double mLatitude;
@@ -26,6 +28,7 @@ public class StopGeofence implements Serializable {
 	private final String physicalStopCode;
 	private final String stopCode;
 	private final String destinationName;
+	private int departureCode;
 	private final int stopCrowd;
 
 	/**
@@ -59,6 +62,7 @@ public class StopGeofence implements Serializable {
 		this.destinationCode = destinationCode;
 		this.destinationName = destinationName;
 		this.stopCrowd = stopCrowd;
+		this.departureCode = UNSET_DEP_CODE;
 	}
 	// Instance field getters
 	public String getId() {
@@ -106,6 +110,14 @@ public class StopGeofence implements Serializable {
 	
 	public int getStopCrowd() {
 		return stopCrowd;
+	}
+	
+	public void setDepartureCode(final int departureCode) {
+		this.departureCode = departureCode;
+	}
+	
+	public int getDepartureCode() {
+		return departureCode;
 	}
 	
 	/**

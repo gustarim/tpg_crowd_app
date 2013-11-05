@@ -61,12 +61,15 @@ public class ShowNextStopsFragment extends Fragment {
 			if (steps != null) {
 				Log.i("", steps.size() + "");
 				final Step nonZero = results.getFirstNonZeroRemainingStep();
+				final TextView nextUpdate = (TextView)layout.findViewById(R.id.nextUpdateTime);
 				if (nonZero != null) {
 					final int next = nonZero.getArrivalTime();
 					handler.postDelayed(updateNextStops, next * 60 * 1000);
-					final TextView nextUpdate = (TextView)layout.findViewById(R.id.nextUpdateTime);
 					final Resources res = getResources();
 					nextUpdate.setText(res.getQuantityString(R.plurals.next_update, next, next));
+				}
+				else {
+					nextUpdate.setText("");
 				}
 				noData.setVisibility(View.GONE);
 				
@@ -79,6 +82,7 @@ public class ShowNextStopsFragment extends Fragment {
 				list.setVisibility(View.VISIBLE);
 			}
 			else {
+				list.setVisibility(View.GONE);
 				noData.setVisibility(View.VISIBLE);
 				sortCrowd.setOnClickListener(null);
 				sortCrowd.setBackgroundResource(0);
@@ -148,11 +152,7 @@ public class ShowNextStopsFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		final HandlerThread thread = new HandlerThread("UpdateNextStopsHandler");
-		thread.start();
-		handler = new Handler(thread.getLooper());
 		
-		requestNextStops();
 	}
 	
 	@Override
@@ -178,12 +178,18 @@ public class ShowNextStopsFragment extends Fragment {
 		departureCode = b.getInt(EXTRA_DEP_CODE);
 		Log.d("dep", departureCode + " " + lineCode + " " + lineCode);
 		
+		final HandlerThread thread = new HandlerThread("UpdateNextStopsHandler");
+		thread.start();
+		handler = new Handler(thread.getLooper());
+		
+		requestNextStops();
+		
 		return layout;
 	}
 	
 	@Override
-	public void onStop() {
-		super.onStop();
+	public void onDestroyView() {
+		super.onDestroyView();
 		handler.getLooper().quit();
 	}
 	

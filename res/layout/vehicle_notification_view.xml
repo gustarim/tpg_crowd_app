@@ -32,7 +32,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/nextDepFragment_view"
+        android:id="@+id/nextStopsFragment_view"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/crowdFragment"
@@ -50,12 +50,18 @@
             android:textColor="@color/tpg"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/nextStopsFragment"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.8"
-            android:orientation="vertical" />
+            android:layout_weight="0.8" >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/no_data" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/wrong_vehicle_view"

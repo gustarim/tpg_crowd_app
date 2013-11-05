@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.CharSequenceUtils;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,6 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ch.unige.tpgcrowd.R;
+import ch.unige.tpgcrowd.google.geofence.StopGeofence;
+import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
 import ch.unige.tpgcrowd.manager.ITPGDepartures;
 import ch.unige.tpgcrowd.manager.TPGManager;
 import ch.unige.tpgcrowd.model.Departure;
@@ -53,9 +53,9 @@ public class ShowNextDeparturesFragment extends Fragment {
 		
 		@Override
 		public void onSuccess(final DepartureList results) {
+			deps = results.getDepartures();
 			progres.setVisibility(View.GONE);
 			Log.d("dep", "next " + results.getDepartures().size());
-			deps = results.getDepartures();
 			sortByCrowd(deps);
 			final ImageButton sortCrowd = (ImageButton)layout.findViewById(R.id.sortCrowd);
 			sortCrowd.setOnClickListener(crowdSortClick);
@@ -121,8 +121,11 @@ public class ShowNextDeparturesFragment extends Fragment {
 		@Override
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position,
 				final long arg3) {
+			final Departure dep = deps.get(position);
+			final StopGeofence geo = StopGeofenceStore.getGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID);
+			geo.setDepartureCode(dep.getDepartureCode());
+			StopGeofenceStore.setGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID, geo);
 			if (depClickListener != null) {
-				final Departure dep = deps.get(position);
 				depClickListener.onItemListclicked(lineCode, destinationName, dep.getDepartureCode());
 			}
 		}

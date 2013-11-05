@@ -30,6 +30,8 @@ public class StopGeofenceStore {
 			"ch.unige.tpgcrowd.geofence.KEY_PHYSICAL_STOP_CODE";
 	public static final String KEY_LINE_CODE = 
 			"ch.unige.tpgcrowd.geofence.KEY_LINE_CODE";
+	public static final String KEY_DEP_CODE = 
+			"ch.unige.tpgcrowd.geofence.KEY_DEP_CODE";
 	public static final String KEY_STOP_CROWD = 
 			"ch.unige.tpgcrowd.geofence.KEY_STOP_CROWD";
 	// The prefix for flattened geofence keys
@@ -123,6 +125,10 @@ public class StopGeofenceStore {
 		final String physicalStopCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_PHYSICAL_STOP_CODE), INVALID_CODE);
 		final String stopCode = mPrefs.getString(getGeofenceFieldKey(id, KEY_STOP_CODE), INVALID_CODE);
 		
+		final int departureCode =  mPrefs.getInt(
+				getGeofenceFieldKey(id, KEY_DEP_CODE),
+				INVALID_INT_VALUE);
+		
 		final int stopCrowd = mPrefs.getInt(
 				getGeofenceFieldKey(id, KEY_STOP_CROWD),
 				INVALID_INT_VALUE);
@@ -142,8 +148,10 @@ public class StopGeofenceStore {
 				!stopCode.equals(INVALID_CODE)) {
 
 			// Return a true Geofence object
-			return new StopGeofence(lat, lng,
+			final StopGeofence geo = new StopGeofence(lat, lng,
 					transitionType, lineCode, directionCode, directionName, physicalStopCode, stopCode, stopCrowd);
+			geo.setDepartureCode(departureCode);
+			return geo;
 			// Otherwise, return null.
 		} else {
 			return null;
@@ -194,6 +202,9 @@ public class StopGeofenceStore {
 				getGeofenceFieldKey(id, KEY_STOP_CODE),
 				geofence.getStopCode());
 		editor.putInt(
+				getGeofenceFieldKey(id, KEY_DEP_CODE),
+				geofence.getDepartureCode());
+		editor.putInt(
 				getGeofenceFieldKey(id, KEY_STOP_CROWD),
 				geofence.getStopCrowd());
 		// Commit the changes
@@ -217,6 +228,7 @@ public class StopGeofenceStore {
 		editor.remove(getGeofenceFieldKey(id, KEY_DESTINATION_NAME));
 		editor.remove(getGeofenceFieldKey(id, KEY_PHYSICAL_STOP_CODE));
 		editor.remove(getGeofenceFieldKey(id, KEY_STOP_CODE));
+		editor.remove(getGeofenceFieldKey(id, KEY_DEP_CODE));
 		editor.remove(getGeofenceFieldKey(id, KEY_STOP_CROWD));
 		editor.commit();
 	}

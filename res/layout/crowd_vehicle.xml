@@ -4,47 +4,83 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <ImageView
-        android:id="@+id/crowd_img"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/crowd_bus_drawable" />
+    <LinearLayout
+        android:id="@+id/crowd_image_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="160dp"
+        android:orientation="vertical" >
 
-    <SeekBar
-        android:id="@+id/crowd_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/crowd_img"
-        android:layout_margin="5dp" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/crowd_seekbar"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/radio0"
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:text="@string/standing" />
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-        <RadioButton
-            android:id="@+id/radio1"
-            android:layout_width="match_parent"
+            <RadioButton
+                android:id="@+id/radioStanding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/standing" />
+
+            <RadioButton
+                android:id="@+id/radioSitting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/sitting" />
+        </RadioGroup>
+
+	    <ImageView
+	        android:id="@+id/crowd_img"
+	        android:layout_width="match_parent"
+	        android:layout_height="80dp"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginTop="5dp"
+	        android:contentDescription="@null"
+	        android:scaleType="fitCenter"
+	        android:src="@drawable/crowd_bus_drawable" />
+	
+	    <SeekBar
+	        android:id="@+id/crowd_seekbar"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp" />
+	</LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/crowd_btns_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="160dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/btn_accept"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sitting" />
-    </RadioGroup>
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="0.5"
+            android:background="@drawable/btn_background"
+            android:text="@string/accept" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/button_horizontal_margin"
+            android:layout_marginRight="@dimen/button_horizontal_margin"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_weight="0.5"
+            android:background="@drawable/btn_background"
+            android:text="@string/cancel" />
+    </LinearLayout>
 
 </RelativeLayout>
