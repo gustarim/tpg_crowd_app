@@ -35,22 +35,22 @@ import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 public class ShowNextDeparturesFragment extends Fragment {
-	
+
 	public static final String EXTRA_LINE_CODE = "ch.unige.tpgcrowd.extra.LINE_CODE";
 	public static final String EXTRA_DEST_CODE = "ch.unige.tpgcrowd.extra.DEST_CODE";
 	public static final String EXTRA_STOP_CODE = "ch.unige.tpgcrowd.extra.STOP_CODE";
 	public static final String EXTRA_PHYSICAL_STOP_CODE = "ch.unige.tpgcrowd.extra.PHYSICAL_STOP_CODE";
 	public static final String EXTRA_DEST_NAME = "ch.unige.tpgcrowd.extra.DEST_NAME";
 	protected static final String STRING_HOUR = "&gt;1h";
-	
+
 	public interface OnDepartureClickListener {
 		public void onItemListclicked(final String lineCode, final String destinationName, final int departurecode);
 	}
-	
+
 	private OnDepartureClickListener depClickListener;
-	
+
 	private final TPGObjectListener<DepartureList> departureListener = new TPGObjectListener<DepartureList>() {
-		
+
 		@Override
 		public void onSuccess(final DepartureList results) {
 			deps = results.getDepartures();
@@ -70,16 +70,16 @@ public class ShowNextDeparturesFragment extends Fragment {
 			final TextView update = (TextView)getView().findViewById(R.id.updateTime);
 			update.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
 		}
-		
+
 		@Override
 		public void onFailure() {
 			// TODO Auto-generated method stub
-			
+
 		}
 	};
-	
+
 	private final OnClickListener refreshClick = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(final View v) {
 			requestNextDepartures();
@@ -87,9 +87,9 @@ public class ShowNextDeparturesFragment extends Fragment {
 			update.setText(R.string.loading);
 		}
 	};
-	
+
 	private final OnClickListener crowdSortClick = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(final View v) {
 			sortByCrowd(deps);
@@ -101,9 +101,9 @@ public class ShowNextDeparturesFragment extends Fragment {
 			list.setAdapter(adapter);
 		}
 	};
-	
+
 	private final OnClickListener timeSortClick = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(final View v) {
 			sortByTime(deps);
@@ -115,23 +115,27 @@ public class ShowNextDeparturesFragment extends Fragment {
 			list.setAdapter(adapter);
 		}
 	};
-	
+
 	private final OnItemClickListener listItemClick = new OnItemClickListener() {
 
 		@Override
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position,
 				final long arg3) {
 			final Departure dep = deps.get(position);
-			final StopGeofence geo = StopGeofenceStore.getGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID);
-			geo.setDepartureCode(dep.getDepartureCode());
-			StopGeofenceStore.setGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID, geo);
-			if (depClickListener != null) {
-				depClickListener.onItemListclicked(lineCode, destinationName, dep.getDepartureCode());
+
+			if (dep != null && dep.getDepartureCode() != null) {
+
+				final StopGeofence geo = StopGeofenceStore.getGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID);
+				geo.setDepartureCode(dep.getDepartureCode());
+				StopGeofenceStore.setGeofence(getActivity(), StopGeofence.STOP_GEOFENCE_ID, geo);
+				if (depClickListener != null) {
+					depClickListener.onItemListclicked(lineCode, destinationName, dep.getDepartureCode());
+				}
 			}
 		}
-		
+
 	};
-	
+
 	private View progres;
 	private ListView list;
 	private List<Departure> deps;
@@ -140,11 +144,11 @@ public class ShowNextDeparturesFragment extends Fragment {
 	private String destinationName;
 	private String stopCode;
 	private LinearLayout layout;
-	
+
 	public void setOnDepepartureClickListener(final OnDepartureClickListener depClickListener) {
 		this.depClickListener = depClickListener;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -152,7 +156,7 @@ public class ShowNextDeparturesFragment extends Fragment {
 		final Bundle b = getArguments();
 		lineCode = b.getString(EXTRA_LINE_CODE);
 		destinationName = b.getString(EXTRA_DEST_NAME);
-		
+
 		final LinearLayout lineInfo = (LinearLayout)layout.findViewById(R.id.lineInfo);
 		final TextView lineIcon = (TextView)lineInfo.findViewById(R.id.lineIcon);
 		lineIcon.setText(lineCode);
@@ -161,17 +165,17 @@ public class ShowNextDeparturesFragment extends Fragment {
 		refresh.setOnClickListener(refreshClick);
 		final TextView dir = (TextView)lineInfo.findViewById(R.id.direction);
 		dir.setText(destinationName);
-		
+
 		progres = layout.findViewById(R.id.progres);
 		list = (ListView)layout.findViewById(R.id.departuresList);
-		
+
 		destinationCode = b.getString(EXTRA_DEST_CODE);
 		stopCode = b.getString(EXTRA_STOP_CODE);
 		Log.d("dep", stopCode + " " + lineCode + " " + destinationCode);
 		requestNextDepartures();
 		return layout;
 	}
-	
+
 	private void requestNextDepartures() {
 		final ITPGDepartures depMan = TPGManager.getDeparturesManager(getActivity());
 		depMan.getNextDepartures(stopCode, lineCode, destinationCode, departureListener);
@@ -184,35 +188,39 @@ public class ShowNextDeparturesFragment extends Fragment {
 			super(getActivity(), R.layout.list_row_show_departure, deps);
 			departures = deps;
 		}
-		
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final LayoutInflater inflater = (LayoutInflater) getActivity()
-			        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final View rowView = inflater.inflate(R.layout.list_row_show_departure, parent, false);
 			final Departure dep = departures.get(position);
-			
+
 			final TextView time = (TextView)rowView.findViewById(R.id.time);
 			time.setText(dep.getWaitingTime().equals(STRING_HOUR) ? ">60" : dep.getWaitingTime());
-			
+
 			final ImageView crowd = (ImageView)rowView.findViewById(R.id.crowd);
 			crowd.setImageLevel(dep.getCrowd());
-			
+
 			final ImageView info = (ImageView)rowView.findViewById(R.id.info);
 			if (dep.getDisruptions() != null && !dep.getDisruptions().isEmpty()) {
-				info.setImageDrawable(getResources().getDrawable(R.drawable.incident));
+				info.setVisibility(ImageView.VISIBLE);
+
 				final Disruption dis = dep.getDisruptions().get(0);
 				info.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						Toast.makeText(getContext(), dis.getConsequence(), Toast.LENGTH_SHORT).show();
 					}
 				});
 			}
-			else {
-				info.setOnClickListener(null);
-			}
+
+			final ImageView pmr = (ImageView)rowView.findViewById(R.id.pmr);
+			if (dep.getCharacteristics() != null && dep.getCharacteristics().contains("PMR")) {
+				pmr.setVisibility(ImageView.VISIBLE);
+			}		
+
 			return rowView;
 		}
 	}
@@ -226,7 +234,7 @@ public class ShowNextDeparturesFragment extends Fragment {
 			}
 		});
 	}
-	
+
 	private static void sortByTime(final List<Departure> deps) {
 		Collections.sort(deps, new Comparator<Departure>() {
 
@@ -236,9 +244,9 @@ public class ShowNextDeparturesFragment extends Fragment {
 						61 : Integer.valueOf(lhs.getWaitingTime());
 				final int rhsTime = rhs.getWaitingTime().equals(STRING_HOUR) ? 
 						61 : Integer.valueOf(rhs.getWaitingTime());;
-				
-				
-				return lhsTime - rhsTime;
+
+
+						return lhsTime - rhsTime;
 			}
 		});
 	}

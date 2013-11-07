@@ -221,13 +221,22 @@ public class ShowNextStopsFragment extends Fragment {
 			}
 			
 			final TextView stopName = (TextView)rowView.findViewById(R.id.stopName);
-			stopName.setText(step.getPhysicalStop().getStopName());
+			final ImageView crowd = (ImageView)rowView.findViewById(R.id.crowd);
+
+			//Sometimes there is no physical stop for the last stop.. 
+			//So in these cases we use the stop name and we don't display the crowd info
+			if (step.getPhysicalStop() != null) {
+				stopName.setText(step.getPhysicalStop().getStopName());
+				crowd.setImageLevel(step.getPhysicalStop().getCrowd());
+			}
+			else {
+				stopName.setText(stop.getStopName());
+				crowd.setImageLevel(0);
+			}
 			
 			final TextView time = (TextView)rowView.findViewById(R.id.time);
 			time.setText(step.getArrivalTime() + "");
 			
-			final ImageView crowd = (ImageView)rowView.findViewById(R.id.crowd);
-			crowd.setImageLevel(step.getPhysicalStop().getCrowd());
 			
 			return rowView;
 		}

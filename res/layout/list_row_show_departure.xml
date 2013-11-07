@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" xmlns:tools="http://schemas.android.com/tools" tools:context=".ui.fragments.ShowNextDeparturesFragment$DepartureListAdapter">
+    android:orientation="horizontal"
+    tools:context=".ui.fragments.ShowNextDeparturesFragment$DepartureListAdapter" >
 
-    <!-- <TextView
+    <!--
+         <TextView
         android:id="@+id/crowd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,47 +17,71 @@
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
         android:layout_weight="3"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceListItem" /> -->
-    
+        android:textAppearance="?android:attr/textAppearanceListItem" />
+    -->
+
     <ImageView
         android:id="@+id/crowd"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/crowd_people_drawable"
-        android:layout_gravity="center" />
+        android:src="@drawable/crowd_people_drawable" />
 
     <TextView
         android:id="@+id/time"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/element_nobutton_vertical_margin"
         android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
         android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 
-    <ImageView
-        android:id="@+id/info"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
-        android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
-        android:layout_weight="3"
-        android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@null"
-        android:layout_gravity="center" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/info"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+            android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+            android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:src="@drawable/incident" />
+
+        <ImageView
+            android:id="@+id/pmr"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="@dimen/element_nobutton_horizontal_margin"
+            android:layout_marginRight="@dimen/element_nobutton_horizontal_margin"
+            android:layout_marginTop="@dimen/element_nobutton_vertical_margin"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:src="@drawable/handi" />
+    </LinearLayout>
 
 </LinearLayout>
