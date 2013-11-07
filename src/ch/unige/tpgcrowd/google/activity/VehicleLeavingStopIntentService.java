@@ -40,7 +40,7 @@ public class VehicleLeavingStopIntentService extends IntentService {
 
 	public VehicleLeavingStopIntentService() {
 		super(NAME);
-		mPrefs = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+		mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 	}
 
 	@Override
