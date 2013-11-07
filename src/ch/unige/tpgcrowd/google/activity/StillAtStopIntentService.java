@@ -26,7 +26,7 @@ public class StillAtStopIntentService extends IntentService {
 	public static final int TPG_STOP_NOTIFICATION = 1234;
 	
 	// The SharedPreferences object in which activity recognition timestamp is stored
-	private final SharedPreferences mPrefs;
+	private SharedPreferences mPrefs = null;
 	// The name of the SharedPreferences
 	private static final String SHARED_PREFERENCES =
 			"SharedPreferences";
@@ -41,10 +41,14 @@ public class StillAtStopIntentService extends IntentService {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
-	public StillAtStopIntentService() {
-		
+	public StillAtStopIntentService() {		
 		super(NAME);
-		mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mPrefs = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 	}
 
 	@Override
