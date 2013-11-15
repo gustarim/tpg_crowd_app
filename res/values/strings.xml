@@ -40,6 +40,10 @@
 	<string name="no_data_vehicle_exp">The data is not available, because you didn\'t select a new departure or because the live updates 
 	    from TPG are not working.</string>
 	<string name="no_data">No data available!</string>
+	<string name="info_incident">Incident</string>
+	<string name="info_pmr_green">Very suggested</string>
+	<string name="info_pmr_orange">Suggested</string>
+	<string name="info_pmr_red">Not suggested</string>
 	
 	<plurals name="next_update">
         <item quantity="one">(next update in 1 min)</item>

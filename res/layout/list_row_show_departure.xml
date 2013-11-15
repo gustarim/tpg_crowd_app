@@ -81,7 +81,7 @@
             android:contentDescription="@null"
             android:scaleType="fitCenter"
             android:visibility="gone"
-            android:src="@drawable/handi" />
+            android:src="@drawable/handi_drawable" />
     </LinearLayout>
 
 </LinearLayout>

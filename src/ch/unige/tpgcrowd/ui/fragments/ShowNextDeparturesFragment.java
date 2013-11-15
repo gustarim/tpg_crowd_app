@@ -32,6 +32,8 @@ import ch.unige.tpgcrowd.model.Departure;
 import ch.unige.tpgcrowd.model.DepartureList;
 import ch.unige.tpgcrowd.model.Disruption;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
+import ch.unige.tpgcrowd.ui.component.InfoItem;
+import ch.unige.tpgcrowd.ui.component.QuickInfo;
 import ch.unige.tpgcrowd.util.ColorStore;
 
 public class ShowNextDeparturesFragment extends Fragment {
@@ -43,6 +45,11 @@ public class ShowNextDeparturesFragment extends Fragment {
 	public static final String EXTRA_DEST_NAME = "ch.unige.tpgcrowd.extra.DEST_NAME";
 	protected static final String STRING_HOUR = "&gt;1h";
 
+    private static final int ID_INCIDENT = 1;
+    private static final int ID_PMR_GREEN = 2;
+    private static final int ID_PMR_ORANGE = 3;
+    private static final int ID_PMR_RED = 4;	
+	
 	public interface OnDepartureClickListener {
 		public void onItemListclicked(final String lineCode, final String destinationName, final int departurecode);
 	}
@@ -115,6 +122,14 @@ public class ShowNextDeparturesFragment extends Fragment {
 			list.setAdapter(adapter);
 		}
 	};
+	
+	private final OnClickListener infoClick = new OnClickListener() {
+		
+		@Override
+		public void onClick(final View v) {
+			quickinfo.show(v);
+		}
+	};
 
 	private final OnItemClickListener listItemClick = new OnItemClickListener() {
 
@@ -144,6 +159,8 @@ public class ShowNextDeparturesFragment extends Fragment {
 	private String destinationName;
 	private String stopCode;
 	private LinearLayout layout;
+	
+	protected QuickInfo quickinfo;
 
 	public void setOnDepepartureClickListener(final OnDepartureClickListener depClickListener) {
 		this.depClickListener = depClickListener;
@@ -157,15 +174,31 @@ public class ShowNextDeparturesFragment extends Fragment {
 		lineCode = b.getString(EXTRA_LINE_CODE);
 		destinationName = b.getString(EXTRA_DEST_NAME);
 
+		InfoItem incidentItem     = new InfoItem(ID_INCIDENT, getResources().getString(R.string.info_incident), getResources().getDrawable(R.drawable.incident));
+		InfoItem pmrGreenItem     = new InfoItem(ID_PMR_GREEN, getResources().getString(R.string.info_pmr_green), getResources().getDrawable(R.drawable.handi_green));
+		InfoItem pmrOrangeItem   = new InfoItem(ID_PMR_ORANGE, getResources().getString(R.string.info_pmr_orange), getResources().getDrawable(R.drawable.handi_orange));
+		InfoItem pmrRedItem     = new InfoItem(ID_PMR_RED, getResources().getString(R.string.info_pmr_red), getResources().getDrawable(R.drawable.handi_red));
+		
+		quickinfo = new QuickInfo(this.getActivity());
+		quickinfo.addInfoItem(incidentItem);
+		quickinfo.addInfoItem(pmrGreenItem);
+		quickinfo.addInfoItem(pmrOrangeItem);
+		quickinfo.addInfoItem(pmrRedItem);
+		
 		final LinearLayout lineInfo = (LinearLayout)layout.findViewById(R.id.lineInfo);
 		final TextView lineIcon = (TextView)lineInfo.findViewById(R.id.lineIcon);
 		lineIcon.setText(lineCode);
 		lineIcon.setBackgroundColor(ColorStore.getColor(getActivity(), lineCode));
+		
 		final ImageButton refresh = (ImageButton)layout.findViewById(R.id.refresh);
 		refresh.setOnClickListener(refreshClick);
+		
 		final TextView dir = (TextView)lineInfo.findViewById(R.id.direction);
 		dir.setText(destinationName);
 
+		final ImageButton infoBtn = (ImageButton)layout.findViewById(R.id.getInfo);
+		infoBtn.setOnClickListener(infoClick);
+		
 		progres = layout.findViewById(R.id.progres);
 		list = (ListView)layout.findViewById(R.id.departuresList);
 
@@ -219,6 +252,18 @@ public class ShowNextDeparturesFragment extends Fragment {
 			final ImageView pmr = (ImageView)rowView.findViewById(R.id.pmr);
 			if (dep.getCharacteristics() != null && dep.getCharacteristics().contains("PMR")) {
 				pmr.setVisibility(ImageView.VISIBLE);
+				if (dep.getCrowd() == -1) {
+					pmr.setImageLevel(0);
+				}
+				else if (dep.getCrowd() < 4) {
+					pmr.setImageLevel(1);
+				}
+				else if (dep.getCrowd() < 7) {
+					pmr.setImageLevel(2);
+				}
+				else {
+					pmr.setImageLevel(3);
+				}
 			}		
 
 			return rowView;
