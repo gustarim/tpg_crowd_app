@@ -54,4 +54,10 @@
 	<string name="thx_stop_crowd">Thank you!</string>
 	<string name="ok">OK</string>
 	<string name="end_of_service">This service is ended!</string>
+	
+	<string name="about">About</string>
+	<string name="about_text">This applications was developed by the University of Geneva. 
+	    All the data about the transport services (the data about the stops and the real time data about the next departures) is provided by TPG!
+	    The data about the crowd is currenlty being simulated.</string>
+	
 </resources>

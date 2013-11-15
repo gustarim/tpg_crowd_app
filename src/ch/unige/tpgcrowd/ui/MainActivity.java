@@ -10,9 +10,11 @@ import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
 import ch.unige.tpgcrowd.model.Stop;
+import ch.unige.tpgcrowd.ui.fragments.AboutDialogFragment;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment.MapEventListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowLinesMapFragment.OnLineMapLongClickListener;
@@ -24,6 +26,7 @@ import ch.unige.tpgcrowd.util.ColorStore;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends FragmentActivity implements StopRender, MapEventListener, OnLineMapLongClickListener {
+	private static final String ABOUT_DIALOG = "aboutDialog";
 	private ShowStopFragment spsf;
 	private ShowNearbyStopsFragment nearbyFragment;
 	private InitialMapFragment map;
@@ -88,6 +91,19 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.about:
+			final FragmentManager fm = getSupportFragmentManager();
+			new AboutDialogFragment().show(fm, ABOUT_DIALOG);
+			break;
+		default:
+			break;
+		}
 		return true;
 	}
 
