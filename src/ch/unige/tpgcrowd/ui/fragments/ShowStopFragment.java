@@ -3,17 +3,24 @@ package ch.unige.tpgcrowd.ui.fragments;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import ch.unige.tpgcrowd.R;
+import ch.unige.tpgcrowd.google.activity.StillAtStopIntentService;
 import ch.unige.tpgcrowd.google.geofence.GeofenceHandler;
 import ch.unige.tpgcrowd.google.geofence.StopGeofence;
 import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
@@ -26,10 +33,12 @@ import ch.unige.tpgcrowd.model.PhysicalStop;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.model.StopList;
 import ch.unige.tpgcrowd.net.listener.TPGObjectListener;
+import ch.unige.tpgcrowd.ui.StopNotificationView;
 import ch.unige.tpgcrowd.ui.fragments.ShowLinesFragment.OnLinesMapClickListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowLinesMapFragment.OnLinesClickListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowNextDeparturesFragment.OnDepartureClickListener;
 import ch.unige.tpgcrowd.ui.fragments.ShowPhisicalStopsFragment.OnConnectionClickListener;
+import ch.unige.tpgcrowd.util.ColorStore;
 
 import com.google.android.gms.location.Geofence;
 
@@ -72,6 +81,45 @@ public class ShowStopFragment extends Fragment
 					StopTransitionsIntentService.getTransitionPendingIntent(getActivity().getApplicationContext()));
 			if (added) {
 				Log.i(StopGeofence.STOP_GEOFENCE_ID, "Geofence added");
+//				final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity().getApplicationContext());
+//
+//				//Small view
+//				RemoteViews rv = new RemoteViews(getActivity().getPackageName(), R.layout.notification_small_at_stop);
+//				rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getActivity().getApplicationContext(), sg.getLineCode()));
+//
+//				rv.setTextViewText(R.id.lineIcon,sg.getLineCode());
+//				rv.setTextViewText(R.id.textDirection,sg.getDestinationName());
+//
+//				notificationBuilder.setContent(rv);
+//
+//				notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+//
+//				/* Creates an explicit intent for an Activity in your app */
+//				Intent resultIntent = new Intent(getActivity().getApplicationContext(), StopNotificationView.class);
+//				resultIntent.putExtra("STOP_GEOFENCE_KEY", sg);
+//
+//				resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//				/* Adds the Intent that starts the Activity to the top of the stack */
+//				PendingIntent resultPendingIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+//
+//				notificationBuilder.setContentIntent(resultPendingIntent);
+//
+//				//Add buttons
+//				//				Intent infoIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+//				//				infoIntent.setAction("ACTION_SHOW_INFO");
+//				//				PendingIntent piInfo = PendingIntent.getService(getActivity().getApplicationContext(), 0, infoIntent, 0);
+//				//
+//				//				Intent wrongStopIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+//				//				wrongStopIntent.setAction("ACTION_CHANGE_STOP");
+//				//				PendingIntent piWrongStop = PendingIntent.getService(getActivity().getApplicationContext(), 0, wrongStopIntent, 0);
+//				//				
+//				//				notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("Next departure : 3min").setBigContentTitle(sg.getLineCode()));
+//				//				notificationBuilder.addAction(android.R.drawable.ic_menu_info_details,getString(R.string.more_info), piInfo);
+//				//				notificationBuilder.addAction(android.R.drawable.ic_delete,getString(R.string.wrong_stop), piWrongStop);
+//
+//				final NotificationManager notificationManager = (NotificationManager)getActivity().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//				notificationManager.notify(StillAtStopIntentService.TPG_STOP_NOTIFICATION, notificationBuilder.build());
+				
 			}
 			
 			return added;

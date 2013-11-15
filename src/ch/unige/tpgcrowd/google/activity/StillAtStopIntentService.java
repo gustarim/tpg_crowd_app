@@ -136,8 +136,6 @@ public class StillAtStopIntentService extends IntentService {
 					notificationManager.notify(TPG_STOP_NOTIFICATION, notificationBuilder.build());
 
 
-
-
 					geofence.setTransitionType(Geofence.GEOFENCE_TRANSITION_EXIT);
 					StopGeofenceStore.setGeofence(getApplicationContext(), StopGeofence.STOP_GEOFENCE_ID, geofence);
 					GeofenceHandler.addGeofences(getApplicationContext(), new String[] {StopGeofence.STOP_GEOFENCE_ID}, 

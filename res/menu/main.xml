@@ -5,6 +5,6 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/about"
-        android:icon="@drawable/ic_info_departure"/>
+        android:icon="@drawable/ic_menu_info"/>
 
 </menu>
