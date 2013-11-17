@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import ch.unige.tpgcrowd.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
@@ -26,8 +28,30 @@ public class InitialMapFragment extends Fragment {
 		public void onLongClick(double latitude, double longitude);
 	}
 
+	private static final String MAP_FRAG = "intimap";
+
+	private final OnMapLongClickListener mapClick = new OnMapLongClickListener() {
+		
+		@Override
+		public void onMapLongClick(LatLng point) {
+			listener.onLongClick(point.latitude, point.longitude);
+			
+			final MarkerOptions mo = new MarkerOptions();
+			mo.position(point);
+			
+			mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
+		
+			if (userLocMarker!=null){
+				userLocMarker.remove();					
+			}
+			final Marker m = map.addMarker(mo);
+			userLocMarker = m;	
+		}
+	};
+	
 	private MapEventListener listener;
 	private GoogleMap map;
+	private SupportMapFragment smf;
 	
 	Marker sysLocMarker = null;
 	Marker userLocMarker = null;
@@ -39,37 +63,41 @@ public class InitialMapFragment extends Fragment {
 			Bundle savedInstanceState) {
 //		return super.onCreateView(inflater, container, savedInstanceState);		
 		
-		View layout = inflater.inflate(R.layout.show_initial_map, container, false);
-		final FragmentManager fm = getFragmentManager();
-		map = ((SupportMapFragment)fm.findFragmentByTag("bigInitMap")).getMap();
+		final View layout = inflater.inflate(R.layout.show_initial_map, container, false);
+//		final FragmentManager fm = getFragmentManager();
+//		map = ((SupportMapFragment)fm.findFragmentByTag("bigInitMap")).getMap();
 		
-		//default location
-				double latitude = 46.2022200;
-				double longitude = 6.1456900;
-				
-
-				setLocation(latitude, longitude, -1);
-				
-				map.setOnMapLongClickListener(new OnMapLongClickListener() {
-					
-					@Override
-					public void onMapLongClick(LatLng point) {
-						listener.onLongClick(point.latitude, point.longitude);
-						
-						final MarkerOptions mo = new MarkerOptions();
-						mo.position(point);
-						
-						mo.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
-					
-						if (userLocMarker!=null){
-							userLocMarker.remove();					
-						}
-						final Marker m = map.addMarker(mo);
-						userLocMarker = m;	
-					}
-				});
 		
 		return layout;
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		final FragmentManager fm = getFragmentManager();
+		final GoogleMapOptions mapOpt = new GoogleMapOptions();
+		mapOpt.useViewLifecycleInFragment(true);
+		final SupportMapFragment mapfr = SupportMapFragment.newInstance(mapOpt);
+		final FragmentTransaction ft = fm.beginTransaction();
+		ft.add(R.id.initMap, mapfr, MAP_FRAG);
+		ft.commit();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		final FragmentManager fm = getFragmentManager();
+		map = ((SupportMapFragment)fm.findFragmentByTag(MAP_FRAG)).getMap();
+		
+		//default location
+		double latitude = 46.2022200;
+		double longitude = 6.1456900;
+		
+
+		setLocation(latitude, longitude, -1);
+		
+		map.setOnMapLongClickListener(mapClick);
 	}
 	
 	public void setLocation(double latitude, double longitude, double accuracy) {

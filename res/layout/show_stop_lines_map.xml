@@ -3,12 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <fragment
+    <!-- <fragment
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/element_nobutton_horizontal_margin"
-        android:tag="bigMap" />
+        android:tag="bigMap"
+         /> -->
+    <FrameLayout
+        	android:id="@+id/bigMap"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent">
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/mapLineLayout"

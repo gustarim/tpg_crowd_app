@@ -18,6 +18,7 @@ import ch.unige.tpgcrowd.ui.fragments.ShowStopFragment.PhysicalStopSelectedListe
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,7 +47,31 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 		View layout = getView();		
 
 		layout = inflater.inflate(R.layout.show_stop_lines, null, false);
+		final FragmentManager fm = getFragmentManager();
+		final FragmentTransaction ft = fm.beginTransaction();
+		spsf = ShowPhisicalStopsFragment.newInstance();
+		ft.add(R.id.phisicalStopsFragment, spsf, null);
+		ft.commit();
 
+		return layout;
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		final FragmentManager fm = getFragmentManager();
+		final GoogleMapOptions mapOpt = new GoogleMapOptions();
+		mapOpt.useViewLifecycleInFragment(true);
+		final SupportMapFragment mapfr = SupportMapFragment.newInstance(mapOpt);
+		final FragmentTransaction ft = fm.beginTransaction();
+		ft.add(R.id.smallMap, mapfr, SMALL_MAP_FRAGMENT);
+		ft.commit();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		final FragmentManager fm = getFragmentManager();
 		final SupportMapFragment map = (SupportMapFragment)fm.findFragmentByTag(SMALL_MAP_FRAGMENT);
 		final GoogleMap gmap = map.getMap();
@@ -56,13 +81,6 @@ public class ShowLinesFragment extends Fragment implements PhysicalStopRender {
 		settings.setMyLocationButtonEnabled(false);
 		settings.setZoomControlsEnabled(false);
 		map.getMap().setOnMapClickListener(mapClick);
-
-		final FragmentTransaction ft = fm.beginTransaction();
-		spsf = ShowPhisicalStopsFragment.newInstance();
-		ft.add(R.id.phisicalStopsFragment, spsf, null);
-		ft.commit();
-
-		return layout;
 	}
 	
 	@Override

@@ -202,8 +202,8 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onStop() {
+		super.onStop();
 		LocationHandler.stopLocation(getActivity(), penInt);
 		getActivity().unregisterReceiver(locationReceiver);
 	}

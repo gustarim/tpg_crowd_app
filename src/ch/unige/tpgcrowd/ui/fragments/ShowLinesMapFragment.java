@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -43,6 +45,7 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 	public interface OnLinesClickListener {
 		public void onLinesClick();
 	}
+	private static final String BIG_MAP_FRAGMENT = "bigMap";
 	private GoogleMap map;
 	
 	List<Marker> markersStops = new ArrayList<Marker>();
@@ -148,8 +151,27 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 		View layout = inflater.inflate(R.layout.show_stop_lines_map, container, false);
 		final LinearLayout lines = (LinearLayout)layout.findViewById(R.id.mapLineButton);
 		lines.setOnClickListener(click);
+		return layout;
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
 		final FragmentManager fm = getFragmentManager();
-		map = ((SupportMapFragment)fm.findFragmentByTag("bigMap")).getMap();
+		final GoogleMapOptions mapOpt = new GoogleMapOptions();
+		mapOpt.useViewLifecycleInFragment(true);
+		final SupportMapFragment mapfr = SupportMapFragment.newInstance(mapOpt);
+		final FragmentTransaction ft = fm.beginTransaction();
+		ft.add(R.id.bigMap, mapfr, BIG_MAP_FRAGMENT);
+		ft.commit();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		final FragmentManager fm = getFragmentManager();
+		map = ((SupportMapFragment)fm.findFragmentByTag(BIG_MAP_FRAGMENT)).getMap();
 		
 		map.setOnMapLongClickListener(new OnMapLongClickListener() {
 			
@@ -161,8 +183,6 @@ public class ShowLinesMapFragment extends Fragment implements PhysicalStopRender
 				listener.onLineMapLongClick(zoom, ll, arg0);
 			}
 		});
-
-		return layout;
 	}
 	
 	@Override

@@ -33,12 +33,19 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
-        <fragment
+        <!-- <fragment
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:tag="smallMap" />
+            android:tag="smallMap" /> -->
+        
+        <FrameLayout
+        	android:id="@+id/smallMap"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:layout_weight="1">
+    	</FrameLayout>
     </LinearLayout>
 
     <FrameLayout
