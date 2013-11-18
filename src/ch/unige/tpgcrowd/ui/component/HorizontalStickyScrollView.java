@@ -141,8 +141,6 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
 			StopViewItem view = (StopViewItem)parent.getChildAt(currentIndex);
 
-			Log.d("NEXT", "nbChild : " + nbChild + " - current Index : " + currentIndex);
-
 			if (next) {
 				if (currentIndex < nbChild - 2) {
 					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
