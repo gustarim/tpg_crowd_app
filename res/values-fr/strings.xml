@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">UnCrowd</string>
+    <string name="action_settings">Préférences</string>
+    <string name="default_line">A0</string>
+    <string name="default_direction">Direction</string>
+    <string name="default_time">Prochain Départ</string>
+    <string name="loading">Chargement&#8230;</string>
+    <string name="error">Erreur</string>
+    <string name="error_msg">Une erreur est servenue, merci de réessayer</string>
+    <string name="more_info">Plus d\'info</string>
+    <string name="wrong_stop">Mauvais Arrêt!</string>
+    <string name="connection_not_found">Aucune connexion!</string>
+    <string name="stop_name">Nom de l\'Arrêt</string>
+    <string name="lines">Lignes</string>
+    <string name="stop_crowd">Affluence à l\'Arrêt</string>
+    <string name="title_no_stop">Aucun Arrêt séléctionné</string>
+    <string name="title_crowd">Donne ton avis !</string>
+    <string name="wrong_stop">Mauvaise ligne?</string>
+    <string name="select_stop">Selectionner une ligne</string>
+    <string name="crowd_on_board">Affluence à bord</string>
+    <string name="next_departures">Prochains Départs</string>
+    <string name="refresh">Actualiser</string>
+    <string name="information">information</string>
+    <string name="updated">mis à jour</string>
+    <string name="sort_time">trier par temps</string>
+    <string name="sort_crowd">trier par affluence</string>
+    <string name="contribute">Cliquez ici pour afficher les prochains départs et donner votre avis sur l\'affluence</string>
+    <string name="contribute2">Cliquez ici pour afficher les prochains arrêts et donner votre avis sur l\'affluence</string>
+    <string name="next_stops">Prochains arrêts</string>
+    <string name="standing">Je suis debout</string>
+	<string name="sitting">Je suis assis</string>
+	<string name="wrong_vehicle">Mauvais bus/tram?</string>
+	<string name="wrong_vehicle_exp">le bus/tram est erroné soit parce qu\'aucun départ n\'a été sélectionné depuis votre dernier trajet, 
+	    soit parce que vous avez pris un autre départ que celui sélectionné récemment, ou parce que les mise à jour des données TPG ne sont pas disponibles actuellement.</string>
+	<string name="no_data_vehicle">Pas de données?</string>
+	<string name="no_data_vehicle_exp">Aucune donnée n\'est disponible soit parce qu\'aucune destination n\'a été séléctionnée 
+	    soit parce que les mise à jour des données TPG ne sont pas disponibles actuellement.</string>
+	<string name="no_data">Aucune donnée disponible!</string>
+	<string name="info_incident">Incident</string>
+	<string name="info_pmr_green">Très suggéré</string>
+	<string name="info_pmr_orange">Suggéré</string>
+	<string name="info_pmr_red">Non suggéré</string>
+	
+	<plurals name="next_update">
+        <item quantity="one">(actualisation dans 1 min)</item>
+        <item quantity="other">(actualisation dans %d mins)</item>
+    </plurals>
+	<string name="accept">Accepter</string>
+	<string name="cancel">Annuler</string>
+	<string name="thx_stop_crowd">Merci!</string>
+	<string name="ok">OK</string>
+	<string name="end_of_service">Ce service est terminé!</string>
+	
+	<string name="about">A propos</string>
+	<string name="about_text">Cette application a été développée par l\'Université de Genève. 
+	    Toutes les données relatives aux services de transport (les arrêts et prochains départs en temps réel) sont issues des transports public genevois (TPG).
+	    Les données d\'affluence sont actuellement simulées et ne reflète pas l\'affluence réelle.</string>
+	
+</resources>
