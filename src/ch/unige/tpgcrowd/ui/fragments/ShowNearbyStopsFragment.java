@@ -52,7 +52,7 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	public interface StopRender {
 		public void onStopSelected(Stop stop);
 		public void setMapLocation(Location loc);
-		public void setSystemLocation(Location loc);
+		public void setSystemLocation(Location loc, boolean moveTo);
 	}
 
 	private StopRender mListener;
@@ -62,7 +62,7 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			curLocation = (Location) intent.getExtras().get(LocationClient.KEY_LOCATION_CHANGED);
-			updateSystemLocation(curLocation);
+			updateSystemLocation(curLocation, false);
 
 			if(!userPoint){
 
@@ -106,8 +106,8 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 		return inflater.inflate(R.layout.nearby_stops_fragment, container, false);
 	}
 
-	protected void updateSystemLocation(Location loc) {
-		mListener.setSystemLocation(loc);
+	protected void updateSystemLocation(Location loc, boolean moveTo) {
+		mListener.setSystemLocation(loc, moveTo);
 		
 	}
 
@@ -199,6 +199,11 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	public void setUserLocation(double latitude, double longitude) {
 		// TODO Auto-generated method stub
 		updateNearbyStops(latitude, longitude, true);
+	}
+	
+	public void removeUserLocation() {
+		updateSystemLocation(curLocation, true);
+		updateNearbyStops(curLocation.getLatitude(), curLocation.getLongitude(), false);
 	}
 
 	@Override

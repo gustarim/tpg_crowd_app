@@ -3,33 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-   	<!-- <fragment
+    <!--
+        <fragment
         android:name="ch.unige.tpgcrowd.ui.fragments.TPGMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/element_nobutton_horizontal_margin"
         android:tag="bigInitMap"
-        android:id="@+id/initialMap" /> -->
+        android:id="@+id/initialMap" />
+    -->
 
-    <TextView
-        android:id="@+id/map"
+    <LinearLayout
+        android:id="@+id/map_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/background_selected"
-        android:padding="@dimen/element_nobutton_horizontal_margin"
-        android:text="@string/title_no_stop"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/tpg"
-        android:textStyle="bold" />
-    
+        android:orientation="horizontal"
+        android:padding="@dimen/element_nobutton_horizontal_margin" >
+
+        <TextView
+            android:id="@+id/map"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/title_no_stop"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/tpg"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/mylocation_btn"
+            android:layout_gravity="center"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:src="@android:drawable/ic_menu_compass"
+			android:background="@drawable/btn_background" />
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/initMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/map" >
-        
+        android:layout_below="@+id/map_layout" >
     </FrameLayout>
 
 </RelativeLayout>

@@ -180,13 +180,17 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 	}
 
 	@Override
-	public void setSystemLocation(Location loc) {
-		map.setSystemLocation(loc);
+	public void setSystemLocation(Location loc, boolean moveTo) {
+		map.setSystemLocation(loc, moveTo);
 		if(spsf!=null){
 			spsf.setSystemLocation(loc);
 		}	
 	}
 
+	@Override
+	public void onMyLocationButtonClick() {
+		nearbyFragment.removeUserLocation();
+	}
 	
 	private void init() {
 		final FragmentManager fm = getSupportFragmentManager();
@@ -204,4 +208,5 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 		ft.add(R.id.main, map, InitialMapFragment.class.getSimpleName());
 		ft.commit();
 	}
+
 }

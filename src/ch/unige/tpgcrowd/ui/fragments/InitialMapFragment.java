@@ -8,7 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import ch.unige.tpgcrowd.R;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +29,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class InitialMapFragment extends Fragment {
 	public interface MapEventListener {
 		public void onLongClick(double latitude, double longitude);
+		public void onMyLocationButtonClick();
+		
 	}
 
 	private static final String MAP_FRAG = "intimap";
@@ -67,10 +72,19 @@ public class InitialMapFragment extends Fragment {
 //		final FragmentManager fm = getFragmentManager();
 //		map = ((SupportMapFragment)fm.findFragmentByTag("bigInitMap")).getMap();
 		
+		ImageButton myLocationBtn = (ImageButton) layout.findViewById(R.id.mylocation_btn);
+		myLocationBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				restoreSystemLocation();
+			}
+		});
+		
 		
 		return layout;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -141,7 +155,7 @@ public class InitialMapFragment extends Fragment {
 		userLocMarker = m;	
 	}
 
-	public void setSystemLocation(Location loc) {
+	public void setSystemLocation(Location loc, boolean moveTo) {
 		final MarkerOptions mo = new MarkerOptions();
 		LatLng ll = new LatLng(loc.getLatitude(),loc.getLongitude());
 		mo.position(ll);
@@ -167,5 +181,19 @@ public class InitialMapFragment extends Fragment {
 		
 		final Circle c = map.addCircle(co);
 		sysLocCircle = c;
+		
+		if (moveTo) {
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, map.getCameraPosition().zoom));
+		}
+	}
+	
+	
+	protected void restoreSystemLocation() {
+		if (userLocMarker!=null){
+			userLocMarker.remove();					
+		}
+		if (listener != null) {
+			listener.onMyLocationButtonClick();
+		}
 	}
 }
