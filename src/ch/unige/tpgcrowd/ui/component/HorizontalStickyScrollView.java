@@ -3,6 +3,7 @@ package ch.unige.tpgcrowd.ui.component;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -35,7 +36,7 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 	protected StopSelectedListener fragmentListener;
 	protected StopViewItem selectedView;
 	int currentIndex = -1;
-	
+
 	float relativeSize = 0.35f;
 
 	protected OnTouchListener touchListener = new View.OnTouchListener() {
@@ -51,11 +52,23 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			try {
 				// right to left swipe
-				if(velocityX < 0 && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					move(true);
-				}  else if (velocityX > 0 && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					move(false);
+				int orientation = getResources().getConfiguration().orientation;
+				
+				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+					if(velocityX < 0 && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+						move(true);
+					}  else if (velocityX > 0 && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+						move(false);
+					}
 				}
+				else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+					if(velocityY < 0 && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+						move(true);
+					}  else if (velocityY > 0 && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+						move(false);
+					}
+				}
+
 			} catch (Exception e) {
 				// nothing
 			}
@@ -136,21 +149,27 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 	public void move(boolean next) {
 		if (currentIndex > -1) {
 			ViewGroup parent = (ViewGroup) getChildAt(0);
-
+			int orientation = getResources().getConfiguration().orientation;
 			int nbChild = parent.getChildCount();
 
 			StopViewItem view = (StopViewItem)parent.getChildAt(currentIndex);
 
 			if (next) {
 				if (currentIndex < nbChild - 2) {
-					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(
+							orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+									orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
+
 					mLayParamCollapse.weight = RELATIVE_SIZE_SMALL;
 					view.setLayoutParams(mLayParamCollapse);
 
 					view.extendView(false);
 
 					StopViewItem viewToExtend = (StopViewItem)parent.getChildAt(currentIndex + 2);
-					LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(
+							orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+									orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
+
 					mLayParamExtend.weight = relativeSize;
 					viewToExtend.setLayoutParams(mLayParamExtend);
 					viewToExtend.extendView(true);
@@ -158,7 +177,10 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 					if (currentIndex < nbChild - 3) {
 						StopViewItem viewToDisplay = (StopViewItem)parent.getChildAt(currentIndex + 3);
 						//Not really needed but just to be sure...
-						LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+						LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(
+								orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+										orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
+
 						mLayParam.weight = RELATIVE_SIZE_SMALL;
 						viewToDisplay.setLayoutParams(mLayParam);
 						viewToDisplay.setVisibility(VISIBLE);
@@ -177,13 +199,17 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
 				if (currentIndex > 0) {
 					StopViewItem viewToExtend = (StopViewItem)parent.getChildAt(currentIndex - 1);
-					LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					LinearLayout.LayoutParams mLayParamExtend = new LinearLayout.LayoutParams(
+							orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+									orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
 					mLayParamExtend.weight = relativeSize;
 					viewToExtend.setLayoutParams(mLayParamExtend);
 					viewToExtend.extendView(true);
 
 					StopViewItem viewToCollapse = (StopViewItem)parent.getChildAt(currentIndex + 1);
-					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+					LinearLayout.LayoutParams mLayParamCollapse = new LinearLayout.LayoutParams(
+							orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+									orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
 					mLayParamCollapse.weight = RELATIVE_SIZE_SMALL;
 					viewToCollapse.setLayoutParams(mLayParamCollapse);
 					viewToCollapse.extendView(false);
@@ -192,7 +218,9 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 					if (currentIndex > 1) {
 						StopViewItem viewToDisplay = (StopViewItem)parent.getChildAt(currentIndex - 2);
 						//Not really needed but just to be sure...
-						LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+						LinearLayout.LayoutParams mLayParam = new LinearLayout.LayoutParams(
+								orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+										orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
 						mLayParam.weight = RELATIVE_SIZE_SMALL;
 						viewToDisplay.setLayoutParams(mLayParam);
 						viewToDisplay.setVisibility(VISIBLE);
@@ -236,14 +264,17 @@ public class HorizontalStickyScrollView extends  HorizontalScrollView {
 
 		parent.removeAllViews();
 		currentIndex = 0;
-		
+
 		relativeSize = getRelativeSize(stops.size());
-		
+		int orientation = getResources().getConfiguration().orientation;
+
 		//parent.setBackgroundColor(Color.BLUE);
 		int id = 0;
 		for (Stop stop : stops) {
 
-			LinearLayout.LayoutParams layParam = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT);
+			LinearLayout.LayoutParams layParam = new LinearLayout.LayoutParams(
+					orientation==Configuration.ORIENTATION_PORTRAIT?0:LinearLayout.LayoutParams.MATCH_PARENT,
+							orientation==Configuration.ORIENTATION_PORTRAIT?LinearLayout.LayoutParams.MATCH_PARENT:0);
 
 			StopViewItem stView = new StopViewItem(getContext(),stop, childClickListener);
 			stView.setId(id);

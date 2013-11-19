@@ -1,0 +1,91 @@
+<ch.unige.tpgcrowd.ui.component.StopViewItem xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tool"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/stopview_full"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/nearby_stop_background"
+        android:orientation="vertical"
+        android:paddingBottom="3dp"
+        android:paddingLeft="9dp"
+        android:paddingRight="8dp"
+        android:paddingTop="3dp" >
+
+        <TextView
+            android:id="@+id/stop_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:textAppearance="@style/StopTitle" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
+            android:gravity="center" >
+
+            <GridView
+                android:id="@+id/stop_images"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clipChildren="true"
+                android:columnWidth="@dimen/small_line_icon_width"
+                android:gravity="center"
+                android:horizontalSpacing="1dp"
+                android:numColumns="auto_fit"
+                android:scrollbars="none"
+                android:stretchMode="none"
+                android:verticalSpacing="1dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stop_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/StopContent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/stopview_small"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/nearby_stop_small_background"
+        android:orientation="horizontal"
+        android:padding="7dp"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.8"
+            android:gravity="center" >
+
+            <GridView
+                android:id="@+id/stop_small_images"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnWidth="@dimen/small_line_icon_width"
+                android:gravity="center"
+                android:horizontalSpacing="1dp"
+                android:numColumns="auto_fit"
+                android:scrollbars="none"
+                android:stretchMode="none"
+                android:verticalSpacing="1dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stop_small_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textAppearance="@style/StopContentSmall" />
+    </LinearLayout>
+
+</ch.unige.tpgcrowd.ui.component.StopViewItem>
