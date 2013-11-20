@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">UnCrowd</string>
+    <string name="app_name">UnCrowdTPG</string>
     <string name="action_settings">Préférences</string>
     <string name="default_line">A0</string>
     <string name="default_direction">Direction</string>
