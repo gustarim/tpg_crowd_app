@@ -1,6 +1,7 @@
 package ch.unige.tpgcrowd.ui;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -91,7 +92,11 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 //		notificationBuilder.setContentIntent(resultPendingIntent);
 //		
 //		final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//		notificationManager.notify(VehicleLeavingStopIntentService.TPG_NOTIFICATION, notificationBuilder.build());
+//		
+//		Notification notif = notificationBuilder.build();
+//		notif.defaults = Notification.DEFAULT_ALL;
+//		
+//		notificationManager.notify(VehicleLeavingStopIntentService.TPG_NOTIFICATION, notif);
 	}
 
 	@Override

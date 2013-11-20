@@ -1,6 +1,7 @@
 package ch.unige.tpgcrowd.google.activity;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -114,7 +115,11 @@ public class VehicleLeavingStopIntentService extends IntentService {
 					notificationBuilder.setContentIntent(resultPendingIntent);
 					
 					final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-					notificationManager.notify(TPG_NOTIFICATION, notificationBuilder.build());
+					
+					Notification notif = notificationBuilder.build();
+					notif.defaults = Notification.DEFAULT_ALL;
+
+					notificationManager.notify(TPG_NOTIFICATION, notif);
 				}
 				else {
 					Log.i(NAME, "Detected other activity...");

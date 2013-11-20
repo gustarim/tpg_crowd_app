@@ -3,6 +3,7 @@ package ch.unige.tpgcrowd.ui.fragments;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -118,7 +119,10 @@ public class ShowStopFragment extends Fragment
 //				//				notificationBuilder.addAction(android.R.drawable.ic_delete,getString(R.string.wrong_stop), piWrongStop);
 //
 //				final NotificationManager notificationManager = (NotificationManager)getActivity().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//				notificationManager.notify(StillAtStopIntentService.TPG_STOP_NOTIFICATION, notificationBuilder.build());
+//				
+//				Notification notif = notificationBuilder.build();
+//				notif.defaults = Notification.DEFAULT_ALL;
+//				notificationManager.notify(StillAtStopIntentService.TPG_STOP_NOTIFICATION, notif);
 				
 			}
 			

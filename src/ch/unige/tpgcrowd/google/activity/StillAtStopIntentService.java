@@ -1,6 +1,7 @@
 package ch.unige.tpgcrowd.google.activity;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -133,7 +134,11 @@ public class StillAtStopIntentService extends IntentService {
 					//				notificationBuilder.addAction(android.R.drawable.ic_delete,getString(R.string.wrong_stop), piWrongStop);
 
 					final NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-					notificationManager.notify(TPG_STOP_NOTIFICATION, notificationBuilder.build());
+					
+					Notification notif = notificationBuilder.build();
+					notif.defaults = Notification.DEFAULT_ALL;
+					
+					notificationManager.notify(TPG_STOP_NOTIFICATION, notif);
 
 
 					geofence.setTransitionType(Geofence.GEOFENCE_TRANSITION_EXIT);
