@@ -107,7 +107,7 @@ public class StillAtStopIntentService extends IntentService {
 
 					notificationBuilder.setContent(rv);
 
-					notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+					notificationBuilder.setSmallIcon(R.drawable.ic_stat_tpgcrowd);
 
 					/* Creates an explicit intent for an Activity in your app */
 					Intent resultIntent = new Intent(getApplicationContext(), StopNotificationView.class);

@@ -92,7 +92,7 @@ public class ShowStopFragment extends Fragment
 //
 //				notificationBuilder.setContent(rv);
 //
-//				notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+//				notificationBuilder.setSmallIcon(R.drawable.ic_stat_tpgcrowd);
 //
 //				/* Creates an explicit intent for an Activity in your app */
 //				Intent resultIntent = new Intent(getActivity().getApplicationContext(), StopNotificationView.class);

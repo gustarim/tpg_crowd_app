@@ -1,6 +1,8 @@
 package ch.unige.tpgcrowd.ui;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -8,10 +10,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RemoteViews;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.GooglePlayServiceCheckUtility;
+import ch.unige.tpgcrowd.google.activity.VehicleLeavingStopIntentService;
+import ch.unige.tpgcrowd.google.geofence.StopGeofence;
+import ch.unige.tpgcrowd.google.geofence.StopGeofenceStore;
 import ch.unige.tpgcrowd.model.Stop;
 import ch.unige.tpgcrowd.ui.fragments.AboutDialogFragment;
 import ch.unige.tpgcrowd.ui.fragments.InitialMapFragment;
@@ -73,7 +80,7 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 //
 //		notificationBuilder.setContent(rv);
 //
-//		notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+//		notificationBuilder.setSmallIcon(R.drawable.ic_stat_tpgcrowd);
 //		
 //		/* Creates an explicit intent for an Activity in your app */
 //		final Intent resultIntent = new Intent(getApplicationContext(), VehicleNotificationView.class);
