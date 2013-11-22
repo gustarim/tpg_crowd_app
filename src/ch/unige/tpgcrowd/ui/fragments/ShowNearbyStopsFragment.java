@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import ch.unige.tpgcrowd.R;
 import ch.unige.tpgcrowd.google.location.LocationHandler;
 import ch.unige.tpgcrowd.manager.ITPGStops;
@@ -202,8 +203,13 @@ public class ShowNearbyStopsFragment extends Fragment implements StopSelectedLis
 	}
 	
 	public void removeUserLocation() {
-		updateSystemLocation(curLocation, true);
-		updateNearbyStops(curLocation.getLatitude(), curLocation.getLongitude(), false);
+		if (curLocation != null) {
+			updateSystemLocation(curLocation, true);
+			updateNearbyStops(curLocation.getLatitude(), curLocation.getLongitude(), false);
+		}
+		else {
+			Toast.makeText(getActivity(), R.string.waiting_location_update, Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override

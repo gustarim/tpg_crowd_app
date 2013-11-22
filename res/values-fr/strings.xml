@@ -26,6 +26,7 @@
     <string name="updated">mis à jour</string>
     <string name="sort_time">trier par temps</string>
     <string name="sort_crowd">trier par affluence</string>
+    <string name="waiting_location_update">Recherche de la position&#8230;</string>
     <string name="contribute">Cliquez ici pour afficher les prochains départs et donner votre avis sur l\'affluence</string>
     <string name="contribute2">Cliquez ici pour afficher les prochains arrêts et donner votre avis sur l\'affluence</string>
     <string name="next_stops">Prochains arrêts</string>

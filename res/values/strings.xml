@@ -28,6 +28,7 @@
     <string name="sort_time">sort by time</string>
     <string name="sort_crowd">sort by crowd</string>
     <string name="waiting">You are waiting for</string>
+    <string name="waiting_location_update">Waiting for location update&#8230;</string>
     <string name="contribute">click to know about your connection and register the crowd</string>
     <string name="contribute2">click to know about your next stops and register the crowd</string>
     <string name="next_stops">Next stops</string>

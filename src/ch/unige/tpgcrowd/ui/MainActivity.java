@@ -71,32 +71,34 @@ public class MainActivity extends FragmentActivity implements StopRender, MapEve
 		}
 		
 //		final StopGeofence geofence = StopGeofenceStore.getGeofence(getApplicationContext(), StopGeofence.STOP_GEOFENCE_ID);
-//		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
-//		//Small view
-//		final RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notification_small_in_vehicle);
-//		rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getApplicationContext(), geofence.getLineCode()));
-//
-//		rv.setTextViewText(R.id.lineIcon, geofence.getLineCode());
-//		rv.setTextViewText(R.id.textDirection, geofence.getDestinationName());
-//
-//		notificationBuilder.setContent(rv);
-//
-//		notificationBuilder.setSmallIcon(R.drawable.ic_stat_tpgcrowd);
-//		
-//		/* Creates an explicit intent for an Activity in your app */
-//		final Intent resultIntent = new Intent(getApplicationContext(), VehicleNotificationView.class);
-//		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//		/* Adds the Intent that starts the Activity to the top of the stack */
-//		final PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//		notificationBuilder.setContentIntent(resultPendingIntent);
-//		
-//		final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//		
-//		Notification notif = notificationBuilder.build();
-//		notif.defaults = Notification.DEFAULT_ALL;
-//		
-//		notificationManager.notify(VehicleLeavingStopIntentService.TPG_NOTIFICATION, notif);
+//		if (geofence != null) {
+//			final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+//			//Small view
+//			final RemoteViews rv = new RemoteViews(getPackageName(), R.layout.notification_small_in_vehicle);
+//			rv.setInt(R.id.lineIcon, "setBackgroundColor", ColorStore.getColor(getApplicationContext(), geofence.getLineCode()));
+//	
+//			rv.setTextViewText(R.id.lineIcon, geofence.getLineCode());
+//			rv.setTextViewText(R.id.textDirection, geofence.getDestinationName());
+//	
+//			notificationBuilder.setContent(rv);
+//	
+//			notificationBuilder.setSmallIcon(R.drawable.ic_stat_tpgcrowd);
+//			
+//			/* Creates an explicit intent for an Activity in your app */
+//			final Intent resultIntent = new Intent(getApplicationContext(), VehicleNotificationView.class);
+//			resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//			/* Adds the Intent that starts the Activity to the top of the stack */
+//			final PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+//	
+//			notificationBuilder.setContentIntent(resultPendingIntent);
+//			
+//			final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//			
+//			Notification notif = notificationBuilder.build();
+//			notif.defaults = Notification.DEFAULT_ALL;
+//			
+//			notificationManager.notify(VehicleLeavingStopIntentService.TPG_NOTIFICATION, notif);
+//		}
 	}
 
 	@Override
